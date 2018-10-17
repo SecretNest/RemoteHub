@@ -5,30 +5,9 @@ using System.Text;
 
 namespace SecretNest.RemoteHub
 {
-    class HostTable
+    partial class HostTable
     {
-        Dictionary<Guid, Entity> hosts = new Dictionary<Guid, Entity>();
-
-        class Entity
-        {
-            public DateTime Timeout { get; private set; }
-            public RedisChannel Channel { get; }
-
-            public void Refresh(int seconds)
-            {
-                Timeout = DateTime.Now.AddSeconds(seconds);
-            }
-
-            public bool IsTimeValid => Timeout > DateTime.Now;
-
-            public Entity(int seconds, string channel)
-            {
-                Channel = new RedisChannel(channel, RedisChannel.PatternMode.Literal);
-                Refresh(seconds);
-            }
-        }
-        
-        public void AddOrRefresh(Guid hostId, int seconds, string channel)
+        public void AddOrRefresh(Guid hostId, int seconds, string channel, out Guid virtualHostSettingId)
         {
             lock (hosts)
             {
@@ -38,7 +17,33 @@ namespace SecretNest.RemoteHub
                 }
                 else
                 {
-                    hosts.Add(hostId, new Entity(seconds, channel));
+                    entity = new HostEntity(seconds, channel);
+                    hosts.Add(hostId, entity);
+                }
+                virtualHostSettingId = entity.VirtualHostSettingId;
+            }
+        }
+
+        public void ClearVirtualHosts(Guid hostId)
+        {
+            lock (hosts)
+            {
+                if (hosts.TryGetValue(hostId, out var record))
+                {
+                    record.ClearVirtualHosts(out var affectedVirtualHosts);
+                    RefreshVirtualHost(affectedVirtualHosts);
+                }
+            }
+        }
+
+        public void ApplyVirtualHosts(Guid hostId, Guid settingId, string value)
+        {
+            lock (hosts)
+            {
+                if (hosts.TryGetValue(hostId, out var record))
+                {
+                    record.ApplyVirtualHosts(settingId, value, out var affectedVirtualHosts);
+                    RefreshVirtualHost(affectedVirtualHosts);
                 }
             }
         }
@@ -47,7 +52,28 @@ namespace SecretNest.RemoteHub
         {
             lock (hosts)
             {
-                hosts.Remove(hostId);
+                if (hosts.TryGetValue(hostId, out var record))
+                {
+                    hosts.Remove(hostId);
+                    RefreshVirtualHost(record.VirtualHosts.Keys);
+                }
+            }
+        }
+
+        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId)
+        {
+            lock (virtuals)
+            {
+                if (virtuals.TryGetValue(virtualHostId, out var percentageDistributer))
+                {
+                    hostId = percentageDistributer.GetOne();
+                    return true;
+                }
+                else
+                {
+                    hostId = Guid.Empty;
+                    return false;
+                }
             }
         }
 
@@ -65,6 +91,7 @@ namespace SecretNest.RemoteHub
                     else
                     {
                         hosts.Remove(hostId);
+                        RefreshVirtualHost(record.VirtualHosts.Keys);
                         channel = default(RedisChannel);
                         return false;
                     }
@@ -77,27 +104,32 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        public List<Tuple<Guid, RedisChannel>> GetAllHosts()
+        List<Tuple<Guid, HostEntity>> GetAllHosts()
         {
-            List<Tuple<Guid, RedisChannel>> result = new List<Tuple<Guid, RedisChannel>>();
-            List<Guid> toRemove = new List<Guid>();
+            List<Tuple<Guid, HostEntity>> result = new List<Tuple<Guid, HostEntity>>();
+            List<Guid> hostToRemove = new List<Guid>();
+            HashSet<Guid> virtualToRefresh = new HashSet<Guid>();
             lock (hosts)
             {
                 foreach(var item in hosts)
                 {
                     if (item.Value.IsTimeValid)
                     {
-                        result.Add(new Tuple<Guid, RedisChannel>(item.Key, item.Value.Channel));
+                        result.Add(new Tuple<Guid, HostEntity>(item.Key, item.Value));
                     }
                     else
                     {
-                        toRemove.Add(item.Key);
+                        foreach (var key in item.Value.VirtualHosts.Keys)
+                            virtualToRefresh.Add(key);
+                        hostToRemove.Add(item.Key);
                     }
                 }
-                foreach(var key in toRemove)
+                foreach(var key in hostToRemove)
                 {
                     hosts.Remove(key);
                 }
+                if (virtualToRefresh.Count > 0)
+                    RefreshVirtualHost(virtualToRefresh);
             }
             return result;
         }

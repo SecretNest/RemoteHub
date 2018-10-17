@@ -14,7 +14,9 @@ namespace SecretNest.RemoteHub
         IDatabase redisDatabase;
         ISubscriber publisher;
         ISubscriber subscriber;
+        readonly string privateChannelName;
         string messageTextRefresh;
+        string messageTextRefreshFull;
         readonly string messageTextShutdown;
         const string messageTextHello = "v1:Hello";
         TimeSpan hostTimeToLive = new TimeSpan(0, 0, 30);
@@ -28,9 +30,9 @@ namespace SecretNest.RemoteHub
         {
             this.hostKeyPrefix = hostKeyPrefix;
             clientIdText = clientId.ToString("N");
-            messageTextRefresh = string.Format("v1:Refresh:{0}:{1}:{2}{3}", clientIdText, (int)hostTimeToLive.TotalSeconds, privateChannelNamePrefix, clientIdText);
+            privateChannelName = privateChannelNamePrefix + clientIdText;
             messageTextShutdown = "v1:Shutdown:" + clientIdText;
-
+            BuildMessageTextRefresh();
             redisConnection = ConnectionMultiplexer.Connect(redisConfiguration);
             redisDatabase = redisConnection.GetDatabase(redisDb);
             mainChannel = new RedisChannel(mainChannelName, RedisChannel.PatternMode.Literal);
@@ -54,9 +56,43 @@ namespace SecretNest.RemoteHub
                     hostTimeToLive = new TimeSpan(0, 0, 5);
                 else
                     hostTimeToLive = value;
-                messageTextRefresh = string.Format("v1:Refresh:{0}:{1}", clientIdText, (int)hostTimeToLive.TotalSeconds);
+                BuildMessageTextRefresh();
                 hostRefreshingTime = new TimeSpan(hostTimeToLive.Ticks / 2);
             }
+        }
+
+        string currentVirtualHostSettingId;
+        string currentVirtualHostSetting;
+        bool needRefreshFull = false;
+
+        public void ApplyVirtualHosts(params KeyValuePair<Guid, VirtualHostSetting>[] settings)
+        {
+            if (settings == null || settings.Length == 0)
+            {
+                currentVirtualHostSettingId = Guid.Empty.ToString("N");
+                currentVirtualHostSetting = currentVirtualHostSettingId;
+            }
+            else
+            {
+                currentVirtualHostSettingId = Guid.NewGuid().ToString("N");
+                currentVirtualHostSetting = currentVirtualHostSettingId + ":"
+                    + string.Join(",", Array.ConvertAll(settings, i => string.Format("{0:N}-{1}-{2}", i.Key, i.Value.Priority, i.Value.Weight)));
+            }
+
+            BuildMessageTextRefresh();
+
+            needRefreshFull = true;
+            var old = updatingRedisWaitingCancellation;
+            updatingRedisWaitingCancellation = new CancellationTokenSource();
+            old.Cancel();
+        }
+
+        void BuildMessageTextRefresh()
+        {
+            messageTextRefreshFull = string.Format("v1:RefreshFull:{0}:{1}:{2}:{3}",
+                clientIdText, (int)hostTimeToLive.TotalSeconds, privateChannelName, currentVirtualHostSetting);
+            messageTextRefresh = string.Format("v1:Refresh:{0}:{1}:{2}:{3}",
+                clientIdText, (int)hostTimeToLive.TotalSeconds, privateChannelName, currentVirtualHostSettingId);
         }
 
         void OnMainChannelReceived(RedisChannel channel, RedisValue value)
@@ -69,13 +105,56 @@ namespace SecretNest.RemoteHub
                     var clientId = Guid.Parse(texts[2]);
                     var seconds = int.Parse(texts[3]);
                     var channelName = texts[4];
-                    hostTable.AddOrRefresh(clientId, seconds, channelName);
+                    hostTable.AddOrRefresh(clientId, seconds, channelName, out var currentVirtualHostSettingId);
+                    var virtualHostId = Guid.Parse(texts[5]);
+                    if (currentVirtualHostSettingId != virtualHostId)
+                    {
+                        if (virtualHostId == Guid.Empty)
+                        {
+                            hostTable.ClearVirtualHosts(clientId);
+                        }
+                        else
+                        {
+                            publisher.PublishAsync(mainChannel, "v1:NeedRefreshFull:" + texts[2]);
+                        }
+                    }
+                }
+                else if (texts[2] == "RefreshFull")
+                {
+                    var clientId = Guid.Parse(texts[2]);
+                    var seconds = int.Parse(texts[3]);
+                    var channelName = texts[4];
+                    hostTable.AddOrRefresh(clientId, seconds, channelName, out var currentVirtualHostSettingId);
+                    var virtualHostId = Guid.Parse(texts[5]);
+                    if (currentVirtualHostSettingId != virtualHostId)
+                    {
+                        if (virtualHostId == Guid.Empty)
+                        {
+                            hostTable.ClearVirtualHosts(clientId);
+                        }
+                        else
+                        {
+                            hostTable.ApplyVirtualHosts(clientId, virtualHostId, texts[6]);
+                        }
+
+                    }
                 }
                 else if (texts[1] == "Hello")
                 {
+                    needRefreshFull = true;
                     var old = updatingRedisWaitingCancellation;
                     updatingRedisWaitingCancellation = new CancellationTokenSource();
                     old.Cancel();
+                }
+                else if (texts[1] == "NeedRefreshFull")
+                {
+                    if (clientIdText == texts[2])
+                    {
+                        needRefreshFull = true;
+                        var old = updatingRedisWaitingCancellation;
+                        updatingRedisWaitingCancellation = new CancellationTokenSource();
+                        old.Cancel();
+                    }
                 }
                 else if (texts[1] == "Shutdown")
                 {
@@ -94,14 +173,19 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        public bool TryResolve(Guid targetId, out RedisChannel channel)
+        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId)
         {
-            return hostTable.TryGet(targetId, out channel);
+            return hostTable.TryResolveVirtualHost(virtualHostId, out hostId);
         }
 
-        public async Task<bool> SendMessage(Guid targetId, T message)
+        public bool TryResolve(Guid hostId, out RedisChannel channel)
         {
-            if (hostTable.TryGet(targetId, out RedisChannel channel))
+            return hostTable.TryGet(hostId, out channel);
+        }
+
+        public async Task<bool> SendMessage(Guid targetHostId, T message)
+        {
+            if (hostTable.TryGet(targetHostId, out var channel))
             {
                 await SendMessage(channel, message);
                 return true;
@@ -182,7 +266,15 @@ namespace SecretNest.RemoteHub
             while (!updatingToken.IsCancellationRequested)
             {
                 nextRefresh += hostRefreshingTime;
-                await publisher.PublishAsync(mainChannel, messageTextRefresh);
+                if (needRefreshFull)
+                {
+                    needRefreshFull = false;
+                    await publisher.PublishAsync(mainChannel, messageTextRefreshFull);
+                }
+                else
+                {
+                    await publisher.PublishAsync(mainChannel, messageTextRefresh);
+                }
 
                 TimeSpan waiting = nextRefresh - DateTime.Now;
                 if (waiting > TimeSpan.Zero)
