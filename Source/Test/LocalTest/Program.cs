@@ -33,6 +33,12 @@ namespace LocalTest
             client2.Start();
             client3.Start();
 
+            Guid virtualHostId = Guid.NewGuid();
+            client1.ApplyVirtualHosts(new KeyValuePair<Guid, VirtualHostSetting>(virtualHostId, new VirtualHostSetting(0, 5)));
+            client2.ApplyVirtualHosts(new KeyValuePair<Guid, VirtualHostSetting>(virtualHostId, new VirtualHostSetting(0, 3)));
+            client3.ApplyVirtualHosts(new KeyValuePair<Guid, VirtualHostSetting>(virtualHostId, new VirtualHostSetting(0, 2)));
+
+
             bool shouldContinue = true;
             while (shouldContinue)
             {
@@ -46,6 +52,7 @@ namespace LocalTest
 7: Send from client 3 to client 1
 8: Send from client 3 to client 2
 9: Send from client 3 to client 3
+0: Send from client 1 to virtual host (1:50%/2:30%/3:20%)
 Other: Shutdown.");
 
                 var key = Console.ReadKey(true);
@@ -61,22 +68,28 @@ Other: Shutdown.");
                         client1.SendMessage(client3Id, "From 1 to 3");
                         break;
                     case ConsoleKey.D4:
-                        client1.SendMessage(client1Id, "From 2 to 1");
+                        client2.SendMessage(client1Id, "From 2 to 1");
                         break;
                     case ConsoleKey.D5:
-                        client1.SendMessage(client2Id, "From 2 to 2");
+                        client2.SendMessage(client2Id, "From 2 to 2");
                         break;
                     case ConsoleKey.D6:
-                        client1.SendMessage(client3Id, "From 2 to 3");
+                        client2.SendMessage(client3Id, "From 2 to 3");
                         break;
                     case ConsoleKey.D7:
-                        client1.SendMessage(client1Id, "From 3 to 1");
+                        client3.SendMessage(client1Id, "From 3 to 1");
                         break;
                     case ConsoleKey.D8:
-                        client1.SendMessage(client2Id, "From 3 to 2");
+                        client3.SendMessage(client2Id, "From 3 to 2");
                         break;
                     case ConsoleKey.D9:
-                        client1.SendMessage(client3Id, "From 3 to 3");
+                        client3.SendMessage(client3Id, "From 3 to 3");
+                        break;
+                    case ConsoleKey.D0:
+                        if (client1.TryResolveVirtualHost(virtualHostId, out var hostId))
+                        {
+                            client1.SendMessage(hostId, "From 1 to virtual host (1:50%/2:30%/3:20%)");
+                        }
                         break;
                     default:
                         shouldContinue = false;
