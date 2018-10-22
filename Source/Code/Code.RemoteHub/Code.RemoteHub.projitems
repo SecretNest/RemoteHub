@@ -12,7 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)HostTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)HostTable.VirtualEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PercentageDistributer.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RedisClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteHub.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VirtualHostSetting.cs" />
   </ItemGroup>
   <ItemGroup>

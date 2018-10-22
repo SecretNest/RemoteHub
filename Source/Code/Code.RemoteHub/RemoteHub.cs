@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SecretNest.RemoteHub
 {
-    abstract class RedisClient<T> : IDisposable
+    public abstract class RemoteHub<T> : IDisposable
     {
         readonly ConnectionMultiplexer redisConnection;
         RedisChannel mainChannel, privateChannel;
@@ -23,11 +23,15 @@ namespace SecretNest.RemoteHub
         TimeSpan hostRefreshingTime = new TimeSpan(0, 0, 15);
         readonly string clientIdText;
         readonly string hostKeyPrefix;
+        Guid clientId;
 
         HostTable hostTable = new HostTable();
 
-        protected RedisClient(Guid clientId, string redisConfiguration, string mainChannelName, string hostKeyPrefix, string privateChannelNamePrefix, int redisDb)
+        public Guid ClientId => clientId;
+
+        protected RemoteHub(Guid clientId, string redisConfiguration, string mainChannelName, string hostKeyPrefix, string privateChannelNamePrefix, int redisDb)
         {
+            this.clientId = clientId;
             this.hostKeyPrefix = hostKeyPrefix;
             clientIdText = clientId.ToString("N");
             privateChannelName = privateChannelNamePrefix + clientIdText;
@@ -106,37 +110,38 @@ namespace SecretNest.RemoteHub
                     var seconds = int.Parse(texts[3]);
                     var channelName = texts[4];
                     hostTable.AddOrRefresh(clientId, seconds, channelName, out var currentVirtualHostSettingId);
-                    var virtualHostId = Guid.Parse(texts[5]);
-                    if (currentVirtualHostSettingId != virtualHostId)
+                    if (texts[5] != "")
                     {
-                        if (virtualHostId == Guid.Empty)
-                        {
-                            hostTable.ClearVirtualHosts(clientId);
-                        }
-                        else
+                        Guid virtualHostId = Guid.Parse(texts[5]);
+                        if (currentVirtualHostSettingId != virtualHostId)
                         {
                             publisher.PublishAsync(mainChannel, "v1:NeedRefreshFull:" + texts[2]);
                         }
                     }
+                    else
+                    {
+                        if (currentVirtualHostSettingId != Guid.Empty)
+                            hostTable.ClearVirtualHosts(clientId);
+                    }
                 }
-                else if (texts[2] == "RefreshFull")
+                else if (texts[1] == "RefreshFull")
                 {
                     var clientId = Guid.Parse(texts[2]);
                     var seconds = int.Parse(texts[3]);
                     var channelName = texts[4];
                     hostTable.AddOrRefresh(clientId, seconds, channelName, out var currentVirtualHostSettingId);
-                    var virtualHostId = Guid.Parse(texts[5]);
-                    if (currentVirtualHostSettingId != virtualHostId)
+                    if (texts[5] != "")
                     {
-                        if (virtualHostId == Guid.Empty)
-                        {
-                            hostTable.ClearVirtualHosts(clientId);
-                        }
-                        else
+                        Guid virtualHostId = Guid.Parse(texts[5]);
+                        if (currentVirtualHostSettingId != virtualHostId)
                         {
                             hostTable.ApplyVirtualHosts(clientId, virtualHostId, texts[6]);
                         }
-
+                    }
+                    else
+                    {
+                        if (currentVirtualHostSettingId != Guid.Empty)
+                            hostTable.ClearVirtualHosts(clientId);
                     }
                 }
                 else if (texts[1] == "Hello")
@@ -169,7 +174,7 @@ namespace SecretNest.RemoteHub
             if (onMessageReceivedCallback != null)
             {
                 T message = ConvertFromRedisValue(value);
-                onMessageReceivedCallback(message);
+                onMessageReceivedCallback(clientId, message);
             }
         }
 
@@ -183,11 +188,11 @@ namespace SecretNest.RemoteHub
             return hostTable.TryGet(hostId, out channel);
         }
 
-        public async Task<bool> SendMessage(Guid targetHostId, T message)
+        public bool SendMessage(Guid targetHostId, T message)
         {
             if (hostTable.TryGet(targetHostId, out var channel))
             {
-                await SendMessage(channel, message);
+                SendMessage(channel, message);
                 return true;
             }
             else
@@ -196,9 +201,33 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        public async Task SendMessage(string targetChannel, T message)
+        public async Task<bool> SendMessageAsync(Guid targetHostId, T message)
         {
-            await SendMessage(new RedisChannel(targetChannel, RedisChannel.PatternMode.Literal), message);
+            if (hostTable.TryGet(targetHostId, out var channel))
+            {
+                await SendMessageAsync(channel, message);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public void SendMessage(string targetChannel, T message)
+        {
+            SendMessage(new RedisChannel(targetChannel, RedisChannel.PatternMode.Literal), message);
+        }
+
+        public async Task SendMessageAsync(string targetChannel, T message)
+        {
+            await SendMessageAsync(new RedisChannel(targetChannel, RedisChannel.PatternMode.Literal), message);
+        }
+
+        public void SendMessage(RedisChannel channel, T message)
+        {
+            RedisValue value = ConvertToRedisValue(message);
+            publisher.Publish(channel, value);
         }
 
         public async Task SendMessageAsync(RedisChannel channel, T message)
@@ -342,11 +371,11 @@ namespace SecretNest.RemoteHub
         #endregion
     }
 
-    public delegate void OnMessageReceivedCallback<T>(T message); 
+    public delegate void OnMessageReceivedCallback<T>(Guid clientId, T message);
 
-    class RedisClientOfString : RedisClient<string>
+    public class RemoteHubOfString : RemoteHub<string>
     {
-        public RedisClientOfString(Guid clientId, string redisConfiguration, string mainChannelName, string hostKeyPrefix, string privateChannelNamePrefix, int redisDb)
+        public RemoteHubOfString(Guid clientId, string redisConfiguration, string mainChannelName, string hostKeyPrefix, string privateChannelNamePrefix, int redisDb)
             : base(clientId, redisConfiguration, mainChannelName, hostKeyPrefix, privateChannelNamePrefix, redisDb)
         { }
 
@@ -361,9 +390,9 @@ namespace SecretNest.RemoteHub
         }
     }
 
-    class RedisClientOfBinary : RedisClient<byte[]>
+    public class RemoteHubOfBinary : RemoteHub<byte[]>
     {
-        public RedisClientOfBinary(Guid clientId, string redisConfiguration, string mainChannelName, string hostKeyPrefix, string privateChannelNamePrefix, int redisDb)
+        public RemoteHubOfBinary(Guid clientId, string redisConfiguration, string mainChannelName, string hostKeyPrefix, string privateChannelNamePrefix, int redisDb)
             : base(clientId, redisConfiguration, mainChannelName, hostKeyPrefix, privateChannelNamePrefix, redisDb)
         { }
 
