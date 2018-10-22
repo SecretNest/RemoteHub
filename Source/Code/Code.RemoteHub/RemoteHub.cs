@@ -86,9 +86,12 @@ namespace SecretNest.RemoteHub
             BuildMessageTextRefresh();
 
             needRefreshFull = true;
-            var old = updatingRedisWaitingCancellation;
-            updatingRedisWaitingCancellation = new CancellationTokenSource();
-            old.Cancel();
+            if (updatingRedisWaitingCancellation != null)
+            {
+                var old = updatingRedisWaitingCancellation;
+                updatingRedisWaitingCancellation = new CancellationTokenSource();
+                old.Cancel();
+            }
         }
 
         void BuildMessageTextRefresh()
