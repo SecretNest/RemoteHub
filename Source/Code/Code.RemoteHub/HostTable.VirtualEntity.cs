@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace SecretNest.RemoteHub
 {
@@ -10,12 +11,23 @@ namespace SecretNest.RemoteHub
 
         public void RefreshVirtualHost(IEnumerable<Guid> virtualHosts)
         {
+            lock (hosts)
+            {
+                var allHosts = hosts;
+                RefreshVirtualHost(virtualHosts, allHosts);
+            }
+        }
+
+        void RefreshVirtualHost(IEnumerable<Guid> virtualHosts, IEnumerable<KeyValuePair<Guid, HostEntity>> allHosts)
+        {
             lock (virtuals)
             {
-                lock (hosts)
+                if (!allHosts.Any())
                 {
-                    var allHosts = GetAllHosts();
-
+                    virtuals.Clear();
+                }
+                else
+                {
                     foreach (var virtualHost in virtualHosts)
                     {
                         Dictionary<Guid, int> realHosts = null;
@@ -23,17 +35,17 @@ namespace SecretNest.RemoteHub
 
                         foreach (var host in allHosts)
                         {
-                            if (host.Item2.VirtualHosts.TryGetValue(virtualHost, out var selected))
+                            if (host.Value.VirtualHosts.TryGetValue(virtualHost, out var selected))
                             {
                                 if (realHosts == null || selected.Priority > priority)
                                 {
                                     priority = selected.Priority;
                                     realHosts = new Dictionary<Guid, int>();
-                                    realHosts.Add(host.Item1, selected.Weight);
+                                    realHosts.Add(host.Key, selected.Weight);
                                 }
                                 else if (selected.Priority == priority)
                                 {
-                                    realHosts.Add(host.Item1, selected.Weight);
+                                    realHosts.Add(host.Key, selected.Weight);
                                 }
                             }
                         }

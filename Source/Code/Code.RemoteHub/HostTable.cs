@@ -104,9 +104,9 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        List<Tuple<Guid, HostEntity>> GetAllHosts()
+        List<KeyValuePair<Guid, HostEntity>> GetAllHosts()
         {
-            List<Tuple<Guid, HostEntity>> result = new List<Tuple<Guid, HostEntity>>();
+            List<KeyValuePair<Guid, HostEntity>> result = new List<KeyValuePair<Guid, HostEntity>>();
             List<Guid> hostToRemove = new List<Guid>();
             HashSet<Guid> virtualToRefresh = new HashSet<Guid>();
             lock (hosts)
@@ -115,7 +115,7 @@ namespace SecretNest.RemoteHub
                 {
                     if (item.Value.IsTimeValid)
                     {
-                        result.Add(new Tuple<Guid, HostEntity>(item.Key, item.Value));
+                        result.Add(item);
                     }
                     else
                     {
@@ -129,7 +129,7 @@ namespace SecretNest.RemoteHub
                     hosts.Remove(key);
                 }
                 if (virtualToRefresh.Count > 0)
-                    RefreshVirtualHost(virtualToRefresh);
+                    RefreshVirtualHost(virtualToRefresh, result);
             }
             return result;
         }

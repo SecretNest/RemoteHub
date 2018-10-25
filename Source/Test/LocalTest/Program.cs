@@ -17,12 +17,10 @@ namespace LocalTest
             Guid client1Id = Guid.NewGuid();
             Guid client2Id = Guid.NewGuid();
             Guid client3Id = Guid.NewGuid();
-            RemoteHubOfString client1 = new RemoteHubOfString(client1Id, connectionString, mainChannel, hostKeyPrefix, privateChannelPrefix, 0);
-            RemoteHubOfString client2 = new RemoteHubOfString(client2Id, connectionString, mainChannel, hostKeyPrefix, privateChannelPrefix, 0);
-            RemoteHubOfString client3 = new RemoteHubOfString(client3Id, connectionString, mainChannel, hostKeyPrefix, privateChannelPrefix, 0);
-            client1.OnMessageReceivedCallback = Received;
-            client2.OnMessageReceivedCallback = Received;
-            client3.OnMessageReceivedCallback = Received;
+            RemoteHub<string> client1 = new RemoteHub<string>(client1Id, connectionString, Received);
+            RemoteHub<string> client2 = new RemoteHub<string>(client2Id, connectionString, Received);
+            RemoteHub<string> client3 = new RemoteHub<string>(client3Id, connectionString, Received);
+
 
             //Console.WriteLine(string.Format("ClientId: {0} {1} {2}", client1Id, client2Id, client3Id));
             clientNames.Add(client1Id, "Client1");
