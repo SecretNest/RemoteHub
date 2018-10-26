@@ -3,11 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2046
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0906CFD6-9A98-499E-A8D4-9EF98CEFCF35}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\RemoteAgency\Source\.gitattributes = ..\..\RemoteAgency\Source\.gitattributes
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code", "Code", "{36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Release", "Release", "{189A414D-B434-442A-AD84-E6CA16C00C30}"
@@ -18,7 +13,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub", "Code\Code
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{BD94B882-AC56-4132-BFC6-B987EC7A65B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LocalTest", "Test\LocalTest\LocalTest.csproj", "{EE4A702F-8591-4D72-983D-789AFECB8ECA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalTest", "Test\LocalTest\LocalTest.csproj", "{EE4A702F-8591-4D72-983D-789AFECB8ECA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SHFB", "SHFB", "{E97F3D68-54B6-4CE8-B49C-47DAB9726868}"
+EndProject
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Documentation", "SHFB\Documentation\Documentation.shfbproj", "{139A60AC-5D39-4DD1-8EFC-ABE4CB52541F}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -37,6 +36,10 @@ Global
 		{EE4A702F-8591-4D72-983D-789AFECB8ECA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE4A702F-8591-4D72-983D-789AFECB8ECA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE4A702F-8591-4D72-983D-789AFECB8ECA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{139A60AC-5D39-4DD1-8EFC-ABE4CB52541F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{139A60AC-5D39-4DD1-8EFC-ABE4CB52541F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{139A60AC-5D39-4DD1-8EFC-ABE4CB52541F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{139A60AC-5D39-4DD1-8EFC-ABE4CB52541F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +48,7 @@ Global
 		{1CBDC9C4-FB40-4A55-B78C-FA823DB66CC7} = {189A414D-B434-442A-AD84-E6CA16C00C30}
 		{9FDA9838-335F-4CF1-9678-28E3B88CCDFE} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
 		{EE4A702F-8591-4D72-983D-789AFECB8ECA} = {BD94B882-AC56-4132-BFC6-B987EC7A65B8}
+		{139A60AC-5D39-4DD1-8EFC-ABE4CB52541F} = {E97F3D68-54B6-4CE8-B49C-47DAB9726868}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E700BB2-4439-4C11-8DCD-41829F557945}
