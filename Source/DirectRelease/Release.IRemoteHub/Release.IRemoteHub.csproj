@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
+    <RootNamespace>SecretNest.RemoteHub</RootNamespace>
+  </PropertyGroup>
+
+  <Import Project="..\..\Code\Code.IRemoteHub\Code.IRemoteHub.projitems" Label="Shared" />
+
+</Project>

@@ -13,12 +13,12 @@ namespace SecretNest.RemoteHub
     /// Handles the host state and message transportation.
     /// </summary>
     /// <typeparam name="T">Type of the message data. Only string and byte array (byte[]) is acceptable.</typeparam>
-    public class RemoteHub<T> : IDisposable
+    public class RemoteHub<T> : IDisposable, IRemoteHubRedis<T>
     {
         RedisClient<T> redisClient;
 
         /// <summary>
-        /// Initiliazes an instance of RemoteHub.
+        /// Initializes an instance of RemoteHub.
         /// </summary>
         /// <param name="clientId">Client id of the local RemoteHub.</param>
         /// <param name="redisConfiguration">The string configuration to use for Redis multiplexer.</param>
@@ -26,7 +26,7 @@ namespace SecretNest.RemoteHub
         /// <param name="mainChannelName">Main channel name. Default value is "RemoteHub".</param>
         /// <param name="hostKeyPrefix">Prefix in naming of the host key. Default value is "RemoteHub_". Cannot contains semicolons.</param>
         /// <param name="privateChannelNamePrefix">Prefix in naming of the private channel. Default value is "RemoteHubPrivate_".</param>
-        /// <param name="redisDb">The id to get a database for. Used in getting redis database. Default value is 0.</param>
+        /// <param name="redisDb">The id to get a database for. Used in getting Redis database. Default value is 0.</param>
         public RemoteHub(Guid clientId, string redisConfiguration,
             OnMessageReceivedCallback<T> onMessageReceivedCallback,
             string mainChannelName = "RemoteHub", string hostKeyPrefix = "RemoteHub_",
@@ -61,20 +61,14 @@ namespace SecretNest.RemoteHub
             redisClient.RestartConnection(true);
         }
 
-        /// <summary>
-        /// Occurs while RedisConnectionException is thrown in main channel operating. Will not be raised for private channel operating.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler RedisServerConnectionErrorOccurred;
 
-        /// <summary>
-        /// Gets the client id.
-        /// </summary>
+        /// <inheritdoc/>
+
         public Guid ClientId => redisClient.ClientId;
 
-        /// <summary>
-        /// Restarts connection to Redis server.
-        /// </summary>
-        /// <param name="keepConnectionState">Start main channel processing if it's started.</param>
+        /// <inheritdoc/>
         public void RestartConnection(bool keepConnectionState = false)
         {
             redisClient.RestartConnection(keepConnectionState);
@@ -95,26 +89,13 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        /// <summary>
-        /// Applies the virtual hosts setting for current client.
-        /// </summary>
-        /// <param name="settings">Virtual host settings. Key is virtual host id; Value is setting related to the virtual host specified.</param>
+        /// <inheritdoc/>
         public void ApplyVirtualHosts(params KeyValuePair<Guid, VirtualHostSetting>[] settings) => redisClient.ApplyVirtualHosts(settings);
 
-        /// <summary>
-        /// Tries to resolve virtual host by id to host id.
-        /// </summary>
-        /// <param name="virtualHostId">Virtual host id.</param>
-        /// <param name="hostId">Host id.</param>
-        /// <returns>Whether the resolving is succeeded or not.</returns>
+        /// <inheritdoc/>
         public bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId) => redisClient.TryResolveVirtualHost(virtualHostId, out hostId);
 
-        /// <summary>
-        /// Tries to resolve host id to private channel.
-        /// </summary>
-        /// <param name="hostId">Host id.</param>
-        /// <param name="channel">Private channel for Redis.</param>
-        /// <returns>Whether the resolving is succeeded or not.</returns>
+        /// <inheritdoc/>
         public bool TryResolve(Guid hostId, out RedisChannel channel) => redisClient.TryResolve(hostId, out channel);
 
         /// <summary>
@@ -152,26 +133,13 @@ namespace SecretNest.RemoteHub
         /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
         public async Task SendMessageAsync(string targetChannel, T message) => await redisClient.SendMessageAsync(targetChannel, message);
 
-        /// <summary>
-        /// Sends a message to the private channel specified.
-        /// </summary>
-        /// <param name="channel">Private channel of Redis.</param>
-        /// <param name="message">Message to be sent.</param>
-        /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
+        /// <inheritdoc/>
         public void SendMessage(RedisChannel channel, T message) => redisClient.SendMessage(channel, message);
 
-        /// <summary>
-        /// Creates a task that sends a message to the private channel specified.
-        /// </summary>
-        /// <param name="channel">Private channel of Redis.</param>
-        /// <param name="message">Message to be sent.</param>
-        /// <returns>A task that represents the sending job.</returns>
-        /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
+        /// <inheritdoc/>
         public async Task SendMessageAsync(RedisChannel channel, T message) => await redisClient.SendMessageAsync(channel, message);
 
-        /// <summary>
-        /// Gets or sets the callback to be used for dealing received private message.
-        /// </summary>
+        /// <inheritdoc/>
         public OnMessageReceivedCallback<T> OnMessageReceivedCallback
         {
             get
@@ -184,14 +152,10 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        /// <summary>
-        /// Starts main channel processing, including keeping server status updated and alive, syncing virtual host settings, etc.
-        /// </summary>
+        /// <inheritdoc/>
         public void Start() => redisClient.Start();
 
-        /// <summary>
-        /// Stops main channel processing. Private channel sending and receiving will not be affected but the resolving functions cannot be executed.
-        /// </summary>
+        /// <inheritdoc/>
         public void Shutdown() => redisClient.Shutdown();
 
 
@@ -210,7 +174,7 @@ namespace SecretNest.RemoteHub
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
                 // TODO: set large fields to null.
-
+                
                 disposedValue = true;
             }
         }

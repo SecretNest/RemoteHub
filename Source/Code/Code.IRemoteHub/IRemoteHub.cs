@@ -1,0 +1,91 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SecretNest.RemoteHub
+{
+
+    /// <summary>
+    /// Represents the methods, properties and event of RemoteHub.
+    /// </summary>
+    /// <typeparam name="T">Type of the message data.</typeparam>
+    public interface IRemoteHub<T>
+    {
+        /// <summary>
+        /// Occurs while RedisConnectionException is thrown in main channel operating. Will not be raised for private channel operating.
+        /// </summary>
+        event EventHandler RedisServerConnectionErrorOccurred;
+
+        /// <summary>
+        /// Gets the client id.
+        /// </summary>
+        Guid ClientId { get; }
+
+        /// <summary>
+        /// Restarts connection to Redis server.
+        /// </summary>
+        /// <param name="keepConnectionState">Start main channel processing if it's started.</param>
+        void RestartConnection(bool keepConnectionState = false);
+
+        /// <summary>
+        /// Applies the virtual hosts setting for current client.
+        /// </summary>
+        /// <param name="settings">Virtual host settings. Key is virtual host id; Value is setting related to the virtual host specified.</param>
+        void ApplyVirtualHosts(params KeyValuePair<Guid, VirtualHostSetting>[] settings);
+
+        /// <summary>
+        /// Tries to resolve virtual host by id to host id.
+        /// </summary>
+        /// <param name="virtualHostId">Virtual host id.</param>
+        /// <param name="hostId">Host id.</param>
+        /// <returns>Whether the resolving is succeeded or not.</returns>
+        bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId);
+
+        /// <summary>
+        /// Sends a message to the target host specified by id.
+        /// </summary>
+        /// <param name="targetHostId">Target host id.</param>
+        /// <param name="message">Message to be sent.</param>
+        /// <returns>Whether the resolving from target host id is succeeded or not.</returns>
+        bool SendMessage(Guid targetHostId, T message);
+
+        /// <summary>
+        /// Creates a task that sends a message to the target host specified by id.
+        /// </summary>
+        /// <param name="targetHostId"></param>
+        /// <param name="message"></param>
+        /// <returns>A task that represents the sending job.</returns>
+        Task<bool> SendMessageAsync(Guid targetHostId, T message);
+
+        /// <summary>
+        /// Sends a message to the target host specified by private channel name.
+        /// </summary>
+        /// <param name="targetChannel">Name of the private channel of the target host.</param>
+        /// <param name="message">Message to be sent.</param>
+        void SendMessage(string targetChannel, T message);
+
+        /// <summary>
+        /// Creates a task that sends a message to the target host specified by private channel name.
+        /// </summary>
+        /// <param name="targetChannel">Name of the private channel of the target host.</param>
+        /// <param name="message">Message to be sent.</param>
+        /// <returns>A task that represents the sending job.</returns>
+        Task SendMessageAsync(string targetChannel, T message);
+
+        /// <summary>
+        /// Gets or sets the callback to be used for dealing received private message.
+        /// </summary>
+        OnMessageReceivedCallback<T> OnMessageReceivedCallback { get; set; }
+
+        /// <summary>
+        /// Starts main channel processing, including keeping server status updated and alive, syncing virtual host settings, etc.
+        /// </summary>
+        void Start();
+
+        /// <summary>
+        /// Stops main channel processing. Private channel sending and receiving will not be affected but the resolving functions cannot be executed.
+        /// </summary>
+        void Shutdown();
+    }
+}

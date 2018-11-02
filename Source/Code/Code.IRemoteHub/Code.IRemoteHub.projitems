@@ -3,12 +3,14 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>a18330f8-39bd-4671-b1ee-07e4a019d895</SharedGUID>
+    <SharedGUID>d73c55f9-1cc2-4e53-9bed-3fa64dda3d4d</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>SecretNest.RemoteHub</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)MultiHub.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Delegates.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IRemoteHub.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)VirtualHostSetting.cs" />
   </ItemGroup>
 </Project>
