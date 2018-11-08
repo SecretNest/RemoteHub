@@ -7,12 +7,10 @@ using System.Threading.Tasks;
 namespace SecretNest.RemoteHub
 {
     /// <summary>
-    /// Represents the methods, properties and event of RemoteHub, based on Redis database.
+    /// Represents the base, non-generic version of the generic IRemoteHubRedis.
     /// </summary>
-    /// <typeparam name="T">Type of the message data.</typeparam>
-    public interface IRemoteHubRedis<T> : IRemoteHub<T>
+    public interface IRemoteHubRedis : IRemoteHub
     {
-
         /// <summary>
         /// Tries to resolve host id to private channel.
         /// </summary>
@@ -20,7 +18,14 @@ namespace SecretNest.RemoteHub
         /// <param name="channel">Private channel for Redis.</param>
         /// <returns>Whether the resolving is succeeded or not.</returns>
         bool TryResolve(Guid hostId, out RedisChannel channel);
+    }
 
+    /// <summary>
+    /// Represents the methods, properties and event of RemoteHub, based on Redis database.
+    /// </summary>
+    /// <typeparam name="T">Type of the message data.</typeparam>
+    public interface IRemoteHubRedis<T> : IRemoteHubRedis, IRemoteHub<T>
+    {
         /// <summary>
         /// Sends a message to the private channel specified.
         /// </summary>
@@ -37,7 +42,5 @@ namespace SecretNest.RemoteHub
         /// <returns>A task that represents the sending job.</returns>
         /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
         Task SendMessageAsync(RedisChannel channel, T message);
-
-
     }
 }

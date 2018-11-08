@@ -25,11 +25,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.RemoteHub.MultiHub"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.IRemoteHub", "Code\Code.IRemoteHub\Code.IRemoteHub.shproj", "{D73C55F9-1CC2-4E53-9BED-3FA64DDA3D4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Release.IRemoteHub", "DirectRelease\Release.IRemoteHub\Release.IRemoteHub.csproj", "{FECF2661-E31C-4926-81EE-B4307ABCC6F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.IRemoteHub", "DirectRelease\Release.IRemoteHub\Release.IRemoteHub.csproj", "{FECF2661-E31C-4926-81EE-B4307ABCC6F0}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.IRemoteHub.Redis", "Code\Code.IRemoteHub.Redis\Code.IRemoteHub.Redis.shproj", "{9C9729D8-00E9-48CC-94EC-4B5819B08916}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Release.IRemoteHub.Redis", "DirectRelease\Release.IRemoteHub.Redis\Release.IRemoteHub.Redis.csproj", "{343D39FB-36A7-439D-9498-CEDBC35D8094}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.IRemoteHub.Redis", "DirectRelease\Release.IRemoteHub.Redis\Release.IRemoteHub.Redis.csproj", "{343D39FB-36A7-439D-9498-CEDBC35D8094}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

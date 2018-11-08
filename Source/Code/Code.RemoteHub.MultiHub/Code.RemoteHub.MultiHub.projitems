@@ -9,6 +9,9 @@
     <Import_RootNamespace>SecretNest.RemoteHub</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ConnectionErrorOccurredEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Delegates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MultiHub.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteHubCapsule.cs" />
   </ItemGroup>
 </Project>

@@ -57,12 +57,12 @@ namespace SecretNest.RemoteHub
 
         private void RedisClient_RedisServerConnectionErrorOccurred(object sender, EventArgs e)
         {
-            RedisServerConnectionErrorOccurred?.Invoke(this, e);
+            ConnectionErrorOccurred?.Invoke(this, e);
             redisClient.RestartConnection(true);
         }
 
         /// <inheritdoc/>
-        public event EventHandler RedisServerConnectionErrorOccurred;
+        public event EventHandler ConnectionErrorOccurred;
 
         /// <inheritdoc/>
 

@@ -5,17 +5,15 @@ using System.Threading.Tasks;
 
 namespace SecretNest.RemoteHub
 {
-
     /// <summary>
-    /// Represents the methods, properties and event of RemoteHub.
+    /// Represents the base, non-generic version of the generic IRemoteHub.
     /// </summary>
-    /// <typeparam name="T">Type of the message data.</typeparam>
-    public interface IRemoteHub<T>
+    public interface IRemoteHub
     {
         /// <summary>
-        /// Occurs while RedisConnectionException is thrown in main channel operating. Will not be raised for private channel operating.
+        /// Occurs while connection related exception (e.g., RedisConnectionException) is thrown in main channel operating. Will not be raised for private channel operating.
         /// </summary>
-        event EventHandler RedisServerConnectionErrorOccurred;
+        event EventHandler ConnectionErrorOccurred;
 
         /// <summary>
         /// Gets the client id.
@@ -42,6 +40,27 @@ namespace SecretNest.RemoteHub
         /// <returns>Whether the resolving is succeeded or not.</returns>
         bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId);
 
+
+        /// <summary>
+        /// Starts main channel processing, including keeping server status updated and alive, syncing virtual host settings, etc.
+        /// </summary>
+        void Start();
+
+        /// <summary>
+        /// Stops main channel processing. Private channel sending and receiving will not be affected but the resolving functions cannot be executed.
+        /// </summary>
+        void Shutdown();
+    }
+
+
+
+
+    /// <summary>
+    /// Represents the methods, properties and event of RemoteHub.
+    /// </summary>
+    /// <typeparam name="T">Type of the message data.</typeparam>
+    public interface IRemoteHub<T> : IRemoteHub
+    {
         /// <summary>
         /// Sends a message to the target host specified by id.
         /// </summary>
@@ -77,15 +96,5 @@ namespace SecretNest.RemoteHub
         /// Gets or sets the callback to be used for dealing received private message.
         /// </summary>
         OnMessageReceivedCallback<T> OnMessageReceivedCallback { get; set; }
-
-        /// <summary>
-        /// Starts main channel processing, including keeping server status updated and alive, syncing virtual host settings, etc.
-        /// </summary>
-        void Start();
-
-        /// <summary>
-        /// Stops main channel processing. Private channel sending and receiving will not be affected but the resolving functions cannot be executed.
-        /// </summary>
-        void Shutdown();
     }
 }
