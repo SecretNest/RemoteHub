@@ -23,7 +23,7 @@ namespace SecretNest.RemoteHub
         /// <summary>
         /// Restarts connection to Redis server.
         /// </summary>
-        /// <param name="keepConnectionState">Start main channel processing if it's started.</param>
+        /// <param name="keepConnectionState">Start main channel processing if it's started. Default value is false.</param>
         void RestartConnection(bool keepConnectionState = false);
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace SecretNest.RemoteHub
         Task SendMessageAsync(string targetChannel, T message);
 
         /// <summary>
-        /// Gets or sets the callback to be used for dealing received private message.
+        /// Gets or sets the callback to be used for dealing received private messages.
         /// </summary>
         OnMessageReceivedCallback<T> OnMessageReceivedCallback { get; set; }
     }
