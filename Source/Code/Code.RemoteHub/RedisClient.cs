@@ -59,7 +59,7 @@ namespace SecretNest.RemoteHub
 
         public void RestartConnection(bool keepConnectionState)
         {
-            lock (stateLock)
+            lock (startingLock)
             {
                 var connected = updatingRedis != null;
                 if (connected) Shutdown();
@@ -278,24 +278,27 @@ namespace SecretNest.RemoteHub
         CancellationTokenSource updatingRedisCancellation;
         CancellationTokenSource updatingRedisWaitingCancellation;
         Task updatingRedis;
-        object stateLock = new object();
+        ManualResetEventSlim startingLock = new ManualResetEventSlim();
 
         public void Start()
         {
-            lock (stateLock)
+            lock (startingLock)
             {
                 if (updatingRedis != null) return;
 
                 updatingRedisCancellation = new CancellationTokenSource();
                 updatingRedisWaitingCancellation = new CancellationTokenSource();
 
+                startingLock.Reset();
+
                 updatingRedis = UpdateRedisAsync();
+                startingLock.Wait();
             }
         }
 
         public void Shutdown()
         {
-            lock(stateLock)
+            lock(startingLock)
             {
                 if (updatingRedis == null) return;
 
@@ -348,6 +351,9 @@ namespace SecretNest.RemoteHub
             //start
             var updatingToken = updatingRedisCancellation.Token;
             await MainChannelPublishing(messageTextHello, updatingToken);
+
+            //started
+            startingLock.Set();
 
             var waitingToken = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token).Token;
 
