@@ -1,0 +1,25 @@
+﻿Main Channel:
+1st byte: Command
+
+Command:
+0-127: Private Channel Message.
+128: Hello
+129: Refresh
+	2nd - 17th byte: Client id (Guid)
+	18th - 19th byte: Host TTL seconds (BitConverter UInt16)
+	20th - 35th byte: Virtual host setting id (Guid)
+130: RefreshFull
+	2nd - 17th byte: Client id (Guid)
+	18th - 19th byte: Host TTL seconds (BitConverter UInt16)
+	20th - 35th byte: Virtual host setting id (Guid)
+	36th - 37th byte: Length of virtual host setting data (BitConverter UInt16)
+	From 38th byte: Virtual host setting data
+131: NeedRefreshFull
+	2nd - 17th byte: Client id (Guid)
+255: Shutdown
+	2nd - 17th byte: Client id (Guid)
+
+Private Channel:
+1st - 4th byte: Length of data (BitConverter Int32), Value > 0
+5th - 20th byte: Client id (Guid)
+From 21st byte: Data

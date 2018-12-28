@@ -21,12 +21,6 @@ namespace SecretNest.RemoteHub
         Guid ClientId { get; }
 
         /// <summary>
-        /// Restarts connection to Redis server.
-        /// </summary>
-        /// <param name="keepConnectionState">Start main channel processing if it's started. Default value is false.</param>
-        void RestartConnection(bool keepConnectionState = false);
-
-        /// <summary>
         /// Applies the virtual hosts setting for current client.
         /// </summary>
         /// <param name="settings">Virtual host settings. Key is virtual host id; Value is setting related to the virtual host specified.</param>

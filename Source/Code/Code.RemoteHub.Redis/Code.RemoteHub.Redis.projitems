@@ -3,17 +3,17 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>9fda9838-335f-4cf1-9678-28e3b88ccdfe</SharedGUID>
+    <SharedGUID>bcc8bd2c-1645-45e9-95a0-a315f47f259b</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <Import_RootNamespace>SecretNest.RemoteHub</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)HostTable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)HostTable.VirtualEntity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)PercentageDistributer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HostEntity.RedisExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RedisClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteHubOverRedis.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)HostEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)HostTable.RedisExtension.cs" />
   </ItemGroup>
 </Project>

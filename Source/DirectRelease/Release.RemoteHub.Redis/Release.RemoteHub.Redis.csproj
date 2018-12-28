@@ -18,4 +18,6 @@
 
   <Import Project="..\..\Code\Code.RemoteHub\Code.RemoteHub.projitems" Label="Shared" />
 
+  <Import Project="..\..\Code\Code.RemoteHub.Redis\Code.RemoteHub.Redis.projitems" Label="Shared" />
+
 </Project>

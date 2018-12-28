@@ -23,17 +23,15 @@ namespace SecretNest.RemoteHub
         TimeSpan hostTimeToLive = new TimeSpan(0, 0, 30);
         TimeSpan hostRefreshingTime = new TimeSpan(0, 0, 15);
         readonly string clientIdText;
-        readonly string hostKeyPrefix;
-        Guid clientId;
+        readonly Guid clientId;
 
         HostTable hostTable = new HostTable();
 
         public Guid ClientId => clientId;
 
-        protected RedisClient(Guid clientId, string redisConfiguration, string mainChannelName, string hostKeyPrefix, string privateChannelNamePrefix, int redisDb)
+        protected RedisClient(Guid clientId, string redisConfiguration, string mainChannelName, string privateChannelNamePrefix, int redisDb)
         {
             this.clientId = clientId;
-            this.hostKeyPrefix = hostKeyPrefix;
             this.mainChannelName = mainChannelName;
             this.redisConfiguration = redisConfiguration;
             clientIdText = clientId.ToString("N");
@@ -443,8 +441,8 @@ namespace SecretNest.RemoteHub
 
     class RedisClientOfString : RedisClient<string>
     {
-        public RedisClientOfString(Guid clientId, string redisConfiguration, string mainChannelName, string hostKeyPrefix, string privateChannelNamePrefix, int redisDb)
-            : base(clientId, redisConfiguration, mainChannelName, hostKeyPrefix, privateChannelNamePrefix, redisDb)
+        public RedisClientOfString(Guid clientId, string redisConfiguration, string mainChannelName, string privateChannelNamePrefix, int redisDb)
+            : base(clientId, redisConfiguration, mainChannelName, privateChannelNamePrefix, redisDb)
         { }
 
         protected override string ConvertFromRedisValue(RedisValue value)
@@ -460,8 +458,8 @@ namespace SecretNest.RemoteHub
 
     class RedisClientOfBinary : RedisClient<byte[]>
     {
-        public RedisClientOfBinary(Guid clientId, string redisConfiguration, string mainChannelName, string hostKeyPrefix, string privateChannelNamePrefix, int redisDb)
-            : base(clientId, redisConfiguration, mainChannelName, hostKeyPrefix, privateChannelNamePrefix, redisDb)
+        public RedisClientOfBinary(Guid clientId, string redisConfiguration, string mainChannelName, string privateChannelNamePrefix, int redisDb)
+            : base(clientId, redisConfiguration, mainChannelName, privateChannelNamePrefix, redisDb)
         { }
 
         protected override byte[] ConvertFromRedisValue(RedisValue value)

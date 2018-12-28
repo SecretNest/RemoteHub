@@ -9,6 +9,6 @@
     <Import_RootNamespace>SecretNest.RemoteHub</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)IRemoteHubRedis.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IRemoteHubOverRedis.cs" />
   </ItemGroup>
 </Project>

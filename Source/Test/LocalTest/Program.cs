@@ -17,9 +17,9 @@ namespace LocalTest
             Guid client1Id = Guid.NewGuid();
             Guid client2Id = Guid.NewGuid();
             Guid client3Id = Guid.NewGuid();
-            RemoteHub<string> client1 = new RemoteHub<string>(client1Id, connectionString, Received);
-            RemoteHub<string> client2 = new RemoteHub<string>(client2Id, connectionString, Received);
-            RemoteHub<string> client3 = new RemoteHub<string>(client3Id, connectionString, Received);
+            RemoteHubOverRedis<string> client1 = new RemoteHubOverRedis<string>(client1Id, connectionString, Received);
+            RemoteHubOverRedis<string> client2 = new RemoteHubOverRedis<string>(client2Id, connectionString, Received);
+            RemoteHubOverRedis<string> client3 = new RemoteHubOverRedis<string>(client3Id, connectionString, Received);
 
 
             //Console.WriteLine(string.Format("ClientId: {0} {1} {2}", client1Id, client2Id, client3Id));

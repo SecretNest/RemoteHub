@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DirectRelease\Release.RemoteHub\Release.RemoteHub.csproj" />
+    <ProjectReference Include="..\..\DirectRelease\Release.RemoteHub.Redis\Release.RemoteHub.Redis.csproj" />
   </ItemGroup>
 
 </Project>

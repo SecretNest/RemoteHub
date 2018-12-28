@@ -7,10 +7,17 @@ using System.Threading.Tasks;
 namespace SecretNest.RemoteHub
 {
     /// <summary>
-    /// Represents the base, non-generic version of the generic IRemoteHubRedis.
+    /// Represents the base, non-generic version of the generic IRemoteHubOverRedis.
     /// </summary>
-    public interface IRemoteHubRedis : IRemoteHub
+    public interface IRemoteHubOverRedis : IRemoteHub
     {
+
+        /// <summary>
+        /// Restarts connection to Redis server.
+        /// </summary>
+        /// <param name="keepConnectionState">Start main channel processing if it's started. Default value is false.</param>
+        void RestartConnection(bool keepConnectionState = false);
+
         /// <summary>
         /// Tries to resolve host id to private channel.
         /// </summary>
@@ -24,7 +31,7 @@ namespace SecretNest.RemoteHub
     /// Represents the methods, properties and event of RemoteHub, based on Redis database.
     /// </summary>
     /// <typeparam name="T">Type of the message data.</typeparam>
-    public interface IRemoteHubRedis<T> : IRemoteHubRedis, IRemoteHub<T>
+    public interface IRemoteHubOverRedis<T> : IRemoteHubOverRedis, IRemoteHub<T>
     {
         /// <summary>
         /// Sends a message to the private channel specified.

@@ -13,38 +13,32 @@ namespace SecretNest.RemoteHub
     /// Handles the host state and message transportation.
     /// </summary>
     /// <typeparam name="T">Type of the message data. Only string and byte array (byte[]) is acceptable.</typeparam>
-    public class RemoteHub<T> : IDisposable, IRemoteHubRedis<T>
+    public class RemoteHubOverRedis<T> : IDisposable, IRemoteHubOverRedis<T>
     {
         RedisClient<T> redisClient;
 
         /// <summary>
-        /// Initializes an instance of RemoteHub.
+        /// Initializes an instance of RemoteHubOverRedis.
         /// </summary>
         /// <param name="clientId">Client id of the local RemoteHub.</param>
         /// <param name="redisConfiguration">The string configuration to use for Redis multiplexer.</param>
         /// <param name="onMessageReceivedCallback">The callback to be used for dealing received private message.</param>
         /// <param name="mainChannelName">Main channel name. Default value is "RemoteHub".</param>
-        /// <param name="hostKeyPrefix">Prefix in naming of the host key. Default value is "RemoteHub_". Cannot contains semicolons.</param>
         /// <param name="privateChannelNamePrefix">Prefix in naming of the private channel. Default value is "RemoteHubPrivate_".</param>
         /// <param name="redisDb">The id to get a database for. Used in getting Redis database. Default value is 0.</param>
-        public RemoteHub(Guid clientId, string redisConfiguration,
+        public RemoteHubOverRedis(Guid clientId, string redisConfiguration,
             OnMessageReceivedCallback<T> onMessageReceivedCallback,
-            string mainChannelName = "RemoteHub", string hostKeyPrefix = "RemoteHub_",
-            string privateChannelNamePrefix = "RemoteHubPrivate_", int redisDb = 0)
+            string mainChannelName = "RemoteHub", string privateChannelNamePrefix = "RemoteHubPrivate_", int redisDb = 0)
         {
-            if (hostKeyPrefix.Contains(";"))
-            {
-                throw new ArgumentException("Semicolons cannot be used in " + nameof(hostKeyPrefix) + ".", nameof(hostKeyPrefix));
-            }
             var type = typeof(T);
             if (type == typeof(string))
             {
-                RedisClient<string> client = new RedisClientOfString(clientId, redisConfiguration, mainChannelName, hostKeyPrefix, privateChannelNamePrefix, redisDb);
+                RedisClient<string> client = new RedisClientOfString(clientId, redisConfiguration, mainChannelName, privateChannelNamePrefix, redisDb);
                 redisClient = __refvalue(__makeref(client), RedisClient<T>);
             }
             else if (type == typeof(byte[]))
             {
-                RedisClient<byte[]> client = new RedisClientOfBinary(clientId, redisConfiguration, mainChannelName, hostKeyPrefix, privateChannelNamePrefix, redisDb);
+                RedisClient<byte[]> client = new RedisClientOfBinary(clientId, redisConfiguration, mainChannelName, privateChannelNamePrefix, redisDb);
                 redisClient = __refvalue(__makeref(client), RedisClient<T>);
             }
             else

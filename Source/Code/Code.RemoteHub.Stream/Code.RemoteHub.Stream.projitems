@@ -3,13 +3,15 @@
   <PropertyGroup>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
     <HasSharedItems>true</HasSharedItems>
-    <SharedGUID>46bf7736-dc3c-4ca2-b3c5-2a7b521cc6f1</SharedGUID>
+    <SharedGUID>6ab9c44f-f3cc-4a87-bbb5-c1bc6638b182</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>SecretNest.RemoteHub.StreamRelay</Import_RootNamespace>
+    <Import_RootNamespace>SecretNest.RemoteHub</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ClientIdEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)StreamRelayServer.cs" />
+    <Content Include="$(MSBuildThisFileDirectory)StreamPackage.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)StreamClient.cs" />
   </ItemGroup>
 </Project>
