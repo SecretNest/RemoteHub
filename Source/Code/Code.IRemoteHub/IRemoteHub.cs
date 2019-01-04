@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace SecretNest.RemoteHub
 {
     /// <summary>
-    /// Represents the base, non-generic version of the generic IRemoteHub.
+    /// Represents the base, non-generic version of the generic <see cref="IRemoteHub{T}"/>.
     /// </summary>
     public interface IRemoteHub
     {
@@ -36,14 +36,14 @@ namespace SecretNest.RemoteHub
 
 
         /// <summary>
-        /// Starts main channel processing, including keeping server status updated and alive, syncing virtual host settings, etc.
+        /// Starts instance operating.
         /// </summary>
         void Start();
 
         /// <summary>
-        /// Stops main channel processing. Private channel sending and receiving will not be affected but the resolving functions cannot be executed.
+        /// Stops instance operating.
         /// </summary>
-        void Shutdown();
+        void Stop();
     }
 
 
@@ -85,10 +85,5 @@ namespace SecretNest.RemoteHub
         /// <param name="message">Message to be sent.</param>
         /// <returns>A task that represents the sending job.</returns>
         Task SendMessageAsync(string targetChannel, T message);
-
-        /// <summary>
-        /// Gets or sets the callback to be used for dealing received private messages.
-        /// </summary>
-        OnMessageReceivedCallback<T> OnMessageReceivedCallback { get; set; }
     }
 }

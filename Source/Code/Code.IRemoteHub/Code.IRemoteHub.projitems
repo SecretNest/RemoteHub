@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Delegates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRemoteHub.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IRemoteHubAdapter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)VirtualHostSetting.cs" />
   </ItemGroup>
 </Project>

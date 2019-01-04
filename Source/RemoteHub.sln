@@ -7,8 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code", "Code", "{36EF9018-D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Release", "Release", "{189A414D-B434-442A-AD84-E6CA16C00C30}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub", "Code\Code.RemoteHub\Code.RemoteHub.shproj", "{9FDA9838-335F-4CF1-9678-28E3B88CCDFE}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{BD94B882-AC56-4132-BFC6-B987EC7A65B8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LocalTest", "Test\LocalTest\LocalTest.csproj", "{EE4A702F-8591-4D72-983D-789AFECB8ECA}"
@@ -16,10 +14,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SHFB", "SHFB", "{E97F3D68-54B6-4CE8-B49C-47DAB9726868}"
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "Documentation", "SHFB\Documentation\Documentation.shfbproj", "{139A60AC-5D39-4DD1-8EFC-ABE4CB52541F}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.MultiHub", "Code\Code.RemoteHub.MultiHub\Code.RemoteHub.MultiHub.shproj", "{A18330F8-39BD-4671-B1EE-07E4A019D895}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.RemoteHub.MultiHub", "DirectRelease\Release.RemoteHub.MultiHub\Release.RemoteHub.MultiHub.csproj", "{07375AB9-A7C1-42BA-9097-96AE15A946A4}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.IRemoteHub", "Code\Code.IRemoteHub\Code.IRemoteHub.shproj", "{D73C55F9-1CC2-4E53-9BED-3FA64DDA3D4D}"
 EndProject
@@ -29,26 +23,27 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.IRemoteHub.Redis", "Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.IRemoteHub.Redis", "DirectRelease\Release.IRemoteHub.Redis\Release.IRemoteHub.Redis.csproj", "{343D39FB-36A7-439D-9498-CEDBC35D8094}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.Stream", "Code\Code.RemoteHub.Stream\Code.RemoteHub.Stream.shproj", "{6AB9C44F-F3CC-4A87-BBB5-C1BC6638B182}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.Redis", "Code\Code.RemoteHub.Redis\Code.RemoteHub.Redis.shproj", "{BCC8BD2C-1645-45E9-95A0-A315F47F259B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Release.RemoteHub.Redis", "DirectRelease\Release.RemoteHub.Redis\Release.RemoteHub.Redis.csproj", "{798696A1-847F-4CDD-8FF2-E527AE5C37E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.RemoteHub.Redis", "DirectRelease\Release.RemoteHub.Redis\Release.RemoteHub.Redis.csproj", "{798696A1-847F-4CDD-8FF2-E527AE5C37E6}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.MultiHub.Redis", "Code\Code.RemoteHub.MultiHub.Redis\Code.RemoteHub.MultiHub.Redis.shproj", "{9430BE1B-22AC-4841-854F-7B324CF337A2}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.StreamAdapter", "Code\Code.RemoteHub.StreamAdapter\Code.RemoteHub.StreamAdapter.shproj", "{CB66A709-2C27-4C22-8B0B-5C87EC4A7185}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Release.RemoteHub.MultiHub.Redis", "DirectRelease\Release.RemoteHub.MultiHub.Redis\Release.RemoteHub.MultiHub.Redis.csproj", "{04175427-795B-4E38-8947-E66D7602E331}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.RemoteHub.StreamAdapter", "DirectRelease\Release.RemoteHub.StreamAdapter\Release.RemoteHub.StreamAdapter.csproj", "{DB53E91D-D9D1-4023-86E6-D6E0129F1504}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Release.RemoteHub.Stream", "DirectRelease\Release.RemoteHub.Stream\Release.RemoteHub.Stream.csproj", "{E847F9F9-07DC-40F4-97AB-0BA9327D319F}"
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.RedisAdapter", "Code\Code.RemoteHub.RedisAdapter\Code.RemoteHub.RedisAdapter.shproj", "{51769908-DE8D-4517-8677-F43224590851}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.RemoteHub.RedisAdapter", "DirectRelease\Release.RemoteHub.RedisAdapter\Release.RemoteHub.RedisAdapter.csproj", "{FF35DE56-9433-4116-9DE6-1CCB5635EF30}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.AdapterShared", "Code\Code.RemoteHub.AdapterShared\Code.RemoteHub.AdapterShared.shproj", "{851EE1D3-A2B8-4DA6-829F-B8A118CC4BB4}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Code\Code.RemoteHub.Stream\Code.RemoteHub.Stream.projitems*{6ab9c44f-f3cc-4a87-bbb5-c1bc6638b182}*SharedItemsImports = 13
-		Code\Code.RemoteHub.MultiHub.Redis\Code.RemoteHub.MultiHub.Redis.projitems*{9430be1b-22ac-4841-854f-7b324cf337a2}*SharedItemsImports = 13
+		Code\Code.RemoteHub.RedisAdapter\Code.RemoteHub.RedisAdapter.projitems*{51769908-de8d-4517-8677-f43224590851}*SharedItemsImports = 13
+		Code\Code.RemoteHub.AdapterShared\Code.RemoteHub.AdapterShared.projitems*{851ee1d3-a2b8-4da6-829f-b8a118cc4bb4}*SharedItemsImports = 13
 		Code\Code.IRemoteHub.Redis\Code.IRemoteHub.Redis.projitems*{9c9729d8-00e9-48cc-94ec-4b5819b08916}*SharedItemsImports = 13
-		Code\Code.RemoteHub\Code.RemoteHub.projitems*{9fda9838-335f-4cf1-9678-28e3b88ccdfe}*SharedItemsImports = 13
-		Code\Code.RemoteHub.MultiHub\Code.RemoteHub.MultiHub.projitems*{a18330f8-39bd-4671-b1ee-07e4a019d895}*SharedItemsImports = 13
 		Code\Code.RemoteHub.Redis\Code.RemoteHub.Redis.projitems*{bcc8bd2c-1645-45e9-95a0-a315f47f259b}*SharedItemsImports = 13
+		Code\Code.RemoteHub.StreamAdapter\Code.RemoteHub.StreamAdapter.projitems*{cb66a709-2c27-4c22-8b0b-5c87ec4a7185}*SharedItemsImports = 13
 		Code\Code.IRemoteHub\Code.IRemoteHub.projitems*{d73c55f9-1cc2-4e53-9bed-3fa64dda3d4d}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,10 +58,6 @@ Global
 		{139A60AC-5D39-4DD1-8EFC-ABE4CB52541F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{139A60AC-5D39-4DD1-8EFC-ABE4CB52541F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{139A60AC-5D39-4DD1-8EFC-ABE4CB52541F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{07375AB9-A7C1-42BA-9097-96AE15A946A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07375AB9-A7C1-42BA-9097-96AE15A946A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07375AB9-A7C1-42BA-9097-96AE15A946A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{07375AB9-A7C1-42BA-9097-96AE15A946A4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FECF2661-E31C-4926-81EE-B4307ABCC6F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FECF2661-E31C-4926-81EE-B4307ABCC6F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FECF2661-E31C-4926-81EE-B4307ABCC6F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -79,34 +70,32 @@ Global
 		{798696A1-847F-4CDD-8FF2-E527AE5C37E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{798696A1-847F-4CDD-8FF2-E527AE5C37E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{798696A1-847F-4CDD-8FF2-E527AE5C37E6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{04175427-795B-4E38-8947-E66D7602E331}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{04175427-795B-4E38-8947-E66D7602E331}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{04175427-795B-4E38-8947-E66D7602E331}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{04175427-795B-4E38-8947-E66D7602E331}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E847F9F9-07DC-40F4-97AB-0BA9327D319F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E847F9F9-07DC-40F4-97AB-0BA9327D319F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E847F9F9-07DC-40F4-97AB-0BA9327D319F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E847F9F9-07DC-40F4-97AB-0BA9327D319F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB53E91D-D9D1-4023-86E6-D6E0129F1504}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB53E91D-D9D1-4023-86E6-D6E0129F1504}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB53E91D-D9D1-4023-86E6-D6E0129F1504}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB53E91D-D9D1-4023-86E6-D6E0129F1504}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF35DE56-9433-4116-9DE6-1CCB5635EF30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF35DE56-9433-4116-9DE6-1CCB5635EF30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF35DE56-9433-4116-9DE6-1CCB5635EF30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF35DE56-9433-4116-9DE6-1CCB5635EF30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{9FDA9838-335F-4CF1-9678-28E3B88CCDFE} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
 		{EE4A702F-8591-4D72-983D-789AFECB8ECA} = {BD94B882-AC56-4132-BFC6-B987EC7A65B8}
 		{139A60AC-5D39-4DD1-8EFC-ABE4CB52541F} = {E97F3D68-54B6-4CE8-B49C-47DAB9726868}
-		{A18330F8-39BD-4671-B1EE-07E4A019D895} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
-		{07375AB9-A7C1-42BA-9097-96AE15A946A4} = {189A414D-B434-442A-AD84-E6CA16C00C30}
 		{D73C55F9-1CC2-4E53-9BED-3FA64DDA3D4D} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
 		{FECF2661-E31C-4926-81EE-B4307ABCC6F0} = {189A414D-B434-442A-AD84-E6CA16C00C30}
 		{9C9729D8-00E9-48CC-94EC-4B5819B08916} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
 		{343D39FB-36A7-439D-9498-CEDBC35D8094} = {189A414D-B434-442A-AD84-E6CA16C00C30}
-		{6AB9C44F-F3CC-4A87-BBB5-C1BC6638B182} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
 		{BCC8BD2C-1645-45E9-95A0-A315F47F259B} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
 		{798696A1-847F-4CDD-8FF2-E527AE5C37E6} = {189A414D-B434-442A-AD84-E6CA16C00C30}
-		{9430BE1B-22AC-4841-854F-7B324CF337A2} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
-		{04175427-795B-4E38-8947-E66D7602E331} = {189A414D-B434-442A-AD84-E6CA16C00C30}
-		{E847F9F9-07DC-40F4-97AB-0BA9327D319F} = {189A414D-B434-442A-AD84-E6CA16C00C30}
+		{CB66A709-2C27-4C22-8B0B-5C87EC4A7185} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
+		{DB53E91D-D9D1-4023-86E6-D6E0129F1504} = {189A414D-B434-442A-AD84-E6CA16C00C30}
+		{51769908-DE8D-4517-8677-F43224590851} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
+		{FF35DE56-9433-4116-9DE6-1CCB5635EF30} = {189A414D-B434-442A-AD84-E6CA16C00C30}
+		{851EE1D3-A2B8-4DA6-829F-B8A118CC4BB4} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E700BB2-4439-4C11-8DCD-41829F557945}

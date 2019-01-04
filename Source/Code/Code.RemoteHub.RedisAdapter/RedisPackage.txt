@@ -1,0 +1,10 @@
+﻿Main Channel:
+Hello: v1:Hello
+Refresh: v1:Refresh:SenderClientId:HostTTLSeconds:VirtualHostSettingId(empty if no virtual host)
+RefreshFull: v1:RefreshFull:SenderClientId:HostTTLSeconds: --When no virtual host
+RefreshFull: v1:RefreshFull:SenderClientId:HostTTLSeconds:VirtualHostSettingId:VirtualHostSettingData
+NeedRefreshFull: v1:NeedRefreshFull:TargetClientId
+Shutdown: v1:Shutdown:SenderClientId
+
+Private Channel:
+Bind the channel name and direct send.

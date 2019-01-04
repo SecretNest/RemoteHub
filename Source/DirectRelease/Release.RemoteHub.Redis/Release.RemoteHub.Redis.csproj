@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
     <RootNamespace>SecretNest.RemoteHub</RootNamespace>
+    <AssemblyName>SecretNest.RemoteHub.Redis</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,9 +15,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Release.IRemoteHub.Redis\Release.IRemoteHub.Redis.csproj" />
     <ProjectReference Include="..\Release.IRemoteHub\Release.IRemoteHub.csproj" />
+    <ProjectReference Include="..\Release.RemoteHub.RedisAdapter\Release.RemoteHub.RedisAdapter.csproj" />
   </ItemGroup>
-
-  <Import Project="..\..\Code\Code.RemoteHub\Code.RemoteHub.projitems" Label="Shared" />
 
   <Import Project="..\..\Code\Code.RemoteHub.Redis\Code.RemoteHub.Redis.projitems" Label="Shared" />
 

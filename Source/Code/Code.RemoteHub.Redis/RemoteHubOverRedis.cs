@@ -12,10 +12,11 @@ namespace SecretNest.RemoteHub
     /// <summary>
     /// Handles the host state and message transportation.
     /// </summary>
-    /// <typeparam name="T">Type of the message data. Only string and byte array (byte[]) is acceptable.</typeparam>
+    /// <typeparam name="T">Type of the message data. Only string and byte array (byte[]) are supported.</typeparam>
     public class RemoteHubOverRedis<T> : IDisposable, IRemoteHubOverRedis<T>
     {
-        RedisClient<T> redisClient;
+        RedisAdapter<T> redisAdapter;
+        readonly Guid clientId;
 
         /// <summary>
         /// Initializes an instance of RemoteHubOverRedis.
@@ -26,135 +27,42 @@ namespace SecretNest.RemoteHub
         /// <param name="mainChannelName">Main channel name. Default value is "RemoteHub".</param>
         /// <param name="privateChannelNamePrefix">Prefix in naming of the private channel. Default value is "RemoteHubPrivate_".</param>
         /// <param name="redisDb">The id to get a database for. Used in getting Redis database. Default value is 0.</param>
+        /// <param name="clientTimeToLive">Time to live (TTL) value of the host in seconds. Any records of hosts expired will be removed. Default value is 30 seconds.</param>
+        /// <param name="clientRefreshingInterval">Interval between refresh command sending operations in seconds. Default value is 15 seconds.</param>
         public RemoteHubOverRedis(Guid clientId, string redisConfiguration,
             OnMessageReceivedCallback<T> onMessageReceivedCallback,
-            string mainChannelName = "RemoteHub", string privateChannelNamePrefix = "RemoteHubPrivate_", int redisDb = 0)
+            string mainChannelName = "RemoteHub", string privateChannelNamePrefix = "RemoteHubPrivate_", int redisDb = 0, 
+            int clientTimeToLive = 30, int clientRefreshingInterval = 15)
         {
-            var type = typeof(T);
-            if (type == typeof(string))
-            {
-                RedisClient<string> client = new RedisClientOfString(clientId, redisConfiguration, mainChannelName, privateChannelNamePrefix, redisDb);
-                redisClient = __refvalue(__makeref(client), RedisClient<T>);
-            }
-            else if (type == typeof(byte[]))
-            {
-                RedisClient<byte[]> client = new RedisClientOfBinary(clientId, redisConfiguration, mainChannelName, privateChannelNamePrefix, redisDb);
-                redisClient = __refvalue(__makeref(client), RedisClient<T>);
-            }
-            else
-            {
-                throw new NotSupportedException("Only string and byte array is supported.");
-            }
-            redisClient.OnMessageReceivedCallback = onMessageReceivedCallback;
-            redisClient.RedisServerConnectionErrorOccurred += RedisClient_RedisServerConnectionErrorOccurred;
+            redisAdapter = new RedisAdapter<T>(redisConfiguration, onMessageReceivedCallback, mainChannelName, privateChannelNamePrefix, redisDb, clientTimeToLive, clientRefreshingInterval);
+            redisAdapter.RedisServerConnectionErrorOccurred += RedisAdapter_RedisServerConnectionErrorOccurred;
+            this.clientId = clientId;
+            redisAdapter.AddClient(clientId);
         }
 
-        private void RedisClient_RedisServerConnectionErrorOccurred(object sender, EventArgs e)
+        private void RedisAdapter_RedisServerConnectionErrorOccurred(object sender, RedisExceptionEventArgs e)
         {
-            ConnectionErrorOccurred?.Invoke(this, e);
-            redisClient.RestartConnection(true);
+            if (e.IsFatal) RedisServerConnectionErrorOccurred?.Invoke(this, e);
+            ConnectionErrorOccurred?.Invoke(this, EventArgs.Empty);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Occurs while connection related exception (e.g., RedisConnectionException) is thrown in main channel operating. Will not be raised for private channel operating.
+        /// </summary>
+        /// <remarks>This event will be raised on only fatal exception. This event will be raised after <see cref="RedisServerConnectionErrorOccurred"/>.</remarks>
         public event EventHandler ConnectionErrorOccurred;
-
-        /// <inheritdoc/>
-
-        public Guid ClientId => redisClient.ClientId;
-
-        /// <inheritdoc/>
-        public void RestartConnection(bool keepConnectionState = false)
-        {
-            redisClient.RestartConnection(keepConnectionState);
-        }
-
         /// <summary>
-        /// Gets or sets the TimeToLive setting of host.
+        /// Occurs when connection to Redis server is broken.
         /// </summary>
-        public TimeSpan HostTimeToLive
-        {
-            get
-            {
-                return redisClient.HostTimeToLive;
-            }
-            set
-            {
-                redisClient.HostTimeToLive = value;
-            }
-        }
+        /// <remarks>This event will be raised before <see cref="ConnectionErrorOccurred"/>.</remarks>
+        public event EventHandler<RedisExceptionEventArgs> RedisServerConnectionErrorOccurred;
 
         /// <inheritdoc/>
-        public void ApplyVirtualHosts(params KeyValuePair<Guid, VirtualHostSetting>[] settings) => redisClient.ApplyVirtualHosts(settings);
-
-        /// <inheritdoc/>
-        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId) => redisClient.TryResolveVirtualHost(virtualHostId, out hostId);
-
-        /// <inheritdoc/>
-        public bool TryResolve(Guid hostId, out RedisChannel channel) => redisClient.TryResolve(hostId, out channel);
-
-        /// <summary>
-        /// Sends a message to the target host specified by id.
-        /// </summary>
-        /// <param name="targetHostId">Target host id.</param>
-        /// <param name="message">Message to be sent.</param>
-        /// <returns>Whether the resolving from target host id is succeeded or not.</returns>
-        /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
-        public bool SendMessage(Guid targetHostId, T message) => redisClient.SendMessage(targetHostId, message);
-
-        /// <summary>
-        /// Creates a task that sends a message to the target host specified by id.
-        /// </summary>
-        /// <param name="targetHostId"></param>
-        /// <param name="message"></param>
-        /// <returns>A task that represents the sending job.</returns>
-        /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
-        public async Task<bool> SendMessageAsync(Guid targetHostId, T message) => await redisClient.SendMessageAsync(targetHostId, message);
-
-        /// <summary>
-        /// Sends a message to the target host specified by private channel name.
-        /// </summary>
-        /// <param name="targetChannel">Name of the private channel of the target host.</param>
-        /// <param name="message">Message to be sent.</param>
-        /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
-        public void SendMessage(string targetChannel, T message) => redisClient.SendMessage(targetChannel, message);
-
-        /// <summary>
-        /// Creates a task that sends a message to the target host specified by private channel name.
-        /// </summary>
-        /// <param name="targetChannel">Name of the private channel of the target host.</param>
-        /// <param name="message">Message to be sent.</param>
-        /// <returns>A task that represents the sending job.</returns>
-        /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
-        public async Task SendMessageAsync(string targetChannel, T message) => await redisClient.SendMessageAsync(targetChannel, message);
-
-        /// <inheritdoc/>
-        public void SendMessage(RedisChannel channel, T message) => redisClient.SendMessage(channel, message);
-
-        /// <inheritdoc/>
-        public async Task SendMessageAsync(RedisChannel channel, T message) => await redisClient.SendMessageAsync(channel, message);
-
-        /// <inheritdoc/>
-        public OnMessageReceivedCallback<T> OnMessageReceivedCallback
-        {
-            get
-            {
-                return redisClient.OnMessageReceivedCallback;
-            }
-            set
-            {
-                redisClient.OnMessageReceivedCallback = value;
-            }
-        }
-
-        /// <inheritdoc/>
-        public void Start() => redisClient.Start();
-
-        /// <inheritdoc/>
-        public void Shutdown() => redisClient.Shutdown();
-
+        public Guid ClientId => clientId;
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
+
 
         protected virtual void Dispose(bool disposing)
         {
@@ -163,7 +71,7 @@ namespace SecretNest.RemoteHub
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects).
-                    redisClient.Dispose();
+                    redisAdapter.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
@@ -188,5 +96,111 @@ namespace SecretNest.RemoteHub
             // GC.SuppressFinalize(this);
         }
         #endregion
+
+        /// <inheritdoc/>
+        public void SendMessage(RedisChannel channel, T message)
+        {
+            redisAdapter.SendPrivateMessage(channel, message);
+        }
+
+        /// <inheritdoc/>
+        public async Task SendMessageAsync(RedisChannel channel, T message)
+        {
+            await redisAdapter.SendPrivateMessageAsync(channel, message);
+        }
+
+        /// <inheritdoc/>
+        public bool TryResolve(Guid hostId, out RedisChannel channel)
+        {
+            return redisAdapter.TryResolve(hostId, out channel);
+        }
+
+        /// <summary>
+        /// Sends a message to the target host specified by id.
+        /// </summary>
+        /// <param name="targetHostId">Target host id.</param>
+        /// <param name="message">Message to be sent.</param>
+        /// <returns>Whether the resolving from target host id is succeeded or not.</returns>
+        /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
+        public bool SendMessage(Guid targetHostId, T message)
+        {
+            if (redisAdapter.TryResolve(targetHostId, out var channel))
+            {
+                redisAdapter.SendPrivateMessage(targetHostId, message);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Creates a task that sends a message to the target host specified by id.
+        /// </summary>
+        /// <param name="targetHostId"></param>
+        /// <param name="message"></param>
+        /// <returns>A task that represents the sending job.</returns>
+        /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
+        public async Task<bool> SendMessageAsync(Guid targetHostId, T message)
+        {
+            if (redisAdapter.TryResolve(targetHostId, out var channel))
+            {
+                await redisAdapter.SendPrivateMessageAsync(targetHostId, message);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Sends a message to the target host specified by private channel name.
+        /// </summary>
+        /// <param name="targetChannel">Name of the private channel of the target host.</param>
+        /// <param name="message">Message to be sent.</param>
+        /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
+        public void SendMessage(string targetChannel, T message)
+        {
+            redisAdapter.SendPrivateMessage(new RedisChannel(targetChannel, RedisChannel.PatternMode.Literal), message);
+        }
+
+        /// <summary>
+        /// Creates a task that sends a message to the target host specified by private channel name.
+        /// </summary>
+        /// <param name="targetChannel">Name of the private channel of the target host.</param>
+        /// <param name="message">Message to be sent.</param>
+        /// <returns>A task that represents the sending job.</returns>
+        /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
+        public async Task SendMessageAsync(string targetChannel, T message)
+        {
+            await redisAdapter.SendPrivateMessageAsync(new RedisChannel(targetChannel, RedisChannel.PatternMode.Literal), message);
+        }
+
+        /// <inheritdoc/>
+        public void ApplyVirtualHosts(params KeyValuePair<Guid, VirtualHostSetting>[] settings)
+        {
+            redisAdapter.ApplyVirtualHosts(clientId, settings);
+        }
+
+        /// <inheritdoc/>
+        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId)
+        {
+            return redisAdapter.TryResolveVirtualHost(virtualHostId, out hostId);
+        }
+
+        /// <inheritdoc/>
+        public void Start()
+        {
+            redisAdapter.Start();
+        }
+
+        /// <inheritdoc/>
+        public void Stop()
+        {
+            redisAdapter.Stop();
+        }
+
     }
 }

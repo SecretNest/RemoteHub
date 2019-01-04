@@ -3,13 +3,15 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
     <RootNamespace>SecretNest.RemoteHub</RootNamespace>
-    <AssemblyName>SecretNest.RemoteHub.MultiHub</AssemblyName>
+    <AssemblyName>SecretNest.RemoteHub.StreamAdapter</AssemblyName>
   </PropertyGroup>
+
+  <Import Project="..\..\Code\Code.RemoteHub.StreamAdapter\Code.RemoteHub.StreamAdapter.projitems" Label="Shared" />
+
+  <Import Project="..\..\Code\Code.RemoteHub.AdapterShared\Code.RemoteHub.AdapterShared.projitems" Label="Shared" />
 
   <ItemGroup>
     <ProjectReference Include="..\Release.IRemoteHub\Release.IRemoteHub.csproj" />
   </ItemGroup>
-
-  <Import Project="..\..\Code\Code.RemoteHub.MultiHub\Code.RemoteHub.MultiHub.projitems" Label="Shared" />
 
 </Project>

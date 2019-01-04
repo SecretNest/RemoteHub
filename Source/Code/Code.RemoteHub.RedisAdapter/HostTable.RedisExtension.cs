@@ -7,7 +7,14 @@ namespace SecretNest.RemoteHub
 {
     partial class HostTable
     {
-        public void AddOrRefresh(Guid hostId, int seconds, string channel, out Guid virtualHostSettingId)
+        readonly string channelPrefix;
+
+        internal HostTable(string channelPrefix)
+        {
+            this.channelPrefix = channelPrefix;
+        }
+
+        public void AddOrRefresh(Guid hostId, int seconds, out Guid virtualHostSettingId)
         {
             lock (hosts)
             {
@@ -17,7 +24,7 @@ namespace SecretNest.RemoteHub
                 }
                 else
                 {
-                    entity = new HostEntity(seconds, channel);
+                    entity = new HostEntity(seconds, channelPrefix + hostId.ToString("N"));
                     hosts.Add(hostId, entity);
                 }
                 virtualHostSettingId = entity.VirtualHostSettingId;
