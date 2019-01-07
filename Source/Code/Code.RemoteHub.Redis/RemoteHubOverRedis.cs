@@ -35,27 +35,22 @@ namespace SecretNest.RemoteHub
             int clientTimeToLive = 30, int clientRefreshingInterval = 15)
         {
             redisAdapter = new RedisAdapter<T>(redisConfiguration, onMessageReceivedCallback, mainChannelName, privateChannelNamePrefix, redisDb, clientTimeToLive, clientRefreshingInterval);
-            redisAdapter.RedisServerConnectionErrorOccurred += RedisAdapter_RedisServerConnectionErrorOccurred;
             this.clientId = clientId;
             redisAdapter.AddClient(clientId);
         }
 
-        private void RedisAdapter_RedisServerConnectionErrorOccurred(object sender, RedisExceptionEventArgs e)
+        /// <inheritdoc/>
+        public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred
         {
-            if (e.IsFatal) RedisServerConnectionErrorOccurred?.Invoke(this, e);
-            ConnectionErrorOccurred?.Invoke(this, EventArgs.Empty);
+            add
+            {
+                redisAdapter.ConnectionErrorOccurred += value;
+            }
+            remove
+            {
+                redisAdapter.ConnectionErrorOccurred -= value;
+            }
         }
-
-        /// <summary>
-        /// Occurs while connection related exception (e.g., RedisConnectionException) is thrown in main channel operating. Will not be raised for private channel operating.
-        /// </summary>
-        /// <remarks>This event will be raised on only fatal exception. This event will be raised after <see cref="RedisServerConnectionErrorOccurred"/>.</remarks>
-        public event EventHandler ConnectionErrorOccurred;
-        /// <summary>
-        /// Occurs when connection to Redis server is broken.
-        /// </summary>
-        /// <remarks>This event will be raised before <see cref="ConnectionErrorOccurred"/>.</remarks>
-        public event EventHandler<RedisExceptionEventArgs> RedisServerConnectionErrorOccurred;
 
         /// <inheritdoc/>
         public Guid ClientId => clientId;

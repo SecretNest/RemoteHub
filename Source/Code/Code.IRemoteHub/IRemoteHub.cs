@@ -11,9 +11,9 @@ namespace SecretNest.RemoteHub
     public interface IRemoteHub
     {
         /// <summary>
-        /// Occurs while connection related exception (e.g., RedisConnectionException) is thrown in main channel operating. Will not be raised for private channel operating.
+        /// Occurs while an connection related exception is thrown.
         /// </summary>
-        event EventHandler ConnectionErrorOccurred;
+        event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
 
         /// <summary>
         /// Gets the client id.

@@ -78,6 +78,21 @@ namespace SecretNest.RemoteHub
         /// <param name="hostId">Host id.</param>
         /// <returns>Whether the resolving is succeeded or not.</returns>
         bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId);
+
+        /// <summary>
+        /// Occurs while an connection related exception is thrown.
+        /// </summary>
+        event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
+
+        /// <summary>
+        /// Occurs while a remote client is added or changed virtual host setting.
+        /// </summary>
+        event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated;
+
+        /// <summary>
+        /// Occurs while a remote client is removed.
+        /// </summary>
+        event EventHandler<ClientIdEventArgs> RemoteClientRemoved;
     }
 
     /// <summary>

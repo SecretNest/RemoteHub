@@ -11,6 +11,5 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)IRemoteHubOverRedis.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRemoteHubRedisAdapter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RedisExceptionEventArgs.cs" />
   </ItemGroup>
 </Project>

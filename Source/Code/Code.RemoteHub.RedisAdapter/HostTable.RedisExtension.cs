@@ -31,14 +31,19 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        public void ApplyVirtualHosts(Guid hostId, Guid settingId, string value)
+        public IReadOnlyDictionary<Guid, VirtualHostSetting> ApplyVirtualHosts(Guid hostId, Guid settingId, string value)
         {
             lock (hosts)
             {
                 if (hosts.TryGetValue(hostId, out var record))
                 {
-                    record.ApplyVirtualHosts(settingId, value, out var affectedVirtualHosts);
+                    var setting = record.ApplyVirtualHosts(settingId, value, out var affectedVirtualHosts);
                     RefreshVirtualHost(affectedVirtualHosts);
+                    return setting;
+                }
+                else
+                {
+                    return null;
                 }
             }
         }

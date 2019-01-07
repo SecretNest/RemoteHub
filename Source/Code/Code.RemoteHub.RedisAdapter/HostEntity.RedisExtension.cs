@@ -9,7 +9,7 @@ namespace SecretNest.RemoteHub
     {
         public RedisChannel Channel { get; }
 
-        public void ApplyVirtualHosts(Guid settingId, string value, out List<Guid> affectedVirtualHosts)
+        public IReadOnlyDictionary<Guid, VirtualHostSetting> ApplyVirtualHosts(Guid settingId, string value, out List<Guid> affectedVirtualHosts)
         {
             affectedVirtualHosts = new List<Guid>();
             lock (virtualHostLock)
@@ -41,6 +41,7 @@ namespace SecretNest.RemoteHub
                 }
                 affectedVirtualHosts.AddRange(VirtualHosts.Keys);
                 VirtualHosts = newHosts;
+                return newHosts;
             }
         }
 

@@ -12,11 +12,6 @@ namespace SecretNest.RemoteHub
     public interface IRemoteHubRedisAdapter : IRemoteHubAdapter
     {
         /// <summary>
-        /// Occurs when connection to Redis server is broken.
-        /// </summary>
-        event EventHandler<RedisExceptionEventArgs> RedisServerConnectionErrorOccurred;
-
-        /// <summary>
         /// Tries to resolve host id to private channel.
         /// </summary>
         /// <param name="hostId">Host id.</param>

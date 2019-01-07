@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace SecretNest.RemoteHub
 {
@@ -29,7 +30,11 @@ namespace SecretNest.RemoteHub
         AutoResetEvent clientsChangingLock = new AutoResetEvent(true); //also used in refresh sending
 
         /// <inheritdoc/>
-        public event EventHandler<RedisExceptionEventArgs> RedisServerConnectionErrorOccurred;
+        public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
+        /// <inheritdoc/>
+        public event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated;
+        /// <inheritdoc/>
+        public event EventHandler<ClientIdEventArgs> RemoteClientRemoved;
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -184,7 +189,10 @@ namespace SecretNest.RemoteHub
                     else
                     {
                         if (currentVirtualHostSettingId != Guid.Empty)
+                        {
                             hostTable.ClearVirtualHosts(clientId);
+                            RemoteClientRemoved?.Invoke(this, new ClientIdEventArgs(clientId));
+                        }
                     }
                 }
                 else if (texts[1] == "RefreshFull")
@@ -197,13 +205,17 @@ namespace SecretNest.RemoteHub
                         Guid virtualHostId = Guid.Parse(texts[4]);
                         if (currentVirtualHostSettingId != virtualHostId)
                         {
-                            hostTable.ApplyVirtualHosts(clientId, virtualHostId, texts[5]);
+                            var setting = hostTable.ApplyVirtualHosts(clientId, virtualHostId, texts[5]);
+                            RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, virtualHostId, setting.ToArray()));
                         }
                     }
                     else
                     {
                         if (currentVirtualHostSettingId != Guid.Empty)
+                        {
                             hostTable.ClearVirtualHosts(clientId);
+                            RemoteClientRemoved?.Invoke(this, new ClientIdEventArgs(clientId));
+                        }
                     }
                 }
                 else if (texts[1] == "Hello")
@@ -233,6 +245,7 @@ namespace SecretNest.RemoteHub
                 {
                     var clientId = Guid.Parse(texts[2]);
                     hostTable.Remove(clientId);
+                    RemoteClientRemoved?.Invoke(this, new ClientIdEventArgs(clientId));
                 }
             }
         }
@@ -251,9 +264,9 @@ namespace SecretNest.RemoteHub
             var waitingToken = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token).Token;
 
             //keep
-            var nextRefresh = DateTime.Now.AddSeconds(clientRefreshingInterval);
             while (!updatingToken.IsCancellationRequested)
             {
+                var nextRefresh = DateTime.Now.AddSeconds(clientRefreshingInterval);
                 try
                 {
                     clientsChangingLock.WaitOne();
@@ -280,7 +293,8 @@ namespace SecretNest.RemoteHub
 
                 try
                 {
-                    await Task.Delay(nextRefresh - DateTime.Now - smallTimeFix, waitingToken);
+                    TimeSpan delay = nextRefresh - DateTime.Now - smallTimeFix;
+                    await Task.Delay(delay, waitingToken);
                 }
                 catch (TaskCanceledException)
                 {
@@ -296,24 +310,30 @@ namespace SecretNest.RemoteHub
         void MainChannelPublishing(string text)
         {
             int retried = 0;
-            try
+            while (true)
             {
-                publisher.Publish(mainChannel, text);
-            }
-            catch (RedisTimeoutException ex)
-            {
-                if (retried > 3)
+                try
                 {
-                    RedisServerConnectionErrorOccurred?.BeginInvoke(this, new RedisExceptionEventArgs(ex, false), null, null);
+                    publisher.Publish(mainChannel, text);
+                    return;
                 }
-                else
+                catch (RedisTimeoutException ex)
                 {
-                    retried++;
+                    if (retried > 3)
+                    {
+                        ConnectionErrorOccurred?.BeginInvoke(this, new ConnectionExceptionEventArgs(ex, false, true), null, null);
+                        break;
+                    }
+                    else
+                    {
+                        retried++;
+                    }
                 }
-            }
-            catch (Exception ex) //RedisConnectionException
-            {
-                RedisServerConnectionErrorOccurred?.BeginInvoke(this, new RedisExceptionEventArgs(ex, true), null, null);
+                catch (Exception ex) //RedisConnectionException
+                {
+                    ConnectionErrorOccurred?.BeginInvoke(this, new ConnectionExceptionEventArgs(ex, true, false), null, null);
+                    break;
+                }
             }
         }
 
@@ -331,7 +351,7 @@ namespace SecretNest.RemoteHub
                 {
                     if (retried > 3)
                     {
-                        RedisServerConnectionErrorOccurred?.BeginInvoke(this, new RedisExceptionEventArgs(ex, false), null, null);
+                        ConnectionErrorOccurred?.BeginInvoke(this, new ConnectionExceptionEventArgs(ex, false, true), null, null);
                         break;
                     }
                     else
@@ -341,7 +361,7 @@ namespace SecretNest.RemoteHub
                 }
                 catch (Exception ex) //RedisConnectionException
                 {
-                    RedisServerConnectionErrorOccurred?.BeginInvoke(this, new RedisExceptionEventArgs(ex, true), null, null);
+                    ConnectionErrorOccurred?.BeginInvoke(this, new ConnectionExceptionEventArgs(ex, true, false), null, null);
                     break;
                 }
             }
@@ -361,7 +381,20 @@ namespace SecretNest.RemoteHub
 
         protected async Task SendPrivateMessageAsync(RedisChannel channel, RedisValue value)
         {
-            await publisher.PublishAsync(channel, value);
+            try
+            {
+                await publisher.PublishAsync(channel, value);
+            }
+            catch(RedisTimeoutException ex)
+            {
+                ConnectionErrorOccurred?.BeginInvoke(this, new ConnectionExceptionEventArgs(ex, false, false), null, null);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                ConnectionErrorOccurred?.BeginInvoke(this, new ConnectionExceptionEventArgs(ex, true, false), null, null);
+                throw;
+            }
         }
 
         protected async Task SendPrivateMessageAsync(Guid targetClientId, RedisValue value)
@@ -372,7 +405,20 @@ namespace SecretNest.RemoteHub
 
         protected void SendPrivateMessage(RedisChannel channel, RedisValue value)
         {
-            publisher.Publish(channel, value);
+            try
+            {
+                publisher.Publish(channel, value);
+            }
+            catch (RedisTimeoutException ex)
+            {
+                ConnectionErrorOccurred?.BeginInvoke(this, new ConnectionExceptionEventArgs(ex, false, false), null, null);
+                throw;
+            }
+            catch (Exception ex)
+            {
+                ConnectionErrorOccurred?.BeginInvoke(this, new ConnectionExceptionEventArgs(ex, true, false), null, null);
+                throw;
+            }
         }
 
         protected void SendPrivateMessage(Guid targetClientId, RedisValue value)

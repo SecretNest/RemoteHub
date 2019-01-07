@@ -9,6 +9,9 @@
     <Import_RootNamespace>SecretNest.RemoteHub</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ClientIdEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ClientWithVirtualHostSettingEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConnectionExceptionEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Delegates.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRemoteHub.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRemoteHubAdapter.cs" />

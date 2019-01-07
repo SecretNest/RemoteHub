@@ -18,11 +18,6 @@ namespace SecretNest.RemoteHub
         /// <param name="channel">Private channel for Redis.</param>
         /// <returns>Whether the resolving is succeeded or not.</returns>
         bool TryResolve(Guid hostId, out RedisChannel channel);
-
-        /// <summary>
-        /// Occurs when connection to Redis server is broken.
-        /// </summary>
-        event EventHandler<RedisExceptionEventArgs> RedisServerConnectionErrorOccurred;
     }
 
     /// <summary>

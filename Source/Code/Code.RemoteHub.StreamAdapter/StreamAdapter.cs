@@ -10,6 +10,13 @@ namespace SecretNest.RemoteHub
     {
         StreamReader streamReader; StreamWriter streamWriter;
 
+        /// <inheritdoc/>
+        public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
+        /// <inheritdoc/>
+        public event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated;
+        /// <inheritdoc/>
+        public event EventHandler<ClientIdEventArgs> RemoteClientRemoved;
+
         protected StreamAdapter(StreamReader reader, StreamWriter writer)
         {
             streamReader = reader;
