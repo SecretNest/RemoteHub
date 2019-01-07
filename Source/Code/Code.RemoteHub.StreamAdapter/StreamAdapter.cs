@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace SecretNest.RemoteHub
 {
-    public abstract class StreamAdapter : IDisposable, IRemoteHubAdapter
+    public abstract class StreamAdapter : IRemoteHubAdapter
     {
-        StreamReader streamReader; StreamWriter streamWriter;
+        readonly BinaryReader streamReader;
+        readonly BinaryReader streamWriter;
+        readonly int streamRefreshingInterval;
+        RemoteClientTable hostTable;
 
         /// <inheritdoc/>
         public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
@@ -17,57 +20,12 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public event EventHandler<ClientIdEventArgs> RemoteClientRemoved;
 
-        protected StreamAdapter(StreamReader reader, StreamWriter writer)
+        protected StreamAdapter(BinaryReader reader, BinaryReader writer, int refreshingInterval)
         {
             streamReader = reader;
             streamWriter = writer;
+            streamRefreshingInterval = refreshingInterval;
         }
-
-        protected abstract void DisposeManagedState();
-        protected abstract void DisposeUnmanagedResources();
-
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // TODO: dispose managed state (managed objects).
-                }
-
-                streamReader.Close();
-                streamReader.Dispose();
-                streamReader = null;
-
-                streamWriter.Flush();
-                streamWriter.Close();
-                streamWriter.Dispose();
-                streamWriter = null;
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposedValue = true;
-            }
-        }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~StreamAdapter() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
-        }
-        #endregion
 
         public Task AddClientAsync(params Guid[] clientId)
         {
@@ -112,6 +70,7 @@ namespace SecretNest.RemoteHub
         public void Stop()
         {
             throw new NotImplementedException();
+
         }
 
         public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)

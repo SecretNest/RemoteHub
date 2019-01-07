@@ -9,9 +9,9 @@
     <Import_RootNamespace>SecretNest.RemoteHub</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)HostEntity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)HostTable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)HostTable.VirtualEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteClientEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteClientTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteClientTable.VirtualEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PercentageDistributer.cs" />
   </ItemGroup>
 </Project>

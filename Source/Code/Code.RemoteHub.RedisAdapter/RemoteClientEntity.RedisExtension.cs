@@ -5,9 +5,17 @@ using StackExchange.Redis;
 
 namespace SecretNest.RemoteHub
 {
-    partial class HostEntity
+    partial class RemoteClientEntity
     {
+        public DateTime Timeout { get; private set; }
         public RedisChannel Channel { get; }
+
+        public void Refresh(int seconds)
+        {
+            Timeout = DateTime.Now.AddSeconds(seconds);
+        }
+
+        public bool IsTimeValid => Timeout > DateTime.Now;
 
         public IReadOnlyDictionary<Guid, VirtualHostSetting> ApplyVirtualHosts(Guid settingId, string value, out List<Guid> affectedVirtualHosts)
         {
@@ -46,7 +54,7 @@ namespace SecretNest.RemoteHub
         }
 
 
-        public HostEntity(int seconds, string channel)
+        public RemoteClientEntity(int seconds, string channel)
         {
             Channel = new RedisChannel(channel, RedisChannel.PatternMode.Literal);
             Refresh(seconds);

@@ -4,10 +4,8 @@ using System.Text;
 
 namespace SecretNest.RemoteHub
 {
-    partial class HostEntity
+    partial class RemoteClientEntity
     {
-        public DateTime Timeout { get; private set; }
-
         public Dictionary<Guid, VirtualHostSetting> VirtualHosts { get; private set; } = new Dictionary<Guid, VirtualHostSetting>();
         public Guid VirtualHostSettingId { get; private set; }
         object virtualHostLock = new object();
@@ -22,12 +20,6 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        public void Refresh(int seconds)
-        {
-            Timeout = DateTime.Now.AddSeconds(seconds);
-        }
-
-        public bool IsTimeValid => Timeout > DateTime.Now;
 
     }
 }

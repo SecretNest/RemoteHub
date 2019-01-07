@@ -22,7 +22,7 @@ namespace SecretNest.RemoteHub
         ConcurrentDictionary<RedisChannel, Guid> targets = new ConcurrentDictionary<RedisChannel, Guid>();
         readonly string redisConfiguration, mainChannelName, privateChannelNamePrefix;
         readonly int redisDb, clientTimeToLive, clientRefreshingInterval;
-        HostTable hostTable;
+        RemoteClientTable hostTable;
         bool needRefreshFull = false;
         CancellationTokenSource updatingRedisCancellation, updatingRedisWaitingCancellation;
         Task updatingRedis;
@@ -93,7 +93,7 @@ namespace SecretNest.RemoteHub
             mainChannel = new RedisChannel(mainChannelName, RedisChannel.PatternMode.Literal);
             this.clientTimeToLive = clientTimeToLive;
             this.clientRefreshingInterval = clientRefreshingInterval;
-            hostTable = new HostTable(privateChannelNamePrefix);
+            hostTable = new RemoteClientTable(privateChannelNamePrefix);
         }
 
         #region Start Stop
@@ -138,7 +138,7 @@ namespace SecretNest.RemoteHub
                 updatingRedisCancellation = null;
                 updatingRedisWaitingCancellation = null;
 
-                RemoveAllClientsAsync().Wait();
+                RemoveAllClients();
 
                 subscriber.UnsubscribeAll();
 
@@ -147,7 +147,13 @@ namespace SecretNest.RemoteHub
                 redisDatabase = null;
                 redisConnection = null;
 
-                hostTable = new HostTable(privateChannelNamePrefix);
+                if (RemoteClientRemoved != null)
+                    foreach (var remoteClientId in hostTable.GetAllRemoteClientId())
+                    {
+                        RemoteClientRemoved.Invoke(this, new ClientIdEventArgs(remoteClientId));
+                    }
+
+                hostTable = new RemoteClientTable(privateChannelNamePrefix);
                 clients = new Dictionary<Guid, ClientEntity>();
                 targets = new ConcurrentDictionary<RedisChannel, Guid>();
             }
@@ -263,10 +269,17 @@ namespace SecretNest.RemoteHub
 
             var waitingToken = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token).Token;
 
+            var nextRefresh = DateTime.Now.AddSeconds(clientRefreshingInterval);
             //keep
             while (!updatingToken.IsCancellationRequested)
             {
-                var nextRefresh = DateTime.Now.AddSeconds(clientRefreshingInterval);
+                hostTable.ClearAllExpired(out var expired);
+                if (RemoteClientRemoved != null)
+                    foreach (var id in expired)
+                    {
+                        RemoteClientRemoved.BeginInvoke(this, new ClientIdEventArgs(id), null, null);
+                    }
+
                 try
                 {
                     clientsChangingLock.WaitOne();
@@ -295,6 +308,7 @@ namespace SecretNest.RemoteHub
                 {
                     TimeSpan delay = nextRefresh - DateTime.Now - smallTimeFix;
                     await Task.Delay(delay, waitingToken);
+                    nextRefresh = nextRefresh.AddSeconds(clientRefreshingInterval);
                 }
                 catch (TaskCanceledException)
                 {
@@ -672,7 +686,12 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public bool TryResolve(Guid hostId, out RedisChannel channel)
         {
-            return hostTable.TryGet(hostId, out channel);
+            var result = hostTable.TryGet(hostId, out channel, out var isTimedOut);
+            if (isTimedOut)
+            {
+                RemoteClientRemoved?.Invoke(this, new ClientIdEventArgs(hostId));
+            }
+            return result;
         }
 
         /// <inheritdoc/>
