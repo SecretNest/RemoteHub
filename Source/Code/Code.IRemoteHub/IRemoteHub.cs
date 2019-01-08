@@ -44,6 +44,11 @@ namespace SecretNest.RemoteHub
         /// Stops instance operating.
         /// </summary>
         void Stop();
+
+        /// <summary>
+        /// Gets whether this instance is started or not.
+        /// </summary>
+        bool IsStarted { get; }
     }
 
 
@@ -56,32 +61,32 @@ namespace SecretNest.RemoteHub
     public interface IRemoteHub<T> : IRemoteHub
     {
         /// <summary>
-        /// Sends a message to the target host specified by id.
+        /// Sends a message to the remote client specified by id.
         /// </summary>
-        /// <param name="targetHostId">Target host id.</param>
+        /// <param name="remoteClientId">Remote client id.</param>
         /// <param name="message">Message to be sent.</param>
-        /// <returns>Whether the resolving from target host id is succeeded or not.</returns>
-        bool SendMessage(Guid targetHostId, T message);
+        /// <returns>Whether the resolving from remote client id is succeeded or not.</returns>
+        bool SendMessage(Guid remoteClientId, T message);
 
         /// <summary>
-        /// Creates a task that sends a message to the target host specified by id.
+        /// Creates a task that sends a message to the remote client specified by id.
         /// </summary>
-        /// <param name="targetHostId"></param>
-        /// <param name="message"></param>
-        /// <returns>A task that represents the sending job.</returns>
-        Task<bool> SendMessageAsync(Guid targetHostId, T message);
+        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="message">Message to be sent.</param>
+        /// <returns>A task that represents the sending job. The result of this task is whether the resolving from remote client id is succeeded or not.</returns>
+        Task<bool> SendMessageAsync(Guid remoteClientId, T message);
 
         /// <summary>
-        /// Sends a message to the target host specified by private channel name.
+        /// Sends a message to the remote client specified by private channel name.
         /// </summary>
-        /// <param name="targetChannel">Name of the private channel of the target host.</param>
+        /// <param name="targetChannel">Name of the private channel of the remote client.</param>
         /// <param name="message">Message to be sent.</param>
         void SendMessage(string targetChannel, T message);
 
         /// <summary>
-        /// Creates a task that sends a message to the target host specified by private channel name.
+        /// Creates a task that sends a message to the remote client specified by private channel name.
         /// </summary>
-        /// <param name="targetChannel">Name of the private channel of the target host.</param>
+        /// <param name="targetChannel">Name of the private channel of the remote client.</param>
         /// <param name="message">Message to be sent.</param>
         /// <returns>A task that represents the sending job.</returns>
         Task SendMessageAsync(string targetChannel, T message);

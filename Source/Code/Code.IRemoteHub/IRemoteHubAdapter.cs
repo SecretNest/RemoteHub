@@ -65,6 +65,11 @@ namespace SecretNest.RemoteHub
         void Stop();
 
         /// <summary>
+        /// Gets whether this adapter is started or not.
+        /// </summary>
+        bool IsStarted { get; }
+
+        /// <summary>
         /// Applies virtual host settings on the client specified by id.
         /// </summary>
         /// <param name="clientId">Client which will settings be applied on.</param>
@@ -72,12 +77,12 @@ namespace SecretNest.RemoteHub
         void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings);
 
         /// <summary>
-        /// Tries to resolve virtual host by id to host id.
+        /// Tries to resolve virtual host by id to remote client id.
         /// </summary>
-        /// <param name="virtualHostId">Virtual host id.</param>
-        /// <param name="hostId">Host id.</param>
+        /// <param name="virtualHostId">Virtual host id to be resolved.</param>
+        /// <param name="remoteClientId">Remote client id as the result.</param>
         /// <returns>Whether the resolving is succeeded or not.</returns>
-        bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId);
+        bool TryResolveVirtualHost(Guid virtualHostId, out Guid remoteClientId);
 
         /// <summary>
         /// Occurs while an connection related exception is thrown.
@@ -93,6 +98,16 @@ namespace SecretNest.RemoteHub
         /// Occurs while a remote client is removed.
         /// </summary>
         event EventHandler<ClientIdEventArgs> RemoteClientRemoved;
+
+        /// <summary>
+        /// Occurs when this adapter started.
+        /// </summary>
+        event EventHandler OnAdapterStarted;
+
+        /// <summary>
+        /// Occurs when this adapter stopped. Also will be raised if the adapter is stopped by the request from underlying object.
+        /// </summary>
+        event EventHandler OnAdapterStopped;
     }
 
     /// <summary>
@@ -102,18 +117,18 @@ namespace SecretNest.RemoteHub
     public interface IRemoteHubAdapter<T> : IRemoteHubAdapter
     {
         /// <summary>
-        /// Sends private message to target specified by id.
+        /// Sends private message to remote client specified by id.
         /// </summary>
-        /// <param name="targetClientId">Client id of the target.</param>
+        /// <param name="remoteClientId">Remote client id.</param>
         /// <param name="message">Message to be sent.</param>
         /// <returns>A task that represents the sending job.</returns>
-        Task SendPrivateMessageAsync(Guid targetClientId, T message);
+        Task SendPrivateMessageAsync(Guid remoteClientId, T message);
 
         /// <summary>
-        /// Sends private message to target specified by id.
+        /// Sends private message to remote client specified by id.
         /// </summary>
-        /// <param name="targetClientId">Client id of the target.</param>
+        /// <param name="remoteClientId">Remote client id.</param>
         /// <param name="message">Message to be sent.</param>
-        void SendPrivateMessage(Guid targetClientId, T message);
+        void SendPrivateMessage(Guid remoteClientId, T message);
     }
 }

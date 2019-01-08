@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>8ab8e164-2c93-42f1-a603-b79036db313b</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SecretNest.RemoteHub</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)IRemoteHubOverStream.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IRemoteHubStreamAdapter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteHubStreamAdapterForceClosingMode.cs" />
+  </ItemGroup>
+</Project>

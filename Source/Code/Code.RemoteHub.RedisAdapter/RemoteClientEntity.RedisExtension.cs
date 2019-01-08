@@ -17,40 +17,45 @@ namespace SecretNest.RemoteHub
 
         public bool IsTimeValid => Timeout > DateTime.Now;
 
-        public IReadOnlyDictionary<Guid, VirtualHostSetting> ApplyVirtualHosts(Guid settingId, string value, out List<Guid> affectedVirtualHosts)
+        public Dictionary<Guid, VirtualHostSetting> ApplyVirtualHosts(Guid settingId, string value, out List<Guid> affectedVirtualHosts)
         {
             affectedVirtualHosts = new List<Guid>();
+            var newHosts = new Dictionary<Guid, VirtualHostSetting>();
+            var texts = value.Split(',');
+            foreach (var text in texts)
+            {
+                var setting = text.Split('-');
+                var virtualHostId = Guid.Parse(setting[0]);
+                var priority = int.Parse(setting[1]);
+                var weight = int.Parse(setting[2]);
+                VirtualHostSetting virtualHost = new VirtualHostSetting(priority, weight);
+                newHosts.Add(virtualHostId, virtualHost);
+            }
             lock (virtualHostLock)
             {
-                var newHosts = new Dictionary<Guid, VirtualHostSetting>();
-                var texts = value.Split(',');
                 VirtualHostSettingId = settingId;
-                foreach (var text in texts)
+                foreach (var item in newHosts)
                 {
-                    var setting = text.Split('-');
-                    var virtualHostId = Guid.Parse(setting[0]);
-                    var priority = int.Parse(setting[1]);
-                    var weight = int.Parse(setting[2]);
-                    VirtualHostSetting virtualHost = new VirtualHostSetting(priority, weight);
-                    newHosts.Add(virtualHostId, virtualHost);
+                    var virtualHostId = item.Key;
+                    var virtualHost = item.Value;
 
                     if (VirtualHosts.TryGetValue(virtualHostId, out var oldVirtualHost))
                     {
                         if (oldVirtualHost != virtualHost)
                         {
-                            affectedVirtualHosts.Add(virtualHostId);
+                            affectedVirtualHosts.Add(virtualHostId);//changed
                         }
                         VirtualHosts.Remove(virtualHostId);
                     }
                     else
                     {
-                        affectedVirtualHosts.Add(virtualHostId);
+                        affectedVirtualHosts.Add(virtualHostId);//added
                     }
                 }
-                affectedVirtualHosts.AddRange(VirtualHosts.Keys);
+                affectedVirtualHosts.AddRange(VirtualHosts.Keys);//deleted
                 VirtualHosts = newHosts;
-                return newHosts;
             }
+            return newHosts;
         }
 
 

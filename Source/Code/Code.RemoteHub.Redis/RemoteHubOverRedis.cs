@@ -105,23 +105,23 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public bool TryResolve(Guid hostId, out RedisChannel channel)
+        public bool TryResolve(Guid remoteClientId, out RedisChannel channel)
         {
-            return redisAdapter.TryResolve(hostId, out channel);
+            return redisAdapter.TryResolve(remoteClientId, out channel);
         }
 
         /// <summary>
-        /// Sends a message to the target host specified by id.
+        /// Sends a message to the remote client specified by id.
         /// </summary>
-        /// <param name="targetHostId">Target host id.</param>
+        /// <param name="remoteClientId">Remote client id.</param>
         /// <param name="message">Message to be sent.</param>
-        /// <returns>Whether the resolving from target host id is succeeded or not.</returns>
+        /// <returns>Whether the resolving from remote client id is succeeded or not.</returns>
         /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
-        public bool SendMessage(Guid targetHostId, T message)
+        public bool SendMessage(Guid remoteClientId, T message)
         {
-            if (redisAdapter.TryResolve(targetHostId, out var channel))
+            if (redisAdapter.TryResolve(remoteClientId, out var channel))
             {
-                redisAdapter.SendPrivateMessage(targetHostId, message);
+                redisAdapter.SendPrivateMessage(remoteClientId, message);
                 return true;
             }
             else
@@ -131,17 +131,17 @@ namespace SecretNest.RemoteHub
         }
 
         /// <summary>
-        /// Creates a task that sends a message to the target host specified by id.
+        /// Creates a task that sends a message to the remote client specified by id.
         /// </summary>
-        /// <param name="targetHostId"></param>
-        /// <param name="message"></param>
-        /// <returns>A task that represents the sending job.</returns>
+        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="message">Message to be sent.</param>
+        /// <returns>A task that represents the sending job. The result of this task is whether the resolving from remote client id is succeeded or not.</returns>
         /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
-        public async Task<bool> SendMessageAsync(Guid targetHostId, T message)
+        public async Task<bool> SendMessageAsync(Guid remoteClientId, T message)
         {
-            if (redisAdapter.TryResolve(targetHostId, out var channel))
+            if (redisAdapter.TryResolve(remoteClientId, out var channel))
             {
-                await redisAdapter.SendPrivateMessageAsync(targetHostId, message);
+                await redisAdapter.SendPrivateMessageAsync(remoteClientId, message);
                 return true;
             }
             else
@@ -151,9 +151,9 @@ namespace SecretNest.RemoteHub
         }
 
         /// <summary>
-        /// Sends a message to the target host specified by private channel name.
+        /// Sends a message to the remote client specified by private channel name.
         /// </summary>
-        /// <param name="targetChannel">Name of the private channel of the target host.</param>
+        /// <param name="targetChannel">Name of the private channel of the remote client.</param>
         /// <param name="message">Message to be sent.</param>
         /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
         public void SendMessage(string targetChannel, T message)
@@ -162,9 +162,9 @@ namespace SecretNest.RemoteHub
         }
 
         /// <summary>
-        /// Creates a task that sends a message to the target host specified by private channel name.
+        /// Creates a task that sends a message to the remote client specified by private channel name.
         /// </summary>
-        /// <param name="targetChannel">Name of the private channel of the target host.</param>
+        /// <param name="targetChannel">Name of the private channel of the remote client.</param>
         /// <param name="message">Message to be sent.</param>
         /// <returns>A task that represents the sending job.</returns>
         /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
@@ -180,9 +180,9 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId)
+        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid remoteClientId)
         {
-            return redisAdapter.TryResolveVirtualHost(virtualHostId, out hostId);
+            return redisAdapter.TryResolveVirtualHost(virtualHostId, out remoteClientId);
         }
 
         /// <inheritdoc/>
@@ -197,5 +197,7 @@ namespace SecretNest.RemoteHub
             redisAdapter.Stop();
         }
 
+        /// <inheritdoc/>
+        public bool IsStarted => redisAdapter.IsStarted;
     }
 }

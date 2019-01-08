@@ -46,15 +46,15 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public async Task SendPrivateMessageAsync(Guid targetClientId, T message)
+        public async Task SendPrivateMessageAsync(Guid remoteClientId, T message)
         {
-            await SendPrivateMessageAsync(targetClientId, valueConverter.ConvertToMessage(message));
+            await SendPrivateMessageAsync(remoteClientId, valueConverter.ConvertToMessage(message));
         }
 
         /// <inheritdoc/>
-        public void SendPrivateMessage(Guid targetClientId, T message)
+        public void SendPrivateMessage(Guid remoteClientId, T message)
         {
-            SendPrivateMessage(targetClientId, valueConverter.ConvertToMessage(message));
+            SendPrivateMessage(remoteClientId, valueConverter.ConvertToMessage(message));
         }
 
         protected override void OnPrivateMessageReceived(Guid clientId, RedisValue value)

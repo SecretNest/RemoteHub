@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
+    <RootNamespace>SecretNest.RemoteHub</RootNamespace>
+    <AssemblyName>SecretNest.IRemoteHub.Stream</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Release.IRemoteHub\Release.IRemoteHub.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\..\Code\Code.IRemoteHub.Stream\Code.IRemoteHub.Stream.projitems" Label="Shared" />
+
+</Project>

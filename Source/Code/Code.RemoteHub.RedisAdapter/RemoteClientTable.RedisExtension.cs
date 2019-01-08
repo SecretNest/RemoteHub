@@ -31,7 +31,7 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        public IReadOnlyDictionary<Guid, VirtualHostSetting> ApplyVirtualHosts(Guid remoteClientId, Guid settingId, string value)
+        public Dictionary<Guid, VirtualHostSetting> ApplyVirtualHosts(Guid remoteClientId, Guid settingId, string value)
         {
             lock (remoteClients)
             {

@@ -35,6 +35,10 @@ namespace SecretNest.RemoteHub
         public event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated;
         /// <inheritdoc/>
         public event EventHandler<ClientIdEventArgs> RemoteClientRemoved;
+        /// <inheritdoc/>
+        public event EventHandler OnAdapterStarted;
+        /// <inheritdoc/>
+        public event EventHandler OnAdapterStopped;
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -123,6 +127,7 @@ namespace SecretNest.RemoteHub
 
                 updatingRedis = UpdateRedisAsync();
                 startingLock.Wait();
+                OnAdapterStarted?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -156,6 +161,7 @@ namespace SecretNest.RemoteHub
                 hostTable = new RemoteClientTable(privateChannelNamePrefix);
                 clients = new Dictionary<Guid, ClientEntity>();
                 targets = new ConcurrentDictionary<RedisChannel, Guid>();
+                OnAdapterStopped?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -170,6 +176,9 @@ namespace SecretNest.RemoteHub
         {
             StopConnection();
         }
+
+        /// <inheritdoc/>
+        public bool IsStarted => updatingRedis != null;
 
         #endregion
 
@@ -411,9 +420,9 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        protected async Task SendPrivateMessageAsync(Guid targetClientId, RedisValue value)
+        protected async Task SendPrivateMessageAsync(Guid remoteClientId, RedisValue value)
         {
-            RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + targetClientId.ToString("N"), RedisChannel.PatternMode.Literal);
+            RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + remoteClientId.ToString("N"), RedisChannel.PatternMode.Literal);
             await SendPrivateMessageAsync(redisChannel, value);
         }
 
@@ -435,9 +444,9 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        protected void SendPrivateMessage(Guid targetClientId, RedisValue value)
+        protected void SendPrivateMessage(Guid remoteClientId, RedisValue value)
         {
-            RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + targetClientId.ToString("N"), RedisChannel.PatternMode.Literal);
+            RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + remoteClientId.ToString("N"), RedisChannel.PatternMode.Literal);
             SendPrivateMessage(redisChannel, value);
         }
         #endregion
@@ -684,20 +693,20 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public bool TryResolve(Guid hostId, out RedisChannel channel)
+        public bool TryResolve(Guid remoteClientId, out RedisChannel channel)
         {
-            var result = hostTable.TryGet(hostId, out channel, out var isTimedOut);
+            var result = hostTable.TryGet(remoteClientId, out channel, out var isTimedOut);
             if (isTimedOut)
             {
-                RemoteClientRemoved?.Invoke(this, new ClientIdEventArgs(hostId));
+                RemoteClientRemoved?.Invoke(this, new ClientIdEventArgs(remoteClientId));
             }
             return result;
         }
 
         /// <inheritdoc/>
-        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId)
+        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid remoteClientId)
         {
-            return hostTable.TryResolveVirtualHost(virtualHostId, out hostId);
+            return hostTable.TryResolveVirtualHost(virtualHostId, out remoteClientId);
         }
     }
 
