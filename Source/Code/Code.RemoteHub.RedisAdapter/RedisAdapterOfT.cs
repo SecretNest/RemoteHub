@@ -36,25 +36,53 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public async Task SendPrivateMessageAsync(RedisChannel channel, T message)
         {
-            await SendPrivateMessageAsync(channel, valueConverter.ConvertToMessage(message));
+            if (IsSelf(channel, out var clientId))
+            {
+                onMessageReceivedCallback.BeginInvoke(clientId, message, null, null);
+            }
+            else
+            {
+                await SendPrivateMessageAsync(channel, valueConverter.ConvertToMessage(message));
+            }
         }
 
         /// <inheritdoc/>
         public void SendPrivateMessage(RedisChannel channel, T message)
         {
-            SendPrivateMessage(channel, valueConverter.ConvertToMessage(message));
+            if (IsSelf(channel, out var clientId))
+            {
+                onMessageReceivedCallback.BeginInvoke(clientId, message, null, null);
+            }
+            else
+            {
+                SendPrivateMessage(channel, valueConverter.ConvertToMessage(message));
+            }
         }
 
         /// <inheritdoc/>
         public async Task SendPrivateMessageAsync(Guid remoteClientId, T message)
         {
-            await SendPrivateMessageAsync(remoteClientId, valueConverter.ConvertToMessage(message));
+            if (IsSelf(remoteClientId))
+            {
+                onMessageReceivedCallback.BeginInvoke(remoteClientId, message, null, null);
+            }
+            else
+            {
+                await SendPrivateMessageAsync(remoteClientId, valueConverter.ConvertToMessage(message));
+            }
         }
 
         /// <inheritdoc/>
         public void SendPrivateMessage(Guid remoteClientId, T message)
         {
-            SendPrivateMessage(remoteClientId, valueConverter.ConvertToMessage(message));
+            if (IsSelf(remoteClientId))
+            {
+                onMessageReceivedCallback.BeginInvoke(remoteClientId, message, null, null);
+            }
+            else
+            {
+                SendPrivateMessage(remoteClientId, valueConverter.ConvertToMessage(message));
+            }
         }
 
         protected override void OnPrivateMessageReceived(Guid clientId, RedisValue value)

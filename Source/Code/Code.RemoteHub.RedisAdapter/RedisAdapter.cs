@@ -18,6 +18,7 @@ namespace SecretNest.RemoteHub
         RedisChannel mainChannel;
         IDatabase redisDatabase;
         ISubscriber publisher, subscriber;
+        int clientsListVersion = int.MinValue;
         Dictionary<Guid, ClientEntity> clients = new Dictionary<Guid, ClientEntity>();
         ConcurrentDictionary<RedisChannel, Guid> targets = new ConcurrentDictionary<RedisChannel, Guid>();
         readonly string redisConfiguration, mainChannelName, privateChannelNamePrefix;
@@ -98,6 +99,23 @@ namespace SecretNest.RemoteHub
             this.clientTimeToLive = clientTimeToLive;
             this.clientRefreshingInterval = clientRefreshingInterval;
             hostTable = new RemoteClientTable(privateChannelNamePrefix);
+        }
+
+        protected bool IsSelf(Guid clientId)
+        {
+            bool result;
+            int start;
+            do
+            {
+                start = clientsListVersion;
+                result = clients.ContainsKey(clientId);
+            } while (start != clientsListVersion);
+            return result;
+        }
+
+        protected bool IsSelf(RedisChannel redisChannel, out Guid clientId)
+        {
+            return targets.TryGetValue(redisChannel, out clientId);
         }
 
         #region Start Stop
@@ -271,17 +289,32 @@ namespace SecretNest.RemoteHub
         {
             //start
             var updatingToken = updatingRedisCancellation.Token;
-            await MainChannelPublishingAsync(messageTextHello, updatingToken);
+            await MainChannelPublishingAsync(messageTextHello, updatingToken);  // This Hello message will also be received by the sender, which will cause the delay in the 1st round of keeping will be cancelled.
 
             //started
+            var waitingToken = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token).Token;
+            var nextRefresh = DateTime.Now.AddSeconds(clientRefreshingInterval);
+
             startingLock.Set();
 
-            var waitingToken = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token).Token;
-
-            var nextRefresh = DateTime.Now.AddSeconds(clientRefreshingInterval);
-            //keep
+            //keeping
             while (!updatingToken.IsCancellationRequested)
             {
+                try
+                {
+                    TimeSpan delay = nextRefresh - DateTime.Now - smallTimeFix;
+                    await Task.Delay(delay, waitingToken);
+                    nextRefresh = nextRefresh.AddSeconds(clientRefreshingInterval);
+                }
+                catch (TaskCanceledException)
+                {
+                    if (!updatingToken.IsCancellationRequested)
+                    {
+                        nextRefresh = DateTime.Now;
+                        waitingToken = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token).Token;
+                    }
+                }
+
                 hostTable.ClearAllExpired(out var expired);
                 if (RemoteClientRemoved != null)
                     foreach (var id in expired)
@@ -311,21 +344,6 @@ namespace SecretNest.RemoteHub
                 finally
                 {
                     clientsChangingLock.Set();
-                }
-
-                try
-                {
-                    TimeSpan delay = nextRefresh - DateTime.Now - smallTimeFix;
-                    await Task.Delay(delay, waitingToken);
-                    nextRefresh = nextRefresh.AddSeconds(clientRefreshingInterval);
-                }
-                catch (TaskCanceledException)
-                {
-                    if (!updatingToken.IsCancellationRequested)
-                    {
-                        nextRefresh = DateTime.Now;
-                        waitingToken = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token).Token;
-                    }
                 }
             }
         }
@@ -404,6 +422,9 @@ namespace SecretNest.RemoteHub
 
         protected async Task SendPrivateMessageAsync(RedisChannel channel, RedisValue value)
         {
+            if (!IsStarted)
+                throw new InvalidOperationException();
+
             try
             {
                 await publisher.PublishAsync(channel, value);
@@ -422,12 +443,18 @@ namespace SecretNest.RemoteHub
 
         protected async Task SendPrivateMessageAsync(Guid remoteClientId, RedisValue value)
         {
+            if (!IsStarted)
+                throw new InvalidOperationException();
+
             RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + remoteClientId.ToString("N"), RedisChannel.PatternMode.Literal);
             await SendPrivateMessageAsync(redisChannel, value);
         }
 
         protected void SendPrivateMessage(RedisChannel channel, RedisValue value)
         {
+            if (!IsStarted)
+                throw new InvalidOperationException();
+
             try
             {
                 publisher.Publish(channel, value);
@@ -446,6 +473,9 @@ namespace SecretNest.RemoteHub
 
         protected void SendPrivateMessage(Guid remoteClientId, RedisValue value)
         {
+            if (!IsStarted)
+                throw new InvalidOperationException();
+
             RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + remoteClientId.ToString("N"), RedisChannel.PatternMode.Literal);
             SendPrivateMessage(redisChannel, value);
         }
@@ -468,6 +498,7 @@ namespace SecretNest.RemoteHub
                     string idText = id.ToString("N");
                     var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
                     clients[id] = client;
+                    Interlocked.Increment(ref clientsListVersion);
 
                     if (updatingRedis != null)
                     {
@@ -501,6 +532,7 @@ namespace SecretNest.RemoteHub
                     string idText = id.ToString("N");
                     var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
                     clients[id] = client;
+                    Interlocked.Increment(ref clientsListVersion);
 
                     if (updatingRedis != null)
                     {
@@ -536,6 +568,7 @@ namespace SecretNest.RemoteHub
                 }
 
                 clients.Remove(clientId);
+                Interlocked.Increment(ref clientsListVersion);
             }
         }
 
@@ -556,6 +589,7 @@ namespace SecretNest.RemoteHub
                 }
 
                 clients.Remove(clientId);
+                Interlocked.Increment(ref clientsListVersion);
             }
         }
 
@@ -709,6 +743,4 @@ namespace SecretNest.RemoteHub
             return hostTable.TryResolveVirtualHost(virtualHostId, out remoteClientId);
         }
     }
-
-    
 }

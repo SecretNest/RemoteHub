@@ -14,7 +14,7 @@ namespace SecretNest.RemoteHub
         Stream outputStream;
         readonly int streamRefreshingInterval;
         RemoteClientTable hostTable; //also used as startlock
-        Task readingJob, writingJob;
+        Task readingJob, writingJob, keepingJob;
         CancellationTokenSource shuttingdownTokenSource;
         CancellationToken shuttingdownToken;
         ManualResetEventSlim streamInReading;
@@ -43,11 +43,13 @@ namespace SecretNest.RemoteHub
         {
             lock(hostTable)
             {
-                if (shuttingdownTokenSource == null) return;
+                if (readingJob != null) return;
                 shuttingdownTokenSource = new CancellationTokenSource();
                 shuttingdownToken = shuttingdownTokenSource.Token;
 
 
+
+                OnAdapterStarted?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -55,7 +57,11 @@ namespace SecretNest.RemoteHub
         {
             lock (hostTable)
             {
+                if (readingJob == null) return;
 
+
+
+                OnAdapterStopped?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -68,16 +74,19 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public void Stop()
         {
-            StopProcessing();
+            Stop(RemoteHubStreamAdapterForceClosingMode.Default, out _);
         }
 
         /// <inheritdoc/>
-        public bool IsStarted => shuttingdownTokenSource != null;
+        public bool IsStarted => readingJob != null;
 
         /// <inheritdoc/>
         public void Stop(RemoteHubStreamAdapterForceClosingMode forceClosing, out bool isReadingStreamClosed)
         {
             throw new NotImplementedException();
+
+
+            StopProcessing();
         }
 
         /// <inheritdoc/>
@@ -114,6 +123,11 @@ namespace SecretNest.RemoteHub
                 }
             }
             catch (OperationCanceledException) { }
+        }
+
+        async Task KeepingProcessor()
+        {
+
         }
 
         async Task OnHelloReceivedAsync()
@@ -201,7 +215,8 @@ namespace SecretNest.RemoteHub
             throw new NotImplementedException();
         }
 
-        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId)
+        /// <inheritdoc/>
+        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid remoteClientId)
         {
             throw new NotImplementedException();
         }
