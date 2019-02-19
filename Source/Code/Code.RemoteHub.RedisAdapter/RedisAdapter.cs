@@ -101,22 +101,7 @@ namespace SecretNest.RemoteHub
             hostTable = new RemoteClientTable(privateChannelNamePrefix);
         }
 
-        protected bool IsSelf(Guid clientId)
-        {
-            bool result;
-            int start;
-            do
-            {
-                start = clientsListVersion;
-                result = clients.ContainsKey(clientId);
-            } while (start != clientsListVersion);
-            return result;
-        }
 
-        protected bool IsSelf(RedisChannel redisChannel, out Guid clientId)
-        {
-            return targets.TryGetValue(redisChannel, out clientId);
-        }
 
         #region Start Stop
         void StartConnection()
@@ -482,6 +467,24 @@ namespace SecretNest.RemoteHub
         #endregion
 
         #region Client Id
+
+        protected bool IsSelf(Guid clientId)
+        {
+            bool result;
+            int start;
+            do
+            {
+                start = clientsListVersion;
+                result = clients.ContainsKey(clientId);
+            } while (start != clientsListVersion);
+            return result;
+        }
+
+        protected bool IsSelf(RedisChannel redisChannel, out Guid clientId)
+        {
+            return targets.TryGetValue(redisChannel, out clientId);
+        }
+
         /// <inheritdoc/>
         public async Task AddClientAsync(params Guid[] clientId)
         {

@@ -11,13 +11,6 @@ namespace SecretNest.RemoteHub
     public interface IRemoteHubStreamAdapter : IRemoteHubAdapter
     {
         /// <summary>
-        /// Stops the underlying stream operations.
-        /// </summary>
-        /// <param name="forceClosing">How to perform closing on stream for reading.</param>
-        /// <param name="isReadingStreamClosed">Whether the stream for reading is closed.</param>
-        void Stop(RemoteHubStreamAdapterForceClosingMode forceClosing, out bool isReadingStreamClosed);
-
-        /// <summary>
         /// Changes the streams of this adapter.
         /// </summary>
         /// <param name="newInputStream">Stream for reading.</param>

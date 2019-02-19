@@ -11,6 +11,5 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)IRemoteHubOverStream.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRemoteHubStreamAdapter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RemoteHubStreamAdapterForceClosingMode.cs" />
   </ItemGroup>
 </Project>

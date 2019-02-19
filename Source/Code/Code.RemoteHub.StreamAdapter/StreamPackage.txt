@@ -2,7 +2,7 @@
 1st byte: Command
 
 Command:
-0-127: Private Channel Message.
+0-127: Private channel message.
 128: Hello
 129: Add or update client without virtual host setting
 	2nd - 17th byte: Client id (Guid)
@@ -15,9 +15,9 @@ Command:
 	2nd - 17th byte: Client id (Guid)
 253: Pong
 254: Ping
-255: Link Closed
+255: Link closed
 
-Private Channel:
-1st - 4th byte: Length of data (BitConverter Int32), Value > 0
+Private channel:
+1st - 4th byte: Length of data (BitConverter Int32), Value > 0, Target client id is not counted in.
 5th - 20th byte: Target client id (Guid)
 From 21st byte: Data

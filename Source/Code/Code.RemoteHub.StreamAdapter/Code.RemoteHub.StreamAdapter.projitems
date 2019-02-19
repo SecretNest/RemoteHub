@@ -12,9 +12,10 @@
     <Content Include="$(MSBuildThisFileDirectory)StreamPackage.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)BinaryReaderReadingExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RemoteClientTable.StreamExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StreamAdapter.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)StreamReadingWritingExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)StreamWritingExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)RemoteClientEntity.StreamExtesnsion.cs" />
