@@ -395,7 +395,7 @@ namespace SecretNest.RemoteHub
         #endregion
 
         #region Private Channel Operating
-        protected abstract void OnPrivateMessageReceived(Guid clientId, RedisValue value);
+        protected abstract void OnPrivateMessageReceived(Guid targetClientId, RedisValue value);
 
         void OnPrivateChannelReceived(RedisChannel channel, RedisValue value)
         {

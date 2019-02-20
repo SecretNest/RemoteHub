@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
+    <RootNamespace>SecretNest.RemoteHub</RootNamespace>
+    <AssemblyName>SecretNest.RemoteHub.Stream</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Release.IRemoteHub.Redis\Release.IRemoteHub.Redis.csproj" />
+    <ProjectReference Include="..\Release.IRemoteHub\Release.IRemoteHub.csproj" />
+    <ProjectReference Include="..\Release.RemoteHub.StreamAdapter\Release.RemoteHub.StreamAdapter.csproj" />
+  </ItemGroup>
+
+  <Import Project="..\..\Code\Code.RemoteHub.Stream\Code.RemoteHub.Stream.projitems" Label="Shared" />
+
+</Project>

@@ -27,7 +27,7 @@ namespace SecretNest.RemoteHub
         public static int ReadInt32(this BinaryReader reader)
         {
             byte[] buffer = reader.ReadBytes(4);
-            return BitConverter.ToUInt32(buffer, 0);
+            return BitConverter.ToInt32(buffer, 0);
         }
     }
 }

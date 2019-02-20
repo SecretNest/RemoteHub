@@ -26,11 +26,25 @@ namespace SecretNest.RemoteHub
         /// <param name="clientTimeToLive">Time to live (TTL) value of the host in seconds. Any records of hosts expired will be removed.</param>
         /// <param name="clientRefreshingInterval">Interval between refresh command sending operations in seconds.</param>
         public RedisAdapter(string redisConfiguration, OnMessageReceivedCallback<T> onMessageReceivedCallback, string mainChannelName, string privateChannelNamePrefix, int redisDb, int clientTimeToLive, int clientRefreshingInterval)
-            : base(redisConfiguration, mainChannelName, privateChannelNamePrefix, redisDb, clientRefreshingInterval, clientRefreshingInterval)
+            : base(redisConfiguration, mainChannelName, privateChannelNamePrefix, redisDb, clientTimeToLive, clientRefreshingInterval)
         {
             this.onMessageReceivedCallback = onMessageReceivedCallback;
 
-            valueConverter = ValueConverter<T>.Create();
+            var type = typeof(T);
+            if (type == typeof(string))
+            {
+                ValueConverter<string> client = new ValueConverterOfString();
+                valueConverter = __refvalue(__makeref(client), ValueConverter<T>);
+            }
+            else if (type == typeof(byte[]))
+            {
+                ValueConverter<byte[]> client = new ValueConverterOfByteArray();
+                valueConverter = __refvalue(__makeref(client), ValueConverter<T>);
+            }
+            else
+            {
+                throw new NotSupportedException("Only string and byte array are supported.");
+            }
         }
 
         /// <inheritdoc/>
@@ -64,7 +78,7 @@ namespace SecretNest.RemoteHub
         {
             if (IsSelf(remoteClientId))
             {
-                onMessageReceivedCallback.BeginInvoke(remoteClientId, message, null, null);
+                OnPrivateMessageReceived(remoteClientId, message);
             }
             else
             {
@@ -77,7 +91,7 @@ namespace SecretNest.RemoteHub
         {
             if (IsSelf(remoteClientId))
             {
-                onMessageReceivedCallback.BeginInvoke(remoteClientId, message, null, null);
+                OnPrivateMessageReceived(remoteClientId, message);
             }
             else
             {
@@ -85,9 +99,14 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        protected override void OnPrivateMessageReceived(Guid clientId, RedisValue value)
+        protected override void OnPrivateMessageReceived(Guid targetClientId, RedisValue value)
         {
-            onMessageReceivedCallback.Invoke(clientId, valueConverter.ConvertFromMessage(value));
+            OnPrivateMessageReceived(targetClientId, valueConverter.ConvertFromMessage(value));
+        }
+
+        void OnPrivateMessageReceived(Guid targetClientId, T message)
+        {
+            onMessageReceivedCallback.BeginInvoke(targetClientId, message, null, null);
         }
     }
 }

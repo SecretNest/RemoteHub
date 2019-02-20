@@ -9,17 +9,19 @@ using System.Linq;
 
 namespace SecretNest.RemoteHub
 {
-    public abstract class StreamAdapter : IRemoteHubStreamAdapter
+    /// <summary>
+    /// Represents the base, non-generic version of the generic <see cref="StreamAdapter{T}"/>, which converts between RemoteHub commands and stream.
+    /// </summary>
+    public abstract class StreamAdapter : IDisposable, IRemoteHubStreamAdapter
     {
         Stream inputStream;
         Stream outputStream;
         readonly int streamRefreshingIntervalInSeconds;
         Dictionary<Guid, byte[]> clients = new Dictionary<Guid, byte[]>(); //value is null if no virtual host; or value is virtual host setting id + count + setting data.
-        RemoteClientTable hostTable; //also used as startlock
+        RemoteClientTable hostTable = new RemoteClientTable(); //also used as startlock
         Task readingJob, writingJob, keepingJob;
         CancellationTokenSource shuttingdownTokenSource;
         CancellationToken shuttingdownToken;
-        ManualResetEventSlim streamInIdling;
         BlockingCollection<byte[]> sendingBuffers;
 
         protected abstract void OnPrivateMessageReceived(Guid targetClientId, byte[] dataPackage);
@@ -42,6 +44,45 @@ namespace SecretNest.RemoteHub
             streamRefreshingIntervalInSeconds = refreshingIntervalInSeconds;
         }
 
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
+
+                StopProcessing();
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
+        // ~RedisAdapter() {
+        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+        //   Dispose(false);
+        // }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+
+        #endregion
+
         #region Start Stop
         void StartProcessing()
         {
@@ -56,6 +97,11 @@ namespace SecretNest.RemoteHub
                 keepingJob = KeepingProcessorAsync();
 
                 OnAdapterStarted?.Invoke(this, EventArgs.Empty);
+
+                sendingBuffers = new BlockingCollection<byte[]>();
+
+                sendingBuffers.Add(new byte[] { 128 }); //Hello
+                SendingRefreshAllClients();
             }
         }
 
@@ -65,6 +111,14 @@ namespace SecretNest.RemoteHub
             {
                 if (readingJob == null) return;
 
+                sendingBuffers.Add(new byte[] { 255 }); //Link closed.
+                sendingBuffers.CompleteAdding();
+
+                while(!sendingBuffers.IsCompleted)
+                {
+                    Task.Delay(100).Wait();
+                }
+                
                 shuttingdownTokenSource.Cancel();
                 inputStream.Close(); //Need to close 1st to make readingJob closable.
 
@@ -79,6 +133,7 @@ namespace SecretNest.RemoteHub
                 keepingJob = null;
                 inputStream = null;
                 outputStream = null;
+                sendingBuffers = null;
 
                 //OnAdapterStopped will be raised at the end of receiving procedure.
             }
@@ -90,7 +145,9 @@ namespace SecretNest.RemoteHub
             StartProcessing();
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Stops the underlying object required operations. Streams will be closed also.
+        /// </summary>
         public void Stop()
         {
             StopProcessing();
@@ -129,7 +186,6 @@ namespace SecretNest.RemoteHub
                     while (!shuttingdownToken.IsCancellationRequested)
                     {
                         commandCode = binaryReader.ReadByte();
-                        streamInIdling.Reset();
 
                         lastStreamWorkingTime = DateTime.Now;
 
@@ -201,6 +257,7 @@ namespace SecretNest.RemoteHub
                     await outputStream.WriteAsync(buffer, 0, buffer.Length, shuttingdownToken);
                 }
             }
+            catch (InvalidOperationException) { } //Finish adding, called only from StopProcessing
             catch (OperationCanceledException) { }
             catch (Exception ex)
             {
@@ -227,7 +284,7 @@ namespace SecretNest.RemoteHub
                     if (previousTime == lastStreamWorkingTime)
                     {
                         lastStreamWorkingTime = DateTime.Now;
-                        sendingBuffers.Add(new byte[] { 254 }); //Sending ping
+                        AddToSendingBuffer(new byte[] { 254 }); //Sending ping
                     }
                 }
             }
@@ -237,7 +294,12 @@ namespace SecretNest.RemoteHub
 
         void OnHelloReceived()
         {
-            foreach(var client in clients)
+            SendingRefreshAllClients();
+        }
+
+        void SendingRefreshAllClients()
+        {
+            foreach (var client in clients)
             {
                 SendingRefreshClient(client.Key, client.Value);
             }
@@ -275,7 +337,11 @@ namespace SecretNest.RemoteHub
 
         void OnPingReceived()
         {
-            sendingBuffers.Add(new byte[] { 253 });
+            try
+            {
+                sendingBuffers.Add(new byte[] { 253 });
+            }
+            catch { }
         }
 
         void OnLinkClosedReceived()
@@ -305,7 +371,7 @@ namespace SecretNest.RemoteHub
                 Array.Copy(setting, 0, package, 17, setting.Length);
             }
             Array.Copy(targetClientId.ToByteArray(), 0, package, 1, 16);
-            sendingBuffers.Add(package);
+            AddToSendingBuffer(package);
         }
 
         void SendingRemoveClient(Guid targetClientId)
@@ -313,7 +379,7 @@ namespace SecretNest.RemoteHub
             byte[] package = new byte[17];
             package[0] = 131;
             Array.Copy(targetClientId.ToByteArray(), 0, package, 1, 16);
-            sendingBuffers.Add(package);
+            AddToSendingBuffer(package);
         }
 
         protected void SendingPrivateMessage(Guid targetClientId, byte[] data)
@@ -323,7 +389,21 @@ namespace SecretNest.RemoteHub
             Array.Copy(BitConverter.GetBytes(length), package, 4);
             Array.Copy(targetClientId.ToByteArray(), 0, package, 4, 16);
             Array.Copy(data, 0, package, 20, length);
-            sendingBuffers.Add(package);
+            AddToSendingBuffer(package);
+        }
+
+        void AddToSendingBuffer(byte[] package)
+        {
+            try
+            {
+                sendingBuffers.Add(package);
+            }
+            catch (InvalidOperationException) //link closed.
+            {
+            }
+            catch (NullReferenceException) //link closed.
+            {
+            }
         }
         #endregion
 
@@ -512,5 +592,9 @@ namespace SecretNest.RemoteHub
             return hostTable.TryResolveVirtualHost(virtualHostId, out remoteClientId);
         }
 
+        protected bool IsSelf(Guid clientId)
+        {
+            return clients.ContainsKey(clientId);
+        }
     }
 }
