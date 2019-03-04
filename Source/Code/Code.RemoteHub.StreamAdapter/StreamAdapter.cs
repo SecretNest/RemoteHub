@@ -128,6 +128,12 @@ namespace SecretNest.RemoteHub
 
                 outputStream.Close();
 
+                if (RemoteClientRemoved != null)
+                    foreach (var remoteClientId in hostTable.GetAllRemoteClientId())
+                    {
+                        RemoteClientRemoved.Invoke(this, new ClientIdEventArgs(remoteClientId));
+                    }
+
                 readingJob = null;
                 writingJob = null;
                 keepingJob = null;
@@ -217,6 +223,11 @@ namespace SecretNest.RemoteHub
                             var clientId = binaryReader.ReadGuid();
                             OnAddOrUpdateClientReceived(clientId);
                         }
+                        else if (commandCode == 131) //Remove
+                        {
+                            var clientId = binaryReader.ReadGuid();
+                            OnRemoveClientReceived(clientId);
+                        }
                         else if (commandCode == 128) //Hello
                         {
                             OnHelloReceived();
@@ -278,7 +289,8 @@ namespace SecretNest.RemoteHub
                 {
                     DateTime previousTime = lastStreamWorkingTime;
                     int delay = streamRefreshingIntervalInSeconds * 1000 - (int)(DateTime.Now - previousTime).TotalMilliseconds;
-                    await Task.Delay(delay, shuttingdownToken);
+                    if (delay > 0)
+                        await Task.Delay(delay, shuttingdownToken);
 
                     if (shuttingdownToken.IsCancellationRequested) break;
                     if (previousTime == lastStreamWorkingTime)
@@ -331,7 +343,7 @@ namespace SecretNest.RemoteHub
             if (RemoteClientRemoved != null)
             {
                 ClientIdEventArgs e = new ClientIdEventArgs(senderClientId);
-                RemoteClientRemoved(this, e);
+                Task.Run(() => RemoteClientRemoved(this, e));
             }
         }
 

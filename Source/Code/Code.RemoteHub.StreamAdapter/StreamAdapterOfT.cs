@@ -73,7 +73,7 @@ namespace SecretNest.RemoteHub
 
         void OnPrivateMessageReceived(Guid targetClientId, T message)
         {
-            onMessageReceivedCallback.BeginInvoke(targetClientId, message, null, null);
+            Task.Run(() => onMessageReceivedCallback(targetClientId, message));
         }
     }
 }

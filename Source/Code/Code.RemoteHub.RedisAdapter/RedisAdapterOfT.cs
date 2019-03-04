@@ -52,7 +52,9 @@ namespace SecretNest.RemoteHub
         {
             if (IsSelf(channel, out var clientId))
             {
-                onMessageReceivedCallback.BeginInvoke(clientId, message, null, null);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                Task.Run(() => onMessageReceivedCallback(clientId, message));
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             }
             else
             {
@@ -65,7 +67,7 @@ namespace SecretNest.RemoteHub
         {
             if (IsSelf(channel, out var clientId))
             {
-                onMessageReceivedCallback.BeginInvoke(clientId, message, null, null);
+                Task.Run(() => onMessageReceivedCallback(clientId, message));
             }
             else
             {
@@ -106,7 +108,7 @@ namespace SecretNest.RemoteHub
 
         void OnPrivateMessageReceived(Guid targetClientId, T message)
         {
-            onMessageReceivedCallback.BeginInvoke(targetClientId, message, null, null);
+            Task.Run(() => onMessageReceivedCallback(targetClientId, message));
         }
     }
 }
