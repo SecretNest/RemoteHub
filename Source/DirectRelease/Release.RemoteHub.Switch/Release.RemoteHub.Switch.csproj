@@ -3,17 +3,13 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
     <RootNamespace>SecretNest.RemoteHub</RootNamespace>
-    <AssemblyName>SecretNest.IRemoteHub.Redis</AssemblyName>
+    <AssemblyName>SecretNest.RemoteHub.Switch</AssemblyName>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="StackExchange.Redis" Version="2.0.519" />
-  </ItemGroup>
+  <Import Project="..\..\Code\Code.RemoteHub.Switch\Code.RemoteHub.Switch.projitems" Label="Shared" />
 
   <ItemGroup>
     <ProjectReference Include="..\Release.IRemoteHub\Release.IRemoteHub.csproj" />
   </ItemGroup>
-
-  <Import Project="..\..\Code\Code.IRemoteHub.Redis\Code.IRemoteHub.Redis.projitems" Label="Shared" />
 
 </Project>

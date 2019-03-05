@@ -43,7 +43,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.IRemoteHub.Stream",
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.Stream", "Code\Code.RemoteHub.Stream\Code.RemoteHub.Stream.shproj", "{8C6B8EC4-A2F0-4FC4-9B93-54D8C0BCB1FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Release.RemoteHub.Stream", "DirectRelease\Release.RemoteHub.Stream\Release.RemoteHub.Stream.csproj", "{2D35E87B-1756-4F04-8403-8AB1E2F135A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.RemoteHub.Stream", "DirectRelease\Release.RemoteHub.Stream\Release.RemoteHub.Stream.csproj", "{2D35E87B-1756-4F04-8403-8AB1E2F135A8}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.Switch", "Code\Code.RemoteHub.Switch\Code.RemoteHub.Switch.shproj", "{C79591BE-E632-4D9C-A016-CB95A43F4D3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Release.RemoteHub.Switch", "DirectRelease\Release.RemoteHub.Switch\Release.RemoteHub.Switch.csproj", "{B8B79421-5498-4FEF-B923-5DF66EC18F6B}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -53,6 +57,7 @@ Global
 		Code\Code.RemoteHub.Stream\Code.RemoteHub.Stream.projitems*{8c6b8ec4-a2f0-4fc4-9b93-54d8c0bcb1fc}*SharedItemsImports = 13
 		Code\Code.IRemoteHub.Redis\Code.IRemoteHub.Redis.projitems*{9c9729d8-00e9-48cc-94ec-4b5819b08916}*SharedItemsImports = 13
 		Code\Code.RemoteHub.Redis\Code.RemoteHub.Redis.projitems*{bcc8bd2c-1645-45e9-95a0-a315f47f259b}*SharedItemsImports = 13
+		Code\Code.RemoteHub.Switch\Code.RemoteHub.Switch.projitems*{c79591be-e632-4d9c-a016-cb95a43f4d3a}*SharedItemsImports = 13
 		Code\Code.RemoteHub.StreamAdapter\Code.RemoteHub.StreamAdapter.projitems*{cb66a709-2c27-4c22-8b0b-5c87ec4a7185}*SharedItemsImports = 13
 		Code\Code.IRemoteHub\Code.IRemoteHub.projitems*{d73c55f9-1cc2-4e53-9bed-3fa64dda3d4d}*SharedItemsImports = 13
 	EndGlobalSection
@@ -96,6 +101,10 @@ Global
 		{2D35E87B-1756-4F04-8403-8AB1E2F135A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D35E87B-1756-4F04-8403-8AB1E2F135A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D35E87B-1756-4F04-8403-8AB1E2F135A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8B79421-5498-4FEF-B923-5DF66EC18F6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8B79421-5498-4FEF-B923-5DF66EC18F6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8B79421-5498-4FEF-B923-5DF66EC18F6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8B79421-5498-4FEF-B923-5DF66EC18F6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -118,6 +127,8 @@ Global
 		{53A98206-EFC9-4C26-8C1A-268E249B599D} = {189A414D-B434-442A-AD84-E6CA16C00C30}
 		{8C6B8EC4-A2F0-4FC4-9B93-54D8C0BCB1FC} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
 		{2D35E87B-1756-4F04-8403-8AB1E2F135A8} = {189A414D-B434-442A-AD84-E6CA16C00C30}
+		{C79591BE-E632-4D9C-A016-CB95A43F4D3A} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
+		{B8B79421-5498-4FEF-B923-5DF66EC18F6B} = {189A414D-B434-442A-AD84-E6CA16C00C30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E700BB2-4439-4C11-8DCD-41829F557945}
