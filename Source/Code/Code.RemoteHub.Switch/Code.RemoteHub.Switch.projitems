@@ -9,7 +9,10 @@
     <Import_RootNamespace>Code.RemoteHub.Switch</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)AdatperPackage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdapterEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ClientIdWithAdapterEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConnectionExceptionWithAdapterEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IGetRelatedRemoteHubAdapterInstance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RemoteHubSwitch.cs" />
   </ItemGroup>
 </Project>

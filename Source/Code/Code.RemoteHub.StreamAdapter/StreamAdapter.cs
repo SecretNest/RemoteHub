@@ -27,11 +27,11 @@ namespace SecretNest.RemoteHub
         protected abstract void OnPrivateMessageReceived(Guid targetClientId, byte[] dataPackage);
 
         /// <inheritdoc/>
-        public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
+        public event EventHandler<ConnectionExceptionEventArgs> OnConnectionErrorOccurred;
         /// <inheritdoc/>
-        public event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated;
+        public event EventHandler<ClientWithVirtualHostSettingEventArgs> OnRemoteClientUpdated;
         /// <inheritdoc/>
-        public event EventHandler<ClientIdEventArgs> RemoteClientRemoved;
+        public event EventHandler<ClientIdEventArgs> OnRemoteClientRemoved;
         /// <inheritdoc/>
         public event EventHandler OnAdapterStarted;
         /// <inheritdoc/>
@@ -128,10 +128,10 @@ namespace SecretNest.RemoteHub
 
                 outputStream.Close();
 
-                if (RemoteClientRemoved != null)
+                if (OnRemoteClientRemoved != null)
                     foreach (var remoteClientId in hostTable.GetAllRemoteClientId())
                     {
-                        RemoteClientRemoved.Invoke(this, new ClientIdEventArgs(remoteClientId));
+                        OnRemoteClientRemoved.Invoke(this, new ClientIdEventArgs(remoteClientId));
                     }
 
                 readingJob = null;
@@ -245,10 +245,10 @@ namespace SecretNest.RemoteHub
                     if (!shuttingdownToken.IsCancellationRequested) //Or, it is closed by terminating reading process.
                     {
                         StopProcessing();
-                        if (ConnectionErrorOccurred != null)
+                        if (OnConnectionErrorOccurred != null)
                         {
                             ConnectionExceptionEventArgs e = new ConnectionExceptionEventArgs(ex, true, false);
-                            ConnectionErrorOccurred(this, e);
+                            OnConnectionErrorOccurred(this, e);
                         }
                     }
                 }
@@ -273,10 +273,10 @@ namespace SecretNest.RemoteHub
             catch (Exception ex)
             {
                 StopProcessing();
-                if (ConnectionErrorOccurred != null)
+                if (OnConnectionErrorOccurred != null)
                 {
                     ConnectionExceptionEventArgs e = new ConnectionExceptionEventArgs(ex, true, false);
-                    ConnectionErrorOccurred(this, e);
+                    OnConnectionErrorOccurred(this, e);
                 }
             }
         }
@@ -320,30 +320,30 @@ namespace SecretNest.RemoteHub
         void OnAddOrUpdateClientReceived(Guid senderClientId)
         {
             hostTable.AddOrUpdate(senderClientId);
-            if (RemoteClientUpdated != null)
+            if (OnRemoteClientUpdated != null)
             {
                 ClientWithVirtualHostSettingEventArgs e = new ClientWithVirtualHostSettingEventArgs(senderClientId, Guid.Empty, null);
-                RemoteClientUpdated(this, e);
+                OnRemoteClientUpdated(this, e);
             }
         }
 
         void OnAddOrUpdateClientReceived(Guid senderClientId, BinaryReader inputStreamReader)
         {
             var entity = hostTable.AddOrUpdate(senderClientId, inputStreamReader);
-            if (RemoteClientUpdated != null)
+            if (OnRemoteClientUpdated != null)
             {
                 ClientWithVirtualHostSettingEventArgs e = new ClientWithVirtualHostSettingEventArgs(senderClientId, entity.VirtualHostSettingId, entity.VirtualHosts.ToArray());
-                RemoteClientUpdated(this, e);
+                OnRemoteClientUpdated(this, e);
             }
         }
 
         void OnRemoveClientReceived(Guid senderClientId)
         {
             hostTable.Remove(senderClientId);
-            if (RemoteClientRemoved != null)
+            if (OnRemoteClientRemoved != null)
             {
                 ClientIdEventArgs e = new ClientIdEventArgs(senderClientId);
-                Task.Run(() => RemoteClientRemoved(this, e));
+                Task.Run(() => OnRemoteClientRemoved(this, e));
             }
         }
 

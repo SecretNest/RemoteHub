@@ -87,17 +87,17 @@ namespace SecretNest.RemoteHub
         /// <summary>
         /// Occurs while an connection related exception is thrown.
         /// </summary>
-        event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
+        event EventHandler<ConnectionExceptionEventArgs> OnConnectionErrorOccurred;
 
         /// <summary>
         /// Occurs while a remote client is added or changed virtual host setting.
         /// </summary>
-        event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated;
+        event EventHandler<ClientWithVirtualHostSettingEventArgs> OnRemoteClientUpdated;
 
         /// <summary>
         /// Occurs while a remote client is removed.
         /// </summary>
-        event EventHandler<ClientIdEventArgs> RemoteClientRemoved;
+        event EventHandler<ClientIdEventArgs> OnRemoteClientRemoved;
 
         /// <summary>
         /// Occurs when this adapter started.
@@ -105,7 +105,7 @@ namespace SecretNest.RemoteHub
         event EventHandler OnAdapterStarted;
 
         /// <summary>
-        /// Occurs when this adapter stopped. Also will be raised if the adapter is stopped by the request from underlying object.
+        /// Occurs when this adapter stopped. Also will be raised if the adapter is stopped by the request from underlying object and remote site.
         /// </summary>
         event EventHandler OnAdapterStopped;
     }

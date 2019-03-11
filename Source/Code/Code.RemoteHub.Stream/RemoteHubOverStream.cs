@@ -19,15 +19,67 @@ namespace SecretNest.RemoteHub
         public bool IsStarted => streamAdapter.IsStarted;
 
         /// <inheritdoc/>
-        public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred
+        public event EventHandler<ClientWithVirtualHostSettingEventArgs> OnRemoteClientUpdated
         {
             add
             {
-                streamAdapter.ConnectionErrorOccurred += value;
+                streamAdapter.OnRemoteClientUpdated += value;
             }
             remove
             {
-                streamAdapter.ConnectionErrorOccurred -= value;
+                streamAdapter.OnRemoteClientUpdated -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<ClientIdEventArgs> OnRemoteClientRemoved
+        {
+            add
+            {
+                streamAdapter.OnRemoteClientRemoved += value;
+            }
+            remove
+            {
+                streamAdapter.OnRemoteClientRemoved -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<ConnectionExceptionEventArgs> OnConnectionErrorOccurred
+        {
+            add
+            {
+                streamAdapter.OnConnectionErrorOccurred += value;
+            }
+            remove
+            {
+                streamAdapter.OnConnectionErrorOccurred -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler OnStarted
+        {
+            add
+            {
+                streamAdapter.OnAdapterStarted += value;
+            }
+            remove
+            {
+                streamAdapter.OnAdapterStarted -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler OnStopped
+        {
+            add
+            {
+                streamAdapter.OnAdapterStopped += value;
+            }
+            remove
+            {
+                streamAdapter.OnAdapterStopped -= value;
             }
         }
 

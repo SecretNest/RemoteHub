@@ -40,15 +40,67 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred
+        public event EventHandler<ClientWithVirtualHostSettingEventArgs> OnRemoteClientUpdated
         {
             add
             {
-                redisAdapter.ConnectionErrorOccurred += value;
+                redisAdapter.OnRemoteClientUpdated += value;
             }
             remove
             {
-                redisAdapter.ConnectionErrorOccurred -= value;
+                redisAdapter.OnRemoteClientUpdated -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<ClientIdEventArgs> OnRemoteClientRemoved
+        {
+            add
+            {
+                redisAdapter.OnRemoteClientRemoved += value;
+            }
+            remove
+            {
+                redisAdapter.OnRemoteClientRemoved -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler<ConnectionExceptionEventArgs> OnConnectionErrorOccurred
+        {
+            add
+            {
+                redisAdapter.OnConnectionErrorOccurred += value;
+            }
+            remove
+            {
+                redisAdapter.OnConnectionErrorOccurred -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler OnStarted
+        {
+            add
+            {
+                redisAdapter.OnAdapterStarted += value;
+            }
+            remove
+            {
+                redisAdapter.OnAdapterStarted -= value;
+            }
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler OnStopped
+        {
+            add
+            {
+                redisAdapter.OnAdapterStopped += value;
+            }
+            remove
+            {
+                redisAdapter.OnAdapterStopped -= value;
             }
         }
 

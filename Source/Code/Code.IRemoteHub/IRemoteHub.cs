@@ -13,7 +13,27 @@ namespace SecretNest.RemoteHub
         /// <summary>
         /// Occurs while an connection related exception is thrown.
         /// </summary>
-        event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
+        event EventHandler<ConnectionExceptionEventArgs> OnConnectionErrorOccurred;
+
+        /// <summary>
+        /// Occurs while a remote client is added or changed virtual host setting.
+        /// </summary>
+        event EventHandler<ClientWithVirtualHostSettingEventArgs> OnRemoteClientUpdated;
+
+        /// <summary>
+        /// Occurs while a remote client is removed.
+        /// </summary>
+        event EventHandler<ClientIdEventArgs> OnRemoteClientRemoved;
+
+        /// <summary>
+        /// Occurs when this instance started.
+        /// </summary>
+        event EventHandler OnStarted;
+
+        /// <summary>
+        /// Occurs when this instance stopped. Also will be raised if the instance is stopped by the request from underlying object and remote site.
+        /// </summary>
+        event EventHandler OnStopped;
 
         /// <summary>
         /// Gets the client id.
