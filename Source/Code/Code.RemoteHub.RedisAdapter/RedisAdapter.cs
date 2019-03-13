@@ -367,6 +367,7 @@ namespace SecretNest.RemoteHub
                     {
                         Task.Run(() => OnConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
                     }
+                    StopConnection();
                     break;
                 }
             }
@@ -407,6 +408,7 @@ namespace SecretNest.RemoteHub
                         Task.Run(() => OnConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
+                    StopConnection();
                     break;
                 }
             }
@@ -453,6 +455,7 @@ namespace SecretNest.RemoteHub
                     Task.Run(() => OnConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
+                StopConnection();
                 throw;
             }
         }
@@ -489,6 +492,7 @@ namespace SecretNest.RemoteHub
                 {
                     Task.Run(() => OnConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
                 }
+                StopConnection();
                 throw;
             }
         }

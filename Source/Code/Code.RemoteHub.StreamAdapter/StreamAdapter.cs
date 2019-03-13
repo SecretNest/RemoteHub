@@ -244,12 +244,12 @@ namespace SecretNest.RemoteHub
                 {
                     if (!shuttingdownToken.IsCancellationRequested) //Or, it is closed by terminating reading process.
                     {
-                        StopProcessing();
                         if (OnConnectionErrorOccurred != null)
                         {
                             ConnectionExceptionEventArgs e = new ConnectionExceptionEventArgs(ex, true, false);
                             OnConnectionErrorOccurred(this, e);
                         }
+                        StopProcessing();
                     }
                 }
             }
@@ -272,12 +272,12 @@ namespace SecretNest.RemoteHub
             catch (OperationCanceledException) { }
             catch (Exception ex)
             {
-                StopProcessing();
                 if (OnConnectionErrorOccurred != null)
                 {
                     ConnectionExceptionEventArgs e = new ConnectionExceptionEventArgs(ex, true, false);
                     OnConnectionErrorOccurred(this, e);
                 }
+                StopProcessing();
             }
         }
 

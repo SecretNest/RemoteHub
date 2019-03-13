@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AdapterEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClientIdWithAdapterEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ConcurrentHashSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConnectionExceptionWithAdapterEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGetRelatedRemoteHubAdapterInstance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RemoteHubSwitch.cs" />
