@@ -1,9 +1,8 @@
-﻿using SecretNest.RemoteHub;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Code.RemoteHub.Switch
+namespace SecretNest.RemoteHub
 {
     /// <summary>
     /// Represents an object which contains a property to get the related RemoteHub Adapter instance.

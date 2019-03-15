@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-/// <summary>
-/// Remote Hub from SecretNest.info
-/// </summary>
 namespace SecretNest.RemoteHub
 {
     /// <summary>
@@ -40,67 +37,67 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public event EventHandler<ClientWithVirtualHostSettingEventArgs> OnRemoteClientUpdated
+        public event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated
         {
             add
             {
-                redisAdapter.OnRemoteClientUpdated += value;
+                redisAdapter.RemoteClientUpdated += value;
             }
             remove
             {
-                redisAdapter.OnRemoteClientUpdated -= value;
+                redisAdapter.RemoteClientUpdated -= value;
             }
         }
 
         /// <inheritdoc/>
-        public event EventHandler<ClientIdEventArgs> OnRemoteClientRemoved
+        public event EventHandler<ClientIdEventArgs> RemoteClientRemoved
         {
             add
             {
-                redisAdapter.OnRemoteClientRemoved += value;
+                redisAdapter.RemoteClientRemoved += value;
             }
             remove
             {
-                redisAdapter.OnRemoteClientRemoved -= value;
+                redisAdapter.RemoteClientRemoved -= value;
             }
         }
 
         /// <inheritdoc/>
-        public event EventHandler<ConnectionExceptionEventArgs> OnConnectionErrorOccurred
+        public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred
         {
             add
             {
-                redisAdapter.OnConnectionErrorOccurred += value;
+                redisAdapter.ConnectionErrorOccurred += value;
             }
             remove
             {
-                redisAdapter.OnConnectionErrorOccurred -= value;
+                redisAdapter.ConnectionErrorOccurred -= value;
             }
         }
 
         /// <inheritdoc/>
-        public event EventHandler OnStarted
+        public event EventHandler Started
         {
             add
             {
-                redisAdapter.OnAdapterStarted += value;
+                redisAdapter.AdapterStarted += value;
             }
             remove
             {
-                redisAdapter.OnAdapterStarted -= value;
+                redisAdapter.AdapterStarted -= value;
             }
         }
 
         /// <inheritdoc/>
-        public event EventHandler OnStopped
+        public event EventHandler Stopped
         {
             add
             {
-                redisAdapter.OnAdapterStopped += value;
+                redisAdapter.AdapterStopped += value;
             }
             remove
             {
-                redisAdapter.OnAdapterStopped -= value;
+                redisAdapter.AdapterStopped -= value;
             }
         }
 

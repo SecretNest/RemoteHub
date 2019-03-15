@@ -12,7 +12,7 @@ namespace SecretNest.RemoteHub
     /// <typeparam name="T">Type of the message data. Only string and byte array (byte[]) are supported.</typeparam>
     public class RedisAdapter<T> : RedisAdapter, IRemoteHubRedisAdapter<T>
     {
-        OnMessageReceivedCallback<T> onMessageReceivedCallback;
+        PrivateMessageCallbackHelper<T> privateMessageCallbackHelper;
         ValueConverter<T> valueConverter;
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace SecretNest.RemoteHub
         public RedisAdapter(string redisConfiguration, OnMessageReceivedCallback<T> onMessageReceivedCallback, string mainChannelName, string privateChannelNamePrefix, int redisDb, int clientTimeToLive, int clientRefreshingInterval)
             : base(redisConfiguration, mainChannelName, privateChannelNamePrefix, redisDb, clientTimeToLive, clientRefreshingInterval)
         {
-            this.onMessageReceivedCallback = onMessageReceivedCallback;
+            privateMessageCallbackHelper = new PrivateMessageCallbackHelper<T>(onMessageReceivedCallback);
 
             var type = typeof(T);
             if (type == typeof(string))
@@ -48,13 +48,38 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
+        public void AddOnMessageReceivedCallback(OnMessageReceivedCallback<T> callback)
+        {
+            lock (privateMessageCallbackHelper)
+            {
+                privateMessageCallbackHelper.AddCallback(callback);
+            }
+        }
+
+        /// <inheritdoc/>
+        public void RemoveOnMessageReceivedCallback(OnMessageReceivedCallback<T> callback)
+        {
+            lock (privateMessageCallbackHelper)
+            {
+                privateMessageCallbackHelper.RemoveCallback(callback);
+            }
+        }
+
+        /// <inheritdoc/>
+        public void RemoveAllOnMessageReceivedCallbacks()
+        {
+            lock (privateMessageCallbackHelper)
+            {
+                privateMessageCallbackHelper.RemoveAllCallbacks();
+            }
+        }
+
+        /// <inheritdoc/>
         public async Task SendPrivateMessageAsync(RedisChannel channel, T message)
         {
             if (IsSelf(channel, out var clientId))
             {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                Task.Run(() => onMessageReceivedCallback(clientId, message));
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                OnPrivateMessageReceived(clientId, message);
             }
             else
             {
@@ -67,7 +92,7 @@ namespace SecretNest.RemoteHub
         {
             if (IsSelf(channel, out var clientId))
             {
-                Task.Run(() => onMessageReceivedCallback(clientId, message));
+                OnPrivateMessageReceived(clientId, message);
             }
             else
             {
@@ -108,7 +133,7 @@ namespace SecretNest.RemoteHub
 
         void OnPrivateMessageReceived(Guid targetClientId, T message)
         {
-            Task.Run(() => onMessageReceivedCallback(targetClientId, message));
+            privateMessageCallbackHelper.CallAndForget(targetClientId, message);
         }
     }
 }

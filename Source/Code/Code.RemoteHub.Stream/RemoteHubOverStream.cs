@@ -19,67 +19,67 @@ namespace SecretNest.RemoteHub
         public bool IsStarted => streamAdapter.IsStarted;
 
         /// <inheritdoc/>
-        public event EventHandler<ClientWithVirtualHostSettingEventArgs> OnRemoteClientUpdated
+        public event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated
         {
             add
             {
-                streamAdapter.OnRemoteClientUpdated += value;
+                streamAdapter.RemoteClientUpdated += value;
             }
             remove
             {
-                streamAdapter.OnRemoteClientUpdated -= value;
+                streamAdapter.RemoteClientUpdated -= value;
             }
         }
 
         /// <inheritdoc/>
-        public event EventHandler<ClientIdEventArgs> OnRemoteClientRemoved
+        public event EventHandler<ClientIdEventArgs> RemoteClientRemoved
         {
             add
             {
-                streamAdapter.OnRemoteClientRemoved += value;
+                streamAdapter.RemoteClientRemoved += value;
             }
             remove
             {
-                streamAdapter.OnRemoteClientRemoved -= value;
+                streamAdapter.RemoteClientRemoved -= value;
             }
         }
 
         /// <inheritdoc/>
-        public event EventHandler<ConnectionExceptionEventArgs> OnConnectionErrorOccurred
+        public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred
         {
             add
             {
-                streamAdapter.OnConnectionErrorOccurred += value;
+                streamAdapter.ConnectionErrorOccurred += value;
             }
             remove
             {
-                streamAdapter.OnConnectionErrorOccurred -= value;
+                streamAdapter.ConnectionErrorOccurred -= value;
             }
         }
 
         /// <inheritdoc/>
-        public event EventHandler OnStarted
+        public event EventHandler Started
         {
             add
             {
-                streamAdapter.OnAdapterStarted += value;
+                streamAdapter.AdapterStarted += value;
             }
             remove
             {
-                streamAdapter.OnAdapterStarted -= value;
+                streamAdapter.AdapterStarted -= value;
             }
         }
 
         /// <inheritdoc/>
-        public event EventHandler OnStopped
+        public event EventHandler Stopped
         {
             add
             {
-                streamAdapter.OnAdapterStopped += value;
+                streamAdapter.AdapterStopped += value;
             }
             remove
             {
-                streamAdapter.OnAdapterStopped -= value;
+                streamAdapter.AdapterStopped -= value;
             }
         }
 

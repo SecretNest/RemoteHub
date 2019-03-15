@@ -47,7 +47,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.RemoteHub.Stream", 
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.Switch", "Code\Code.RemoteHub.Switch\Code.RemoteHub.Switch.shproj", "{C79591BE-E632-4D9C-A016-CB95A43F4D3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Release.RemoteHub.Switch", "DirectRelease\Release.RemoteHub.Switch\Release.RemoteHub.Switch.csproj", "{B8B79421-5498-4FEF-B923-5DF66EC18F6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.RemoteHub.Switch", "DirectRelease\Release.RemoteHub.Switch\Release.RemoteHub.Switch.csproj", "{B8B79421-5498-4FEF-B923-5DF66EC18F6B}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

@@ -1,9 +1,8 @@
-﻿using SecretNest.RemoteHub;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Code.RemoteHub.Switch
+namespace SecretNest.RemoteHub
 {
     /// <summary>
     /// Contains the exception occurred while accessing underlying object, and the RemoteHub Adapter instance which throw the exception.
@@ -18,12 +17,10 @@ namespace Code.RemoteHub.Switch
         /// <summary>
         /// Initializes an instance of ConnectionExceptionWithAdapterEventArgs.
         /// </summary>
-        /// <param name="exception">The exception occurred while accessing underlying object.</param>
-        /// <param name="isFatal">Whether this exception is a fatal one which terminated the connection and further jobs.</param>
-        /// <param name="isRetried">Whether the operation which raised this exception is retried.</param>
+        /// <param name="e">The argument passed by <see cref="IRemoteHubAdapter.ConnectionErrorOccurred"/>.</param>
         /// <param name="remoteHubAdapter">RemoteHub Adapter instance which throw the exception.</param>
-        public ConnectionExceptionWithAdapterEventArgs(Exception exception, bool isFatal, bool isRetried, IRemoteHubAdapter<byte[]> remoteHubAdapter)
-            : base(exception, isFatal, isRetried)
+        public ConnectionExceptionWithAdapterEventArgs(ConnectionExceptionEventArgs e, IRemoteHubAdapter<byte[]> remoteHubAdapter)
+            : base(e.Exception, e.IsFatal, e.IsRetried)
         {
             RemoteHubAdapter = remoteHubAdapter;
         }

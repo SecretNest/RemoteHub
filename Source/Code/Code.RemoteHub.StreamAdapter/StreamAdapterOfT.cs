@@ -12,7 +12,7 @@ namespace SecretNest.RemoteHub
     /// <typeparam name="T">Type of the message data. Only string and byte array (byte[]) are supported.</typeparam>
     public class StreamAdapter<T> : StreamAdapter, IRemoteHubAdapter<T>
     {
-        OnMessageReceivedCallback<T> onMessageReceivedCallback;
+        PrivateMessageCallbackHelper<T> privateMessageCallbackHelper;
         ValueConverter<T> valueConverter;
 
         /// <summary>
@@ -26,7 +26,7 @@ namespace SecretNest.RemoteHub
         public StreamAdapter(Stream inputStream, Stream outputStream, OnMessageReceivedCallback<T> onMessageReceivedCallback, int refreshingIntervalInSeconds, Encoding encoding = null)
             : base(inputStream, outputStream, refreshingIntervalInSeconds)
         {
-            this.onMessageReceivedCallback = onMessageReceivedCallback;
+            privateMessageCallbackHelper = new PrivateMessageCallbackHelper<T>(onMessageReceivedCallback);
 
             var type = typeof(T);
             if (type == typeof(string))
@@ -48,6 +48,33 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
+        public void AddOnMessageReceivedCallback(OnMessageReceivedCallback<T> callback)
+        {
+            lock (privateMessageCallbackHelper)
+            {
+                privateMessageCallbackHelper.AddCallback(callback);
+            }
+        }
+
+        /// <inheritdoc/>
+        public void RemoveOnMessageReceivedCallback(OnMessageReceivedCallback<T> callback)
+        {
+            lock (privateMessageCallbackHelper)
+            {
+                privateMessageCallbackHelper.RemoveCallback(callback);
+            }
+        }
+
+        /// <inheritdoc/>
+        public void RemoveAllOnMessageReceivedCallbacks()
+        {
+            lock (privateMessageCallbackHelper)
+            {
+                privateMessageCallbackHelper.RemoveAllCallbacks();
+            }
+        }
+
+        /// <inheritdoc/>
         public void SendPrivateMessage(Guid remoteClientId, T message)
         {
             if (IsSelf(remoteClientId))
@@ -61,9 +88,16 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public Task SendPrivateMessageAsync(Guid remoteClientId, T message)
+        public async Task SendPrivateMessageAsync(Guid remoteClientId, T message)
         {
-            return Task.Run(() => SendPrivateMessage(remoteClientId, message));
+            if (IsSelf(remoteClientId))
+            {
+                await OnPrivateMessageReceivedAsync(remoteClientId, message);
+            }
+            else
+            {
+                await Task.Run(() => SendingPrivateMessage(remoteClientId, valueConverter.ConvertToMessage(message)));
+            }
         }
 
         protected override void OnPrivateMessageReceived(Guid targetClientId, byte[] dataPackage)
@@ -73,7 +107,12 @@ namespace SecretNest.RemoteHub
 
         void OnPrivateMessageReceived(Guid targetClientId, T message)
         {
-            Task.Run(() => onMessageReceivedCallback(targetClientId, message));
+            privateMessageCallbackHelper.CallAndForget(targetClientId, message);
+        }
+
+        async Task OnPrivateMessageReceivedAsync(Guid targetClientId, T message)
+        {
+            await privateMessageCallbackHelper.CallAsync(targetClientId, message);
         }
     }
 }

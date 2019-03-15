@@ -27,15 +27,15 @@ namespace SecretNest.RemoteHub
         protected abstract void OnPrivateMessageReceived(Guid targetClientId, byte[] dataPackage);
 
         /// <inheritdoc/>
-        public event EventHandler<ConnectionExceptionEventArgs> OnConnectionErrorOccurred;
+        public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
         /// <inheritdoc/>
-        public event EventHandler<ClientWithVirtualHostSettingEventArgs> OnRemoteClientUpdated;
+        public event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated;
         /// <inheritdoc/>
-        public event EventHandler<ClientIdEventArgs> OnRemoteClientRemoved;
+        public event EventHandler<ClientIdEventArgs> RemoteClientRemoved;
         /// <inheritdoc/>
-        public event EventHandler OnAdapterStarted;
+        public event EventHandler AdapterStarted;
         /// <inheritdoc/>
-        public event EventHandler OnAdapterStopped;
+        public event EventHandler AdapterStopped;
 
         protected StreamAdapter(Stream inputStream, Stream outputStream, int refreshingIntervalInSeconds)
         {
@@ -86,7 +86,7 @@ namespace SecretNest.RemoteHub
         #region Start Stop
         void StartProcessing()
         {
-            lock(hostTable) //only for staring lock
+            lock(hostTable) //only for starting lock
             {
                 if (readingJob != null) return;
                 shuttingdownTokenSource = new CancellationTokenSource();
@@ -96,7 +96,7 @@ namespace SecretNest.RemoteHub
                 writingJob = WritingProcessorAsync();
                 keepingJob = KeepingProcessorAsync();
 
-                OnAdapterStarted?.Invoke(this, EventArgs.Empty);
+                AdapterStarted?.Invoke(this, EventArgs.Empty);
 
                 sendingBuffers = new BlockingCollection<byte[]>();
 
@@ -107,7 +107,7 @@ namespace SecretNest.RemoteHub
 
         void StopProcessing()
         {
-            lock (hostTable) //only for staring lock
+            lock (hostTable) //only for starting lock
             {
                 if (readingJob == null) return;
 
@@ -128,10 +128,10 @@ namespace SecretNest.RemoteHub
 
                 outputStream.Close();
 
-                if (OnRemoteClientRemoved != null)
+                if (RemoteClientRemoved != null)
                     foreach (var remoteClientId in hostTable.GetAllRemoteClientId())
                     {
-                        OnRemoteClientRemoved.Invoke(this, new ClientIdEventArgs(remoteClientId));
+                        RemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId));
                     }
 
                 readingJob = null;
@@ -244,17 +244,17 @@ namespace SecretNest.RemoteHub
                 {
                     if (!shuttingdownToken.IsCancellationRequested) //Or, it is closed by terminating reading process.
                     {
-                        if (OnConnectionErrorOccurred != null)
+                        if (ConnectionErrorOccurred != null)
                         {
                             ConnectionExceptionEventArgs e = new ConnectionExceptionEventArgs(ex, true, false);
-                            OnConnectionErrorOccurred(this, e);
+                            ConnectionErrorOccurred(this, e);
                         }
                         StopProcessing();
                     }
                 }
             }
 
-            OnAdapterStopped?.Invoke(this, EventArgs.Empty);
+            AdapterStopped?.Invoke(this, EventArgs.Empty);
         }
 
         async Task WritingProcessorAsync()
@@ -272,10 +272,10 @@ namespace SecretNest.RemoteHub
             catch (OperationCanceledException) { }
             catch (Exception ex)
             {
-                if (OnConnectionErrorOccurred != null)
+                if (ConnectionErrorOccurred != null)
                 {
                     ConnectionExceptionEventArgs e = new ConnectionExceptionEventArgs(ex, true, false);
-                    OnConnectionErrorOccurred(this, e);
+                    ConnectionErrorOccurred(this, e);
                 }
                 StopProcessing();
             }
@@ -320,30 +320,30 @@ namespace SecretNest.RemoteHub
         void OnAddOrUpdateClientReceived(Guid senderClientId)
         {
             hostTable.AddOrUpdate(senderClientId);
-            if (OnRemoteClientUpdated != null)
+            if (RemoteClientUpdated != null)
             {
                 ClientWithVirtualHostSettingEventArgs e = new ClientWithVirtualHostSettingEventArgs(senderClientId, Guid.Empty, null);
-                OnRemoteClientUpdated(this, e);
+                RemoteClientUpdated(this, e);
             }
         }
 
         void OnAddOrUpdateClientReceived(Guid senderClientId, BinaryReader inputStreamReader)
         {
             var entity = hostTable.AddOrUpdate(senderClientId, inputStreamReader);
-            if (OnRemoteClientUpdated != null)
+            if (RemoteClientUpdated != null)
             {
                 ClientWithVirtualHostSettingEventArgs e = new ClientWithVirtualHostSettingEventArgs(senderClientId, entity.VirtualHostSettingId, entity.VirtualHosts.ToArray());
-                OnRemoteClientUpdated(this, e);
+                RemoteClientUpdated(this, e);
             }
         }
 
         void OnRemoveClientReceived(Guid senderClientId)
         {
             hostTable.Remove(senderClientId);
-            if (OnRemoteClientRemoved != null)
+            if (RemoteClientRemoved != null)
             {
                 ClientIdEventArgs e = new ClientIdEventArgs(senderClientId);
-                Task.Run(() => OnRemoteClientRemoved(this, e));
+                RemoteClientRemoved(this, e);
             }
         }
 
@@ -512,6 +512,8 @@ namespace SecretNest.RemoteHub
             return id;
         }
 
+        /// <inheritdoc/>
+        public IEnumerable<Guid> GetAllRemoteClients() => hostTable.GetAllRemoteClientId();
 
         /// <inheritdoc/>
         public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)

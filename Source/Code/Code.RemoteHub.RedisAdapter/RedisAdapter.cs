@@ -30,15 +30,15 @@ namespace SecretNest.RemoteHub
         AutoResetEvent clientsChangingLock = new AutoResetEvent(true); //also used in refresh sending
 
         /// <inheritdoc/>
-        public event EventHandler<ConnectionExceptionEventArgs> OnConnectionErrorOccurred;
+        public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
         /// <inheritdoc/>
-        public event EventHandler<ClientWithVirtualHostSettingEventArgs> OnRemoteClientUpdated;
+        public event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated;
         /// <inheritdoc/>
-        public event EventHandler<ClientIdEventArgs> OnRemoteClientRemoved;
+        public event EventHandler<ClientIdEventArgs> RemoteClientRemoved;
         /// <inheritdoc/>
-        public event EventHandler OnAdapterStarted;
+        public event EventHandler AdapterStarted;
         /// <inheritdoc/>
-        public event EventHandler OnAdapterStopped;
+        public event EventHandler AdapterStopped;
 
         #region IDisposable Support
 
@@ -128,7 +128,7 @@ namespace SecretNest.RemoteHub
 
                 updatingRedis = UpdateRedisAsync();
                 startingLock.Wait();
-                OnAdapterStarted?.Invoke(this, EventArgs.Empty);
+                AdapterStarted?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -153,16 +153,16 @@ namespace SecretNest.RemoteHub
                 redisDatabase = null;
                 redisConnection = null;
 
-                if (OnRemoteClientRemoved != null)
+                if (RemoteClientRemoved != null)
                     foreach (var remoteClientId in hostTable.GetAllRemoteClientId())
                     {
-                        OnRemoteClientRemoved.Invoke(this, new ClientIdEventArgs(remoteClientId));
+                        RemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId));
                     }
 
                 hostTable = new RemoteClientTable(privateChannelNamePrefix);
                 clients = new Dictionary<Guid, ClientEntity>();
                 targets = new ConcurrentDictionary<RedisChannel, Guid>();
-                OnAdapterStopped?.Invoke(this, EventArgs.Empty);
+                AdapterStopped?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -222,7 +222,7 @@ namespace SecretNest.RemoteHub
                         if (currentVirtualHostSettingId != virtualHostId)
                         {
                             var setting = hostTable.ApplyVirtualHosts(clientId, virtualHostId, texts[5]);
-                            OnRemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, virtualHostId, setting.ToArray()));
+                            RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, virtualHostId, setting.ToArray()));
                         }
                     }
                     else
@@ -260,10 +260,7 @@ namespace SecretNest.RemoteHub
                 {
                     var clientId = Guid.Parse(texts[2]);
                     hostTable.Remove(clientId);
-                    if (OnRemoteClientRemoved != null)
-                    {
-                        Task.Run(() => OnRemoteClientRemoved(this, new ClientIdEventArgs(clientId)));
-                    }
+                    RemoteClientRemoved?.Invoke(this, new ClientIdEventArgs(clientId));
                 }
             }
         }
@@ -302,12 +299,10 @@ namespace SecretNest.RemoteHub
                 }
 
                 hostTable.ClearAllExpired(out var expired);
-                if (OnRemoteClientRemoved != null)
+                if (RemoteClientRemoved != null)
                     foreach (var id in expired)
                     {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(() => OnRemoteClientRemoved(this, new ClientIdEventArgs(id)));
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+                        RemoteClientRemoved(this, new ClientIdEventArgs(id));
                     }
 
                 try
@@ -350,9 +345,9 @@ namespace SecretNest.RemoteHub
                 {
                     if (retried > 3)
                     {
-                        if (OnConnectionErrorOccurred != null)
+                        if (ConnectionErrorOccurred != null)
                         {
-                            Task.Run(() => OnConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, false, true)));
+                            Task.Run(() => ConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, false, true)));
                         }
                         break;
                     }
@@ -363,9 +358,9 @@ namespace SecretNest.RemoteHub
                 }
                 catch (Exception ex) //RedisConnectionException
                 {
-                    if (OnConnectionErrorOccurred != null)
+                    if (ConnectionErrorOccurred != null)
                     {
-                        Task.Run(() => OnConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
+                        Task.Run(() => ConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
                     }
                     StopConnection();
                     break;
@@ -387,10 +382,10 @@ namespace SecretNest.RemoteHub
                 {
                     if (retried > 3)
                     {
-                        if (OnConnectionErrorOccurred != null)
+                        if (ConnectionErrorOccurred != null)
                         {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                            Task.Run(() => OnConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, false, true)));
+                            Task.Run(() => ConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, false, true)));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                         }
                         break;
@@ -402,10 +397,10 @@ namespace SecretNest.RemoteHub
                 }
                 catch (Exception ex) //RedisConnectionException
                 {
-                    if (OnConnectionErrorOccurred != null)
+                    if (ConnectionErrorOccurred != null)
                     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                        Task.Run(() => OnConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
+                        Task.Run(() => ConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                     }
                     StopConnection();
@@ -439,20 +434,20 @@ namespace SecretNest.RemoteHub
             }
             catch (RedisTimeoutException ex)
             {
-                if (OnConnectionErrorOccurred != null)
+                if (ConnectionErrorOccurred != null)
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(() => OnConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, false, false)));
+                    Task.Run(() => ConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, false, false)));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
                 throw;
             }
             catch (Exception ex)
             {
-                if (OnConnectionErrorOccurred != null)
+                if (ConnectionErrorOccurred != null)
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-                    Task.Run(() => OnConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
+                    Task.Run(() => ConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 }
                 StopConnection();
@@ -480,17 +475,17 @@ namespace SecretNest.RemoteHub
             }
             catch (RedisTimeoutException ex)
             {
-                if (OnConnectionErrorOccurred != null)
+                if (ConnectionErrorOccurred != null)
                 {
-                    Task.Run(() => OnConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, false, false)));
+                    Task.Run(() => ConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, false, false)));
                 }
                 throw;
             }
             catch (Exception ex)
             {
-                if (OnConnectionErrorOccurred != null)
+                if (ConnectionErrorOccurred != null)
                 {
-                    Task.Run(() => OnConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
+                    Task.Run(() => ConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
                 }
                 StopConnection();
                 throw;
@@ -752,6 +747,9 @@ namespace SecretNest.RemoteHub
         #endregion Client Id
 
         /// <inheritdoc/>
+        public IEnumerable<Guid> GetAllRemoteClients() => hostTable.GetAllRemoteClientId();
+
+        /// <inheritdoc/>
         public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)
         {
             try
@@ -775,9 +773,9 @@ namespace SecretNest.RemoteHub
         public bool TryResolve(Guid remoteClientId, out RedisChannel channel)
         {
             var result = hostTable.TryGet(remoteClientId, out channel, out var isTimedOut);
-            if (isTimedOut && OnRemoteClientRemoved != null)
+            if (isTimedOut && RemoteClientRemoved != null)
             {
-                Task.Run(() => OnRemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId)));
+                RemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId));
             }
             return result;
         }

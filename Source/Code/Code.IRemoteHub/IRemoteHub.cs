@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
+/// <summary>
+/// RemoteHub from SecretNest.info
+/// </summary>
 namespace SecretNest.RemoteHub
 {
     /// <summary>
@@ -13,27 +16,27 @@ namespace SecretNest.RemoteHub
         /// <summary>
         /// Occurs while an connection related exception is thrown.
         /// </summary>
-        event EventHandler<ConnectionExceptionEventArgs> OnConnectionErrorOccurred;
+        event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
 
         /// <summary>
         /// Occurs while a remote client is added or changed virtual host setting.
         /// </summary>
-        event EventHandler<ClientWithVirtualHostSettingEventArgs> OnRemoteClientUpdated;
+        event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated;
 
         /// <summary>
         /// Occurs while a remote client is removed.
         /// </summary>
-        event EventHandler<ClientIdEventArgs> OnRemoteClientRemoved;
+        event EventHandler<ClientIdEventArgs> RemoteClientRemoved;
 
         /// <summary>
         /// Occurs when this instance started.
         /// </summary>
-        event EventHandler OnStarted;
+        event EventHandler Started;
 
         /// <summary>
         /// Occurs when this instance stopped. Also will be raised if the instance is stopped by the request from underlying object and remote site.
         /// </summary>
-        event EventHandler OnStopped;
+        event EventHandler Stopped;
 
         /// <summary>
         /// Gets the client id.

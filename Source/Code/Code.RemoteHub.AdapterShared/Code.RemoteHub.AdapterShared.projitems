@@ -9,6 +9,11 @@
     <Import_RootNamespace>SecretNest.RemoteHub</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)OnMessageReceivedCallbackDispatcherBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OnMessageReceivedCallbackMultipleDispatcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OnMessageReceivedCallbackNoneDispatcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)OnMessageReceivedCallbackOneDispatcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PrivateMessageCallbackHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RemoteClientEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RemoteClientTable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RemoteClientTable.VirtualEntity.cs" />

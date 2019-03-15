@@ -6,12 +6,15 @@
     <SharedGUID>c79591be-e632-4d9c-a016-cb95a43f4d3a</SharedGUID>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Code.RemoteHub.Switch</Import_RootNamespace>
+    <Import_RootNamespace>SecretNest.RemoteHub</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)AdapterCollectionMultipleDispatcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdapterCollectionOneDispatcher.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdapterCollectionDispatcherBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AdapterEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)AdapterCollection.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClientIdWithAdapterEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ConcurrentHashSet.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConnectionExceptionWithAdapterEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGetRelatedRemoteHubAdapterInstance.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RemoteHubSwitch.cs" />

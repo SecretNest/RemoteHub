@@ -55,6 +55,12 @@ namespace SecretNest.RemoteHub
         IEnumerable<Guid> GetAllClients();
 
         /// <summary>
+        /// Gets all found remote clients.
+        /// </summary>
+        /// <returns>Ids of all found remote clients.</returns>
+        IEnumerable<Guid> GetAllRemoteClients();
+
+        /// <summary>
         /// Starts the underlying object required operations.
         /// </summary>
         void Start();
@@ -87,27 +93,29 @@ namespace SecretNest.RemoteHub
         /// <summary>
         /// Occurs while an connection related exception is thrown.
         /// </summary>
-        event EventHandler<ConnectionExceptionEventArgs> OnConnectionErrorOccurred;
+        event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
 
         /// <summary>
         /// Occurs while a remote client is added or changed virtual host setting.
         /// </summary>
-        event EventHandler<ClientWithVirtualHostSettingEventArgs> OnRemoteClientUpdated;
+        /// <remarks>For avoiding client status mismatched, introduced by adding and removing the same client within a tiny timespan, this event should be raised synchronously only.</remarks>
+        event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated;
 
         /// <summary>
         /// Occurs while a remote client is removed.
         /// </summary>
-        event EventHandler<ClientIdEventArgs> OnRemoteClientRemoved;
+        /// <remarks>For avoiding client status mismatched, introduced by adding and removing the same client within a tiny timespan, this event should be raised synchronously only.</remarks>
+        event EventHandler<ClientIdEventArgs> RemoteClientRemoved;
 
         /// <summary>
         /// Occurs when this adapter started.
         /// </summary>
-        event EventHandler OnAdapterStarted;
+        event EventHandler AdapterStarted;
 
         /// <summary>
         /// Occurs when this adapter stopped. Also will be raised if the adapter is stopped by the request from underlying object and remote site.
         /// </summary>
-        event EventHandler OnAdapterStopped;
+        event EventHandler AdapterStopped;
     }
 
     /// <summary>
@@ -130,5 +138,22 @@ namespace SecretNest.RemoteHub
         /// <param name="remoteClientId">Remote client id.</param>
         /// <param name="message">Message to be sent.</param>
         void SendPrivateMessage(Guid remoteClientId, T message);
+
+        /// <summary>
+        /// Adds a callback that will be used for dealing received private message.
+        /// </summary>
+        /// <param name="callback">The callback to be used for dealing received private message.</param>
+        void AddOnMessageReceivedCallback(OnMessageReceivedCallback<T> callback);
+
+        /// <summary>
+        /// Removes a callback which is used for dealing received private message.
+        /// </summary>
+        /// <param name="callback">The callback which is used for dealing received private message.</param>
+        void RemoveOnMessageReceivedCallback(OnMessageReceivedCallback<T> callback);
+
+        /// <summary>
+        /// Removes all callbacks which are used for dealing received private message.
+        /// </summary>
+        void RemoveAllOnMessageReceivedCallbacks();
     }
 }
