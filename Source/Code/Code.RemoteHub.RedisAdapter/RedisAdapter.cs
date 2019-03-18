@@ -19,7 +19,7 @@ namespace SecretNest.RemoteHub
         ISubscriber publisher, subscriber;
         int clientsListVersion = int.MinValue;
         Dictionary<Guid, ClientEntity> clients = new Dictionary<Guid, ClientEntity>();
-        ConcurrentDictionary<RedisChannel, Guid> targets = new ConcurrentDictionary<RedisChannel, Guid>();
+        ConcurrentDictionary<RedisChannel, Guid> targets = new ConcurrentDictionary<RedisChannel, Guid>(); //listening channel and it's client id
         readonly string redisConfiguration, mainChannelName, privateChannelNamePrefix;
         readonly int redisDb, clientTimeToLive, clientRefreshingInterval;
         RemoteClientTable hostTable;
@@ -98,6 +98,17 @@ namespace SecretNest.RemoteHub
             this.clientTimeToLive = clientTimeToLive;
             this.clientRefreshingInterval = clientRefreshingInterval;
             hostTable = new RemoteClientTable(privateChannelNamePrefix);
+        }
+
+        RedisChannel BuildRedisChannel(Guid id)
+        {
+            return BuildRedisChannel(id.ToString("N"));
+        }
+
+        RedisChannel BuildRedisChannel(string idText)
+        {
+            RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + idText, RedisChannel.PatternMode.Literal);
+            return redisChannel;
         }
 
         #region Start Stop
@@ -460,7 +471,7 @@ namespace SecretNest.RemoteHub
             if (!IsStarted)
                 throw new InvalidOperationException();
 
-            RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + remoteClientId.ToString("N"), RedisChannel.PatternMode.Literal);
+            RedisChannel redisChannel = BuildRedisChannel(remoteClientId);
             await SendPrivateMessageAsync(redisChannel, value);
         }
 
@@ -497,7 +508,7 @@ namespace SecretNest.RemoteHub
             if (!IsStarted)
                 throw new InvalidOperationException();
 
-            RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + remoteClientId.ToString("N"), RedisChannel.PatternMode.Literal);
+            RedisChannel redisChannel = BuildRedisChannel(remoteClientId);
             SendPrivateMessage(redisChannel, value);
         }
 
@@ -519,7 +530,7 @@ namespace SecretNest.RemoteHub
 
         protected bool IsSelf(RedisChannel redisChannel, out Guid clientId)
         {
-            return targets.TryGetValue(redisChannel, out clientId);
+            return targets.TryGetValue(redisChannel, out clientId); //targets: contains all local listening channel and it's client id.
         }
 
         /// <inheritdoc/>
@@ -542,7 +553,7 @@ namespace SecretNest.RemoteHub
 
                     if (updatingRedis != null)
                     {
-                        RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + idText, RedisChannel.PatternMode.Literal);
+                        RedisChannel redisChannel = BuildRedisChannel(idText);
                         if (targets.TryAdd(redisChannel, id))
                         {
                             await subscriber.SubscribeAsync(redisChannel, OnPrivateChannelReceived);
@@ -576,7 +587,7 @@ namespace SecretNest.RemoteHub
 
                     if (updatingRedis != null)
                     {
-                        RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + idText, RedisChannel.PatternMode.Literal);
+                        RedisChannel redisChannel = BuildRedisChannel(idText);
                         if (targets.TryAdd(redisChannel, id))
                         {
                             subscriber.Subscribe(redisChannel, OnPrivateChannelReceived);
@@ -776,6 +787,14 @@ namespace SecretNest.RemoteHub
             if (isTimedOut && RemoteClientRemoved != null)
             {
                 RemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId));
+            }
+            if (!result) //try local
+            {
+                if (clients.ContainsKey(remoteClientId))
+                {
+                    channel = BuildRedisChannel(remoteClientId);
+                    result = true;
+                }
             }
             return result;
         }

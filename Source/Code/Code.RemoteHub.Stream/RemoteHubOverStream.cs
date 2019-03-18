@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SecretNest.RemoteHub
 {
@@ -9,7 +10,7 @@ namespace SecretNest.RemoteHub
     /// Handles the host state and message transportation.
     /// </summary>
     /// <typeparam name="T">Type of the message data. Only string and byte array (byte[]) are supported.</typeparam>
-    public class RemoteHubOverStream<T> : IDisposable, IRemoteHubOverStream
+    public class RemoteHubOverStream<T> : IDisposable, IRemoteHubOverStream, IRemoteHub<T>
     {
         StreamAdapter<T> streamAdapter;
         readonly Guid clientId;
@@ -166,6 +167,30 @@ namespace SecretNest.RemoteHub
         public void Stop()
         {
             streamAdapter.Stop();
+        }
+
+        /// <inheritdoc/>
+        public void SendMessage(Guid remoteClientId, T message)
+        {
+            streamAdapter.SendPrivateMessage(remoteClientId, message);
+        }
+
+        /// <inheritdoc/>
+        public Task SendMessageAsync(Guid remoteClientId, T message)
+        {
+            return streamAdapter.SendPrivateMessageAsync(remoteClientId, message);
+        }
+
+        /// <inheritdoc/>
+        public void SendMessage(string targetChannel, T message)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task SendMessageAsync(string targetChannel, T message)
+        {
+            throw new NotImplementedException();
         }
     }
 }

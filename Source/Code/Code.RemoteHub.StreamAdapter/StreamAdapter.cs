@@ -91,14 +91,13 @@ namespace SecretNest.RemoteHub
                 if (readingJob != null) return;
                 shuttingdownTokenSource = new CancellationTokenSource();
                 shuttingdownToken = shuttingdownTokenSource.Token;
+                sendingBuffers = new BlockingCollection<byte[]>();
 
                 readingJob = Task.Run(() => ReadingProcessor());
                 writingJob = WritingProcessorAsync();
                 keepingJob = KeepingProcessorAsync();
 
                 AdapterStarted?.Invoke(this, EventArgs.Empty);
-
-                sendingBuffers = new BlockingCollection<byte[]>();
 
                 sendingBuffers.Add(new byte[] { 128 }); //Hello
                 SendingRefreshAllClients();

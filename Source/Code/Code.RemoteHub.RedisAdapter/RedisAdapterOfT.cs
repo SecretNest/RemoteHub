@@ -100,7 +100,13 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Sends private message to remote client specified by id.
+        /// </summary>
+        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="message">Message to be sent.</param>
+        /// <returns>A task that represents the sending job.</returns>
+        /// <remarks>Redis Adapter will always return true because it won't check whether the target specified by id exists or not.</remarks>
         public async Task SendPrivateMessageAsync(Guid remoteClientId, T message)
         {
             if (IsSelf(remoteClientId))
@@ -113,7 +119,12 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Sends private message to remote client specified by id.
+        /// </summary>
+        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="message">Message to be sent.</param>
+        /// <remarks>Redis Adapter will always return true because it won't check whether the target specified by id exists or not.</remarks>
         public void SendPrivateMessage(Guid remoteClientId, T message)
         {
             if (IsSelf(remoteClientId))
