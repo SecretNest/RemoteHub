@@ -18,10 +18,13 @@ namespace SecretNest.RemoteHub
         Stream outputStream;
         readonly int streamRefreshingIntervalInSeconds;
         Dictionary<Guid, byte[]> clients = new Dictionary<Guid, byte[]>(); //value is null if no virtual host; or value is virtual host setting id + count + setting data.
-        RemoteClientTable hostTable = new RemoteClientTable(); //also used as startlock
+        RemoteClientTable hostTable = new RemoteClientTable();
         Task readingJob, writingJob, keepingJob;
+        bool sendingNormal = false;
+        bool isStopping = false;
         CancellationTokenSource shuttingdownTokenSource;
         CancellationToken shuttingdownToken;
+        ManualResetEventSlim startingLock = new ManualResetEventSlim();
         BlockingCollection<byte[]> sendingBuffers;
 
         protected abstract void OnPrivateMessageReceived(Guid targetClientId, byte[] dataPackage);
@@ -86,38 +89,49 @@ namespace SecretNest.RemoteHub
         #region Start Stop
         void StartProcessing()
         {
-            lock(hostTable) //only for starting lock
+            lock (startingLock) //only for starting lock
             {
                 if (readingJob != null) return;
+                isStopping = false;
+                sendingNormal = true;
+                startingLock.Reset();
                 shuttingdownTokenSource = new CancellationTokenSource();
                 shuttingdownToken = shuttingdownTokenSource.Token;
                 sendingBuffers = new BlockingCollection<byte[]>();
 
                 readingJob = Task.Run(() => ReadingProcessor());
-                writingJob = WritingProcessorAsync();
-                keepingJob = KeepingProcessorAsync();
+                writingJob = Task.Run(async () => await WritingProcessorAsync());
+                keepingJob = Task.Run(async () => await KeepingProcessorAsync());
+
+                SendingRefreshAllClients();
+
+                startingLock.Wait();
 
                 AdapterStarted?.Invoke(this, EventArgs.Empty);
-
-                sendingBuffers.Add(new byte[] { 128 }); //Hello
-                SendingRefreshAllClients();
             }
         }
 
         void StopProcessing()
         {
-            lock (hostTable) //only for starting lock
+            if (isStopping) return;
+            lock (startingLock) //only for starting lock
             {
                 if (readingJob == null) return;
 
-                sendingBuffers.Add(new byte[] { 255 }); //Link closed.
-                sendingBuffers.CompleteAdding();
+                if (isStopping) return;
+                isStopping = true;
 
-                while(!sendingBuffers.IsCompleted)
+                if (sendingNormal)
                 {
-                    Task.Delay(100).Wait();
+                    sendingBuffers.Add(new byte[] { 255 }); //Link closed.
+                    sendingBuffers.CompleteAdding();
+
+                    while (!sendingBuffers.IsCompleted && sendingNormal)
+                    {
+                        Task.Delay(100).Wait();
+                    }
                 }
-                
+
                 shuttingdownTokenSource.Cancel();
                 inputStream.Close(); //Need to close 1st to make readingJob closable.
 
@@ -166,7 +180,7 @@ namespace SecretNest.RemoteHub
         {
             if (IsStarted)
                 throw new InvalidOperationException();
-            lock (hostTable)
+            lock (startingLock)
             {
                 if (IsStarted)
                     throw new InvalidOperationException();
@@ -182,7 +196,6 @@ namespace SecretNest.RemoteHub
 
         void ReadingProcessor()
         {
-            byte[] length4 = new byte[4];
             using (BinaryReader binaryReader = new BinaryReader(inputStream))
             {
                 byte commandCode;
@@ -196,12 +209,7 @@ namespace SecretNest.RemoteHub
 
                         if (commandCode <= 127) //Private channel data
                         {
-                            length4[0] = commandCode;
-                            length4[1] = binaryReader.ReadByte();
-                            length4[2] = binaryReader.ReadByte();
-                            length4[3] = binaryReader.ReadByte();
-
-                            int length = BitConverter.ToInt32(length4, 0);
+                            int length = GetInt32FromBytes(commandCode, binaryReader.ReadByte(), binaryReader.ReadByte(), binaryReader.ReadByte());
                             OnPrivateMessageReceived(length, binaryReader);
                         }
                         else if (commandCode == 254) //Ping
@@ -260,6 +268,12 @@ namespace SecretNest.RemoteHub
         {
             try
             {
+                //Start
+                lastStreamWorkingTime = DateTime.Now;
+                await outputStream.WriteAsync(new byte[] { 128 }, 0, 1, shuttingdownToken); //Hello
+                startingLock.Set();
+
+                //Looping
                 while (!shuttingdownToken.IsCancellationRequested)
                 {
                     var buffer = sendingBuffers.Take(shuttingdownToken);
@@ -271,6 +285,7 @@ namespace SecretNest.RemoteHub
             catch (OperationCanceledException) { }
             catch (Exception ex)
             {
+                sendingNormal = false;
                 if (ConnectionErrorOccurred != null)
                 {
                     ConnectionExceptionEventArgs e = new ConnectionExceptionEventArgs(ex, true, false);
@@ -397,7 +412,7 @@ namespace SecretNest.RemoteHub
         {
             int length = data.Length;
             byte[] package = new byte[data.Length + 20];
-            Array.Copy(BitConverter.GetBytes(length), package, 4);
+            WriteInt32ToByteArray(length, package, 0);
             Array.Copy(targetClientId.ToByteArray(), 0, package, 4, 16);
             Array.Copy(data, 0, package, 20, length);
             AddToSendingBuffer(package);
@@ -441,7 +456,7 @@ namespace SecretNest.RemoteHub
         {
             lock (clients)
             {
-                lock (hostTable)
+                lock (startingLock)
                 {
                     foreach (var client in clientId)
                     {
@@ -463,12 +478,14 @@ namespace SecretNest.RemoteHub
         {
             lock (clients)
             {
-                lock (hostTable)
+                lock (startingLock)
                 {
                     foreach (var client in clientId)
                     {
                         if (clients.Remove(client))
                         {
+                            hostTable.Remove(client);//Remove Fake Remote Client, which may be added for Virtual Host
+
                             if (IsStarted)
                             {
                                 SendingRemoveClient(client);
@@ -485,7 +502,7 @@ namespace SecretNest.RemoteHub
             lock (clients)
             {
                 if (clients.Count == 0) return;
-                lock (hostTable)
+                lock (startingLock)
                 {
                     if (IsStarted)
                     {
@@ -526,13 +543,17 @@ namespace SecretNest.RemoteHub
                         if (currentSetting != null)
                         {
                             clients[clientId] = null;
-                            lock(hostTable)
+                            lock(startingLock)
                             {
                                 if (IsStarted)
                                 {
                                     SendingRefreshClient(clientId, null);
                                 }
                             }
+
+                            //Apply to sender also as fake remote client.
+                            //This need to applied on StreamAdapter because main data package will not be routed back to the sender, not like the behavior in RedisAdapter.
+                            hostTable.Remove(clientId); //Remove Fake Remote Client, which may be added for Virtual Host
                         }
                     }
                     else
@@ -575,13 +596,17 @@ namespace SecretNest.RemoteHub
                         }
 
                         clients[clientId] = newSetting;
-                        lock (hostTable)
+                        lock (startingLock)
                         {
                             if (IsStarted)
                             {
-                                SendingRefreshClient(clientId, null);
+                                SendingRefreshClient(clientId, newSetting);
                             }
                         }
+
+                        //Apply to sender also as fake remote client.
+                        //This need to applied on StreamAdapter because main data package will not be routed back to the sender, not like the behavior in RedisAdapter.
+                        hostTable.AddOrUpdateLocalAsRemoteForVirtualHost(clientId, settings);
                     }
                 }
                 else
@@ -597,6 +622,11 @@ namespace SecretNest.RemoteHub
             buffer[location + 1] = (byte)(value << 8 >> 24);
             buffer[location + 2] = (byte)(value << 16 >> 24);
             buffer[location + 3] = (byte)(value << 24 >> 24);
+        }
+
+        int GetInt32FromBytes(byte b1, byte b2, byte b3, byte b4)
+        {
+            return ((int)b1 << 24) + ((int)b2 << 16) + ((int)b3 << 8) + (int)b4;
         }
 
         /// <inheritdoc/>

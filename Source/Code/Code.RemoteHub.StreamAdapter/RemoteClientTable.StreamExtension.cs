@@ -9,6 +9,18 @@ namespace SecretNest.RemoteHub
 {
     partial class RemoteClientTable
     {
+        public IEnumerable<Guid> GetAllRemoteClientId()
+        {
+            lock (remoteClients)
+            {
+                foreach(var client in remoteClients)
+                {
+                    if (!client.Value.IsLocal)
+                        yield return client.Key;
+                }
+            }
+        }
+
         public void AddOrUpdate(Guid remoteClientId)
         {
             lock (remoteClients)
@@ -23,7 +35,7 @@ namespace SecretNest.RemoteHub
                 }
                 else
                 {
-                    entity = new RemoteClientEntity();
+                    entity = new RemoteClientEntity(false);
                     remoteClients.Add(remoteClientId, entity);
                 }
             }
@@ -48,7 +60,7 @@ namespace SecretNest.RemoteHub
                 }
                 else
                 {
-                    entity = new RemoteClientEntity();
+                    entity = new RemoteClientEntity(false);
                     var affectedVirtualHosts = entity.ApplyVirtualHosts(settingId, inputStreamReader);
                     remoteClients.Add(remoteClientId, entity);
                     RefreshVirtualHost(affectedVirtualHosts);
@@ -57,32 +69,29 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        //public Dictionary<Guid, VirtualHostSetting> AddOrUpdate(Guid remoteClientId, Guid virtualHostSettingId, KeyValuePair<Guid, VirtualHostSetting>[] virtualHostSettings)
-        //{
-        //    Dictionary<Guid, VirtualHostSetting> setting;
-        //    lock (remoteClients)
-        //    {
-        //        if (remoteClients.TryGetValue(remoteClientId, out var entity))
-        //        {
-        //            if (entity.VirtualHostSettingId != virtualHostSettingId)
-        //            {
-        //                setting = entity.ApplyVirtualHosts(virtualHostSettingId, virtualHostSettings, out var affectedVirtualHosts);
-        //                RefreshVirtualHost(affectedVirtualHosts);
-        //            }
-        //            else
-        //            {
-        //                setting = null;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            entity = new RemoteClientEntity();
-        //            setting = entity.ApplyVirtualHosts(virtualHostSettingId, virtualHostSettings, out var affectedVirtualHosts);
-        //            remoteClients.Add(remoteClientId, entity);
-        //            RefreshVirtualHost(affectedVirtualHosts);
-        //        }
-        //    }
-        //    return setting;
-        //}
+        public void AddOrUpdateLocalAsRemoteForVirtualHost(Guid fakeRemoteClientId, KeyValuePair<Guid, VirtualHostSetting>[] virtualHostSettings)
+        {
+            lock (remoteClients)
+            {
+                if (remoteClients.TryGetValue(fakeRemoteClientId, out var entity))
+                {
+                    //if (entity.IsLocal)
+                    //{
+                    //if (entity.VirtualHostSettingId != virtualHostSettingId)
+                    //{
+                    var affectedVirtualHosts = entity.ApplyVirtualHostsForLocalClient(virtualHostSettings);
+                    RefreshVirtualHost(affectedVirtualHosts);
+                    //}
+                    //}
+                }
+                else
+                {
+                    entity = new RemoteClientEntity(true);
+                    var affectedVirtualHosts = entity.ApplyVirtualHostsForLocalClient(virtualHostSettings);
+                    remoteClients.Add(fakeRemoteClientId, entity);
+                    RefreshVirtualHost(affectedVirtualHosts);
+                }
+            }
+        }
     }
 }

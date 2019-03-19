@@ -9,14 +9,6 @@ namespace SecretNest.RemoteHub
     {
         Dictionary<Guid, RemoteClientEntity> remoteClients = new Dictionary<Guid, RemoteClientEntity>();
 
-        public IEnumerable<Guid> GetAllRemoteClientId()
-        {
-            lock(remoteClients)
-            {
-                return remoteClients.Keys;
-            }
-        }
-
         public void ClearVirtualHosts(Guid remoteClientId)
         {
             lock (remoteClients)

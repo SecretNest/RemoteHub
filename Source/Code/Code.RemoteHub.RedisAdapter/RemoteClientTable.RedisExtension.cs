@@ -9,6 +9,14 @@ namespace SecretNest.RemoteHub
     {
         readonly string channelPrefix;
 
+        public IEnumerable<Guid> GetAllRemoteClientId()
+        {
+            lock (remoteClients)
+            {
+                return remoteClients.Keys;
+            }
+        }
+
         internal RemoteClientTable(string channelPrefix)
         {
             this.channelPrefix = channelPrefix;

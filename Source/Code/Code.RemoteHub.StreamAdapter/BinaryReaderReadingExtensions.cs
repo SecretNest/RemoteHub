@@ -18,16 +18,16 @@ namespace SecretNest.RemoteHub
             return new Guid(buffer);
         }
 
-        public static ushort ReadUInt16(this BinaryReader reader)
+        public static ushort ReadUInt16LittleEndian(this BinaryReader reader)
         {
-            byte[] buffer = reader.ReadBytes(2);
-            return BitConverter.ToUInt16(buffer, 0);
+            return (ushort)((reader.ReadByte() << 8) + reader.ReadByte());
         }
 
-        public static int ReadInt32(this BinaryReader reader)
+        public static int ReadInt32LittleEndian(this BinaryReader reader)
         {
-            byte[] buffer = reader.ReadBytes(4);
-            return BitConverter.ToInt32(buffer, 0);
+            return (reader.ReadByte() << 24) + (reader.ReadByte() << 16) + (reader.ReadByte() << 8) + reader.ReadByte();
         }
+
+
     }
 }

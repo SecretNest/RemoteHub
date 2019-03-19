@@ -80,11 +80,8 @@ Other: Shutdown.");
                     }
                 }
 
-
                 client1.Stop();
                 client2.Stop();
-
-                
 
                 Console.WriteLine("Done. Press any key to quit...");
                 Console.ReadKey(true);

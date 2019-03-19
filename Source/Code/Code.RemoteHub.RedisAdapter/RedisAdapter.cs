@@ -26,6 +26,8 @@ namespace SecretNest.RemoteHub
         bool needRefreshFull = false;
         CancellationTokenSource updatingRedisCancellation, updatingRedisWaitingCancellation;
         Task updatingRedis;
+        bool sendingNormal = false;
+        bool isStopping = false;
         ManualResetEventSlim startingLock = new ManualResetEventSlim();
         AutoResetEvent clientsChangingLock = new AutoResetEvent(true); //also used in refresh sending
 
@@ -118,6 +120,8 @@ namespace SecretNest.RemoteHub
             lock (startingLock)
             {
                 if (updatingRedis != null) return;
+                sendingNormal = true;
+                isStopping = false;
 
                 redisConnection = ConnectionMultiplexer.Connect(redisConfiguration);
                 redisDatabase = redisConnection.GetDatabase(redisDb);
@@ -137,7 +141,7 @@ namespace SecretNest.RemoteHub
 
                 startingLock.Reset();
 
-                updatingRedis = UpdateRedisAsync();
+                updatingRedis = Task.Run(async () => await UpdateRedisAsync());
                 startingLock.Wait();
                 AdapterStarted?.Invoke(this, EventArgs.Empty);
             }
@@ -145,9 +149,13 @@ namespace SecretNest.RemoteHub
 
         void StopConnection()
         {
+            if (isStopping) return;
             lock (startingLock)
             {
                 if (updatingRedis == null) return;
+                if (isStopping) return;
+
+                isStopping = true;
 
                 updatingRedisCancellation.Cancel();
                 updatingRedis.Wait();
@@ -345,7 +353,7 @@ namespace SecretNest.RemoteHub
         void MainChannelPublishing(string text)
         {
             int retried = 0;
-            while (true)
+            while (sendingNormal)
             {
                 try
                 {
@@ -369,6 +377,7 @@ namespace SecretNest.RemoteHub
                 }
                 catch (Exception ex) //RedisConnectionException
                 {
+                    sendingNormal = false;
                     if (ConnectionErrorOccurred != null)
                     {
                         Task.Run(() => ConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
@@ -382,7 +391,7 @@ namespace SecretNest.RemoteHub
         async Task MainChannelPublishingAsync(string text, CancellationToken cancellationToken)
         {
             int retried = 0;
-            while (!cancellationToken.IsCancellationRequested)
+            while (sendingNormal && !cancellationToken.IsCancellationRequested)
             {
                 try
                 {
@@ -408,6 +417,7 @@ namespace SecretNest.RemoteHub
                 }
                 catch (Exception ex) //RedisConnectionException
                 {
+                    sendingNormal = false;
                     if (ConnectionErrorOccurred != null)
                     {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -455,6 +465,7 @@ namespace SecretNest.RemoteHub
             }
             catch (Exception ex)
             {
+                sendingNormal = false;
                 if (ConnectionErrorOccurred != null)
                 {
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
@@ -494,6 +505,7 @@ namespace SecretNest.RemoteHub
             }
             catch (Exception ex)
             {
+                sendingNormal = false;
                 if (ConnectionErrorOccurred != null)
                 {
                     Task.Run(() => ConnectionErrorOccurred(this, new ConnectionExceptionEventArgs(ex, true, false)));
@@ -607,7 +619,7 @@ namespace SecretNest.RemoteHub
             if (clients.TryGetValue(clientId, out var client))
             {
                 string idText = clientId.ToString("N");
-                RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + idText, RedisChannel.PatternMode.Literal);
+                RedisChannel redisChannel = BuildRedisChannel(idText);
 
                 if (updatingRedis != null)
                 {
@@ -628,7 +640,7 @@ namespace SecretNest.RemoteHub
             if (clients.TryGetValue(clientId, out var client))
             {
                 string idText = clientId.ToString("N");
-                RedisChannel redisChannel = new RedisChannel(privateChannelNamePrefix + idText, RedisChannel.PatternMode.Literal);
+                RedisChannel redisChannel = BuildRedisChannel(idText);
 
                 if (updatingRedis != null)
                 {
