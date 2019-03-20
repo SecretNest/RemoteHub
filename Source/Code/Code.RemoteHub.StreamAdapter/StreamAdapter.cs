@@ -18,7 +18,7 @@ namespace SecretNest.RemoteHub
         Stream outputStream;
         readonly int streamRefreshingIntervalInSeconds;
         Dictionary<Guid, byte[]> clients = new Dictionary<Guid, byte[]>(); //value is null if no virtual host; or value is virtual host setting id + count + setting data.
-        RemoteClientTable hostTable = new RemoteClientTable();
+        ClientTable hostTable = new ClientTable();
         Task readingJob, writingJob, keepingJob;
         bool sendingNormal = false;
         bool isStopping = false;

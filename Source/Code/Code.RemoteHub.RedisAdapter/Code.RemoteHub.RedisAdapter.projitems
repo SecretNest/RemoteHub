@@ -10,8 +10,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ClientEntity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RemoteClientEntity.RedisExtension.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RemoteClientTable.RedisExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ClientEntity.RedisExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ClientTable.RedisExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RedisAdapter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RedisAdapterOfT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueConverter.cs" />

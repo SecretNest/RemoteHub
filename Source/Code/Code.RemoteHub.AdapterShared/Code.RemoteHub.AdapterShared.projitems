@@ -14,9 +14,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)OnMessageReceivedCallbackNoneDispatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)OnMessageReceivedCallbackOneDispatcher.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PrivateMessageCallbackHelper.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RemoteClientEntity.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RemoteClientTable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RemoteClientTable.VirtualEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ClientEntity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ClientTable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ClientTable.VirtualEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PercentageDistributer.cs" />
   </ItemGroup>
 </Project>

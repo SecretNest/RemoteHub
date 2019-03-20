@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SecretNest.RemoteHub
 {
-    partial class RemoteClientTable
+    partial class ClientTable
     {
         Dictionary<Guid, PercentageDistributer> virtuals = new Dictionary<Guid, PercentageDistributer>();
 

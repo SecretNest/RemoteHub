@@ -5,7 +5,7 @@ using StackExchange.Redis;
 
 namespace SecretNest.RemoteHub
 {
-    partial class RemoteClientTable
+    partial class ClientTable
     {
         readonly string channelPrefix;
 
@@ -17,7 +17,7 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        internal RemoteClientTable(string channelPrefix)
+        internal ClientTable(string channelPrefix)
         {
             this.channelPrefix = channelPrefix;
         }
@@ -32,7 +32,7 @@ namespace SecretNest.RemoteHub
                 }
                 else
                 {
-                    entity = new RemoteClientEntity(seconds, channelPrefix + remoteClientId.ToString("N"));
+                    entity = new ClientEntity(seconds, channelPrefix + remoteClientId.ToString("N"));
                     remoteClients.Add(remoteClientId, entity);
                 }
                 virtualHostSettingId = entity.VirtualHostSettingId;

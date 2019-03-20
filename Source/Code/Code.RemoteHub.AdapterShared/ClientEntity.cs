@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SecretNest.RemoteHub
 {
-    partial class RemoteClientEntity
+    partial class ClientEntity
     {
         public Dictionary<Guid, VirtualHostSetting> VirtualHosts { get; private set; } = new Dictionary<Guid, VirtualHostSetting>();
         public Guid VirtualHostSettingId { get; private set; }

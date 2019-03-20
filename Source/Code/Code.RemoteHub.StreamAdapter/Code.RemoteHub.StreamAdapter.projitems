@@ -13,13 +13,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BinaryReaderReadingExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)RemoteClientTable.StreamExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ClientTable.StreamExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StreamAdapter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StreamAdapterOfT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StreamWritingExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ValueConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)RemoteClientEntity.StreamExtesnsion.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ClientEntity.StreamExtesnsion.cs" />
   </ItemGroup>
 </Project>

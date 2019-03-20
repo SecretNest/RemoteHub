@@ -22,7 +22,7 @@ namespace SecretNest.RemoteHub
         ConcurrentDictionary<RedisChannel, Guid> targets = new ConcurrentDictionary<RedisChannel, Guid>(); //listening channel and it's client id
         readonly string redisConfiguration, mainChannelName, privateChannelNamePrefix;
         readonly int redisDb, clientTimeToLive, clientRefreshingInterval;
-        RemoteClientTable hostTable;
+        ClientTable hostTable;
         bool needRefreshFull = false;
         CancellationTokenSource updatingRedisCancellation, updatingRedisWaitingCancellation;
         Task updatingRedis;
@@ -99,7 +99,7 @@ namespace SecretNest.RemoteHub
             mainChannel = new RedisChannel(mainChannelName, RedisChannel.PatternMode.Literal);
             this.clientTimeToLive = clientTimeToLive;
             this.clientRefreshingInterval = clientRefreshingInterval;
-            hostTable = new RemoteClientTable(privateChannelNamePrefix);
+            hostTable = new ClientTable(privateChannelNamePrefix);
         }
 
         RedisChannel BuildRedisChannel(Guid id)
@@ -178,7 +178,7 @@ namespace SecretNest.RemoteHub
                         RemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId));
                     }
 
-                hostTable = new RemoteClientTable(privateChannelNamePrefix);
+                hostTable = new ClientTable(privateChannelNamePrefix);
                 clients = new Dictionary<Guid, ClientEntity>();
                 targets = new ConcurrentDictionary<RedisChannel, Guid>();
                 AdapterStopped?.Invoke(this, EventArgs.Empty);

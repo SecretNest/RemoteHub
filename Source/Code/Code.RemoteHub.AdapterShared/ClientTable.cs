@@ -5,9 +5,9 @@ using System.Text;
 
 namespace SecretNest.RemoteHub
 {
-    partial class RemoteClientTable
+    partial class ClientTable
     {
-        Dictionary<Guid, RemoteClientEntity> remoteClients = new Dictionary<Guid, RemoteClientEntity>();
+        Dictionary<Guid, ClientEntity> remoteClients = new Dictionary<Guid, ClientEntity>();
 
         public void ClearVirtualHosts(Guid remoteClientId)
         {

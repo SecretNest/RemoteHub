@@ -5,7 +5,7 @@ using StackExchange.Redis;
 
 namespace SecretNest.RemoteHub
 {
-    partial class RemoteClientEntity
+    partial class ClientEntity
     {
         public DateTime Timeout { get; private set; }
         public RedisChannel Channel { get; }
@@ -59,7 +59,7 @@ namespace SecretNest.RemoteHub
         }
 
 
-        public RemoteClientEntity(int seconds, string channel)
+        public ClientEntity(int seconds, string channel)
         {
             Channel = new RedisChannel(channel, RedisChannel.PatternMode.Literal);
             Refresh(seconds);

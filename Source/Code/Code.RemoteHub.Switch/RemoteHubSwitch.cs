@@ -15,7 +15,7 @@ namespace SecretNest.RemoteHub
     /// <para>For example, a stream, which is connected to a instance of <see cref="IRemoteHubAdapter{string}"/> in another endpoint, can be handled by a instance of <see cref="IRemoteHubAdapter{byte[]}"/> for linked to this RemoteHub Switch instance. </para></remarks>
     public class RemoteHubSwitch
     {
-        ConcurrentDictionary<Guid, AdapterCollection> adapterOfClients = new ConcurrentDictionary<Guid, AdapterCollection>(); //also used as startlock
+        ConcurrentDictionary<Guid, AdapterCollection> adapterOfClients = new ConcurrentDictionary<Guid, AdapterCollection>();
         ConcurrentDictionary<IRemoteHubAdapter<byte[]>, HashSet<Guid>> adapters = new ConcurrentDictionary<IRemoteHubAdapter<byte[]>, HashSet<Guid>>(); //HashSet need to be locked while remote client id of this adapter changing.
 
         #region Event - RemoteClientAdded

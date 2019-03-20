@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SecretNest.RemoteHub
 {
-    partial class RemoteClientTable
+    partial class ClientTable
     {
         public IEnumerable<Guid> GetAllRemoteClientId()
         {
@@ -35,13 +35,13 @@ namespace SecretNest.RemoteHub
                 }
                 else
                 {
-                    entity = new RemoteClientEntity(false);
+                    entity = new ClientEntity(false);
                     remoteClients.Add(remoteClientId, entity);
                 }
             }
         }
 
-        public RemoteClientEntity AddOrUpdate(Guid remoteClientId, BinaryReader inputStreamReader)
+        public ClientEntity AddOrUpdate(Guid remoteClientId, BinaryReader inputStreamReader)
         {
             var settingId = inputStreamReader.ReadGuid();
             lock (remoteClients)
@@ -55,12 +55,12 @@ namespace SecretNest.RemoteHub
                     }
                     else
                     {
-                        RemoteClientEntity.SkipVirtualHostsData(inputStreamReader);
+                        ClientEntity.SkipVirtualHostsData(inputStreamReader);
                     }
                 }
                 else
                 {
-                    entity = new RemoteClientEntity(false);
+                    entity = new ClientEntity(false);
                     var affectedVirtualHosts = entity.ApplyVirtualHosts(settingId, inputStreamReader);
                     remoteClients.Add(remoteClientId, entity);
                     RefreshVirtualHost(affectedVirtualHosts);
@@ -86,7 +86,7 @@ namespace SecretNest.RemoteHub
                 }
                 else
                 {
-                    entity = new RemoteClientEntity(true);
+                    entity = new ClientEntity(true);
                     var affectedVirtualHosts = entity.ApplyVirtualHostsForLocalClient(virtualHostSettings);
                     remoteClients.Add(fakeRemoteClientId, entity);
                     RefreshVirtualHost(affectedVirtualHosts);

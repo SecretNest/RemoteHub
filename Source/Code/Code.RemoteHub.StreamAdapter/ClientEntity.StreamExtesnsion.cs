@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SecretNest.RemoteHub
 {
-    partial class RemoteClientEntity
+    partial class ClientEntity
     {
         public bool IsLocal { get; }
 
-        public RemoteClientEntity(bool isLocal)
+        public ClientEntity(bool isLocal)
         {
             IsLocal = isLocal;
         }
