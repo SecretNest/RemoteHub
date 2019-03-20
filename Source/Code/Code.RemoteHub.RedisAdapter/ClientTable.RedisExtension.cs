@@ -9,11 +9,15 @@ namespace SecretNest.RemoteHub
     {
         readonly string channelPrefix;
 
-        public IEnumerable<Guid> GetAllRemoteClientId()
+        public IEnumerable<Guid> GetAllRemoteClientsId(ICollection<Guid> localClients)
         {
-            lock (remoteClients)
+            lock (clients)
             {
-                return remoteClients.Keys;
+                foreach(var id in clients.Keys)
+                {
+                    if (!localClients.Contains(id))
+                        yield return id;
+                }
             }
         }
 
@@ -22,28 +26,28 @@ namespace SecretNest.RemoteHub
             this.channelPrefix = channelPrefix;
         }
 
-        public void AddOrRefresh(Guid remoteClientId, int seconds, out Guid virtualHostSettingId)
+        public void AddOrRefresh(Guid clientId, int seconds, out Guid virtualHostSettingId)
         {
-            lock (remoteClients)
+            lock (clients)
             {
-                if (remoteClients.TryGetValue(remoteClientId, out var entity))
+                if (clients.TryGetValue(clientId, out var entity))
                 {
                     entity.Refresh(seconds);
                 }
                 else
                 {
-                    entity = new ClientEntity(seconds, channelPrefix + remoteClientId.ToString("N"));
-                    remoteClients.Add(remoteClientId, entity);
+                    entity = new ClientEntity(seconds, channelPrefix + clientId.ToString("N"));
+                    clients.Add(clientId, entity);
                 }
                 virtualHostSettingId = entity.VirtualHostSettingId;
             }
         }
 
-        public Dictionary<Guid, VirtualHostSetting> ApplyVirtualHosts(Guid remoteClientId, Guid settingId, string value)
+        public Dictionary<Guid, VirtualHostSetting> ApplyVirtualHosts(Guid clientId, Guid settingId, string value)
         {
-            lock (remoteClients)
+            lock (clients)
             {
-                if (remoteClients.TryGetValue(remoteClientId, out var record))
+                if (clients.TryGetValue(clientId, out var record))
                 {
                     var setting = record.ApplyVirtualHosts(settingId, value, out var affectedVirtualHosts);
                     RefreshVirtualHost(affectedVirtualHosts);
@@ -56,11 +60,11 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        public bool TryGet(Guid remoteClientId, out RedisChannel channel, out bool isTimedOut)
+        public bool TryGet(Guid clientId, out RedisChannel channel, out bool isTimedOut)
         {
-            lock (remoteClients)
+            lock (clients)
             {
-                if (remoteClients.TryGetValue(remoteClientId, out var record))
+                if (clients.TryGetValue(clientId, out var record))
                 {
                     if (record.IsTimeValid)
                     {
@@ -70,7 +74,7 @@ namespace SecretNest.RemoteHub
                     }
                     else
                     {
-                        remoteClients.Remove(remoteClientId);
+                        clients.Remove(clientId);
                         RefreshVirtualHost(record.VirtualHosts.Keys);
                         channel = default(RedisChannel);
                         isTimedOut = true;
@@ -90,9 +94,9 @@ namespace SecretNest.RemoteHub
         {
             expired = new List<Guid>();
             HashSet<Guid> virtualToRefresh = new HashSet<Guid>();
-            lock (remoteClients)
+            lock (clients)
             {
-                foreach (var item in remoteClients)
+                foreach (var item in clients)
                 {
                     if (!item.Value.IsTimeValid)
                     {
@@ -103,7 +107,7 @@ namespace SecretNest.RemoteHub
                 }
                 foreach (var key in expired)
                 {
-                    remoteClients.Remove(key);
+                    clients.Remove(key);
                 }
                 if (virtualToRefresh.Count > 0)
                     RefreshVirtualHost(virtualToRefresh);

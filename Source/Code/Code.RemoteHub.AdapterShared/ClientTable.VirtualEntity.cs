@@ -16,10 +16,10 @@ namespace SecretNest.RemoteHub
             if (virtualHosts.Count == 0)
                 return;
 
-            lock (remoteClients)
+            lock (clients)
                 lock (virtuals)
                 {
-                    if (!remoteClients.Any())
+                    if (!clients.Any())
                     {
                         virtuals.Clear();
                     }
@@ -30,7 +30,7 @@ namespace SecretNest.RemoteHub
                             Dictionary<Guid, int> realHosts = null;
                             int priority = int.MinValue;
 
-                            foreach (var host in remoteClients)
+                            foreach (var host in clients)
                             {
                                 if (host.Value.VirtualHosts.TryGetValue(virtualHost, out var selected))
                                 {

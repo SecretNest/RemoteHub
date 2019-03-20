@@ -7,13 +7,13 @@ namespace SecretNest.RemoteHub
 {
     partial class ClientTable
     {
-        Dictionary<Guid, ClientEntity> remoteClients = new Dictionary<Guid, ClientEntity>();
+        Dictionary<Guid, ClientEntity> clients = new Dictionary<Guid, ClientEntity>();
 
-        public void ClearVirtualHosts(Guid remoteClientId)
+        public void ClearVirtualHosts(Guid clientId)
         {
-            lock (remoteClients)
+            lock (clients)
             {
-                if (remoteClients.TryGetValue(remoteClientId, out var record))
+                if (clients.TryGetValue(clientId, out var record))
                 {
                     record.ClearVirtualHosts(out var affectedVirtualHosts);
                     RefreshVirtualHost(affectedVirtualHosts);
@@ -21,38 +21,30 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        //public bool IsExist(Guid remoteClientId)
-        //{
-        //    lock(remoteClients)
-        //    {
-        //        return remoteClients.ContainsKey(remoteClientId);
-        //    }
-        //}
-
-        public void Remove(Guid remoteClientId)
+        public void Remove(Guid clientId)
         {
-            lock (remoteClients)
+            lock (clients)
             {
-                if (remoteClients.TryGetValue(remoteClientId, out var record))
+                if (clients.TryGetValue(clientId, out var record))
                 {
-                    remoteClients.Remove(remoteClientId);
+                    clients.Remove(clientId);
                     RefreshVirtualHost(record.VirtualHosts.Keys);
                 }
             }
         }
 
-        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid remoteClientId)
+        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid clientId)
         {
             lock (virtuals)
             {
                 if (virtuals.TryGetValue(virtualHostId, out var percentageDistributer))
                 {
-                    remoteClientId = percentageDistributer.GetOne();
+                    clientId = percentageDistributer.GetOne();
                     return true;
                 }
                 else
                 {
-                    remoteClientId = Guid.Empty;
+                    clientId = Guid.Empty;
                     return false;
                 }
             }

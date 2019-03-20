@@ -8,7 +8,7 @@ namespace SecretNest.RemoteHub
 {
     partial class ClientEntity
     {
-        public bool IsLocal { get; }
+        public bool IsLocal { get; set; }
 
         public ClientEntity(bool isLocal)
         {
@@ -68,7 +68,8 @@ namespace SecretNest.RemoteHub
             inputStreamReader.Skip24Bytes(count);
         }
 
-        public List<Guid> ApplyVirtualHostsForLocalClient(KeyValuePair<Guid, VirtualHostSetting>[] virtualHostSettings)
+        //for local client
+        public List<Guid> ApplyVirtualHosts(KeyValuePair<Guid, VirtualHostSetting>[] virtualHostSettings)
         {
             var affectedVirtualHosts = new List<Guid>();
 

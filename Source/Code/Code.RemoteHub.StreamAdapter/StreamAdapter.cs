@@ -16,6 +16,7 @@ namespace SecretNest.RemoteHub
     {
         Stream inputStream;
         Stream outputStream;
+        int clientsListVersion = int.MinValue;
         readonly int streamRefreshingIntervalInSeconds;
         Dictionary<Guid, byte[]> clients = new Dictionary<Guid, byte[]>(); //value is null if no virtual host; or value is virtual host setting id + count + setting data.
         ClientTable hostTable = new ClientTable();
@@ -142,7 +143,7 @@ namespace SecretNest.RemoteHub
                 outputStream.Close();
 
                 if (RemoteClientRemoved != null)
-                    foreach (var remoteClientId in hostTable.GetAllRemoteClientId())
+                    foreach (var remoteClientId in hostTable.GetAllRemoteClientsId())
                     {
                         RemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId));
                     }
@@ -333,7 +334,7 @@ namespace SecretNest.RemoteHub
 
         void OnAddOrUpdateClientReceived(Guid senderClientId)
         {
-            hostTable.AddOrUpdate(senderClientId);
+            hostTable.AddOrUpdate(senderClientId, false);
             if (RemoteClientUpdated != null)
             {
                 ClientWithVirtualHostSettingEventArgs e = new ClientWithVirtualHostSettingEventArgs(senderClientId, Guid.Empty, null);
@@ -463,6 +464,8 @@ namespace SecretNest.RemoteHub
                         if (!clients.ContainsKey(client))
                         {
                             clients[client] = null;
+                            Interlocked.Increment(ref clientsListVersion);
+                            hostTable.AddOrUpdate(client, true);
                             if (IsStarted)
                             {
                                 SendingRefreshClient(client, null);
@@ -484,7 +487,8 @@ namespace SecretNest.RemoteHub
                     {
                         if (clients.Remove(client))
                         {
-                            hostTable.Remove(client);//Remove Fake Remote Client, which may be added for Virtual Host
+                            Interlocked.Increment(ref clientsListVersion);
+                            hostTable.Remove(client);
 
                             if (IsStarted)
                             {
@@ -504,15 +508,8 @@ namespace SecretNest.RemoteHub
                 if (clients.Count == 0) return;
                 lock (startingLock)
                 {
-                    if (IsStarted)
-                    {
-                        var id = clients.Keys.ToArray();
-                        foreach (var client in id)
-                        {
-                            SendingRemoveClient(client);
-                        }
-                    }
-                    clients.Clear();
+                    var id = clients.Keys.ToArray();
+                    RemoveClient(id);
                 }
             }
         }
@@ -529,7 +526,7 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public IEnumerable<Guid> GetAllRemoteClients() => hostTable.GetAllRemoteClientId();
+        public IEnumerable<Guid> GetAllRemoteClients() => hostTable.GetAllRemoteClientsId();
 
         /// <inheritdoc/>
         public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)
@@ -551,9 +548,7 @@ namespace SecretNest.RemoteHub
                                 }
                             }
 
-                            //Apply to sender also as fake remote client.
-                            //This need to applied on StreamAdapter because main data package will not be routed back to the sender, not like the behavior in RedisAdapter.
-                            hostTable.Remove(clientId); //Remove Fake Remote Client, which may be added for Virtual Host
+                            hostTable.ClearVirtualHosts(clientId);
                         }
                     }
                     else
@@ -604,9 +599,7 @@ namespace SecretNest.RemoteHub
                             }
                         }
 
-                        //Apply to sender also as fake remote client.
-                        //This need to applied on StreamAdapter because main data package will not be routed back to the sender, not like the behavior in RedisAdapter.
-                        hostTable.AddOrUpdateLocalAsRemoteForVirtualHost(clientId, settings);
+                        hostTable.AddOrUpdate(clientId, settings);
                     }
                 }
                 else
@@ -637,7 +630,21 @@ namespace SecretNest.RemoteHub
 
         protected bool IsSelf(Guid clientId)
         {
-            return clients.ContainsKey(clientId);
+            bool result;
+            int start;
+            do
+            {
+                start = clientsListVersion;
+                try
+                {
+                    result = clients.ContainsKey(clientId);
+                }
+                catch //when clients changed, it MAY throw an exception
+                {
+                    result = false;
+                }
+            } while (start != clientsListVersion);
+            return result;
         }
     }
 }

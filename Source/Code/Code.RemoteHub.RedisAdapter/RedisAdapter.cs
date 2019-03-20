@@ -173,10 +173,21 @@ namespace SecretNest.RemoteHub
                 redisConnection = null;
 
                 if (RemoteClientRemoved != null)
-                    foreach (var remoteClientId in hostTable.GetAllRemoteClientId())
+                {
+                    try
                     {
-                        RemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId));
+                        clientsChangingLock.WaitOne();
+
+                        foreach (var remoteClientId in hostTable.GetAllRemoteClientsId(clients.Keys))
+                        {
+                            RemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId));
+                        }
                     }
+                    finally
+                    {
+                        clientsChangingLock.Set();
+                    }
+                }
 
                 hostTable = new ClientTable(privateChannelNamePrefix);
                 clients = new Dictionary<Guid, ClientEntity>();
@@ -535,7 +546,14 @@ namespace SecretNest.RemoteHub
             do
             {
                 start = clientsListVersion;
-                result = clients.ContainsKey(clientId);
+                try
+                {
+                    result = clients.ContainsKey(clientId);
+                }
+                catch //when clients changed, it MAY throw an exception
+                {
+                    result = false;
+                }
             } while (start != clientsListVersion);
             return result;
         }
@@ -770,7 +788,19 @@ namespace SecretNest.RemoteHub
         #endregion Client Id
 
         /// <inheritdoc/>
-        public IEnumerable<Guid> GetAllRemoteClients() => hostTable.GetAllRemoteClientId();
+        public IEnumerable<Guid> GetAllRemoteClients()
+        {
+            try
+            {
+                clientsChangingLock.WaitOne();
+
+                return hostTable.GetAllRemoteClientsId(clients.Keys);
+            }
+            finally
+            {
+                clientsChangingLock.Set();
+            }
+        }
 
         /// <inheritdoc/>
         public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)
