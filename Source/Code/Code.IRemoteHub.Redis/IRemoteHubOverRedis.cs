@@ -12,12 +12,12 @@ namespace SecretNest.RemoteHub
     public interface IRemoteHubOverRedis : IRemoteHub
     {
         /// <summary>
-        /// Tries to resolve remote client id to private channel.
+        /// Tries to resolve a client id to private channel.
         /// </summary>
-        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="clientId">Client id.</param>
         /// <param name="channel">Private channel used as Redis target.</param>
         /// <returns>Whether the resolving is succeeded or not.</returns>
-        bool TryResolve(Guid remoteClientId, out RedisChannel channel);
+        bool TryResolve(Guid clientId, out RedisChannel channel);
     }
 
     /// <summary>

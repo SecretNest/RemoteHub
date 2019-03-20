@@ -170,27 +170,15 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public void SendMessage(Guid remoteClientId, T message)
+        public void SendMessage(Guid clientId, T message)
         {
-            streamAdapter.SendPrivateMessage(remoteClientId, message);
+            streamAdapter.SendPrivateMessage(clientId, message);
         }
 
         /// <inheritdoc/>
-        public Task SendMessageAsync(Guid remoteClientId, T message)
+        public Task SendMessageAsync(Guid clientId, T message)
         {
-            return streamAdapter.SendPrivateMessageAsync(remoteClientId, message);
-        }
-
-        /// <inheritdoc/>
-        public void SendMessage(string targetChannel, T message)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task SendMessageAsync(string targetChannel, T message)
-        {
-            throw new NotImplementedException();
+            return streamAdapter.SendPrivateMessageAsync(clientId, message);
         }
     }
 }

@@ -160,25 +160,25 @@ namespace SecretNest.RemoteHub
         }
 
         /// <summary>
-        /// Sends a message to the remote client specified by id.
+        /// Sends a message to the a client specified by id.
         /// </summary>
-        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="clientId">Client id.</param>
         /// <param name="message">Message to be sent.</param>
         /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message. Redis Adapter will always return true because it won't check whether the target specified by id exists or not.</remarks>
-        public void SendMessage(Guid remoteClientId, T message)
+        public void SendMessage(Guid clientId, T message)
         {
-            redisAdapter.SendPrivateMessage(remoteClientId, message);
+            redisAdapter.SendPrivateMessage(clientId, message);
         }
 
         /// <summary>
-        /// Creates a task that sends a message to the remote client specified by id.
+        /// Creates a task that sends a message to the a client specified by id.
         /// </summary>
-        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="clientId">Client id.</param>
         /// <param name="message">Message to be sent.</param>
         /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message. Redis Adapter will always return true because it won't check whether the target specified by id exists or not.</remarks>
-        public Task SendMessageAsync(Guid remoteClientId, T message)
+        public Task SendMessageAsync(Guid clientId, T message)
         {
-            return redisAdapter.SendPrivateMessageAsync(remoteClientId, message);
+            return redisAdapter.SendPrivateMessageAsync(clientId, message);
         }
 
         ///// <summary>
@@ -211,9 +211,9 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid remoteClientId)
+        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid clientId)
         {
-            return redisAdapter.TryResolveVirtualHost(virtualHostId, out remoteClientId);
+            return redisAdapter.TryResolveVirtualHost(virtualHostId, out clientId);
         }
 
         /// <inheritdoc/>

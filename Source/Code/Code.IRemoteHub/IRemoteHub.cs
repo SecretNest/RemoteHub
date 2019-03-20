@@ -53,9 +53,9 @@ namespace SecretNest.RemoteHub
         /// Tries to resolve virtual host by id to host id.
         /// </summary>
         /// <param name="virtualHostId">Virtual host id.</param>
-        /// <param name="hostId">Host id.</param>
+        /// <param name="clientId">Client id as the result.</param>
         /// <returns>Whether the resolving is succeeded or not.</returns>
-        bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId);
+        bool TryResolveVirtualHost(Guid virtualHostId, out Guid clientId);
 
 
         /// <summary>
@@ -84,19 +84,19 @@ namespace SecretNest.RemoteHub
     public interface IRemoteHub<T> : IRemoteHub
     {
         /// <summary>
-        /// Sends a message to the remote client specified by id.
+        /// Sends a message to the a client specified by id.
         /// </summary>
-        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="clientId">Client id.</param>
         /// <param name="message">Message to be sent.</param>
-        void SendMessage(Guid remoteClientId, T message);
+        void SendMessage(Guid clientId, T message);
 
         /// <summary>
-        /// Creates a task that sends a message to the remote client specified by id.
+        /// Creates a task that sends a message to the a client specified by id.
         /// </summary>
-        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="clientId">Client id.</param>
         /// <param name="message">Message to be sent.</param>
         /// <returns>A task that represents the sending job.</returns>
-        Task SendMessageAsync(Guid remoteClientId, T message);
+        Task SendMessageAsync(Guid clientId, T message);
 
         ///// <summary>
         ///// Sends a message to the remote client specified by private channel name.

@@ -823,18 +823,18 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public bool TryResolve(Guid remoteClientId, out RedisChannel channel)
+        public bool TryResolve(Guid clientId, out RedisChannel channel)
         {
-            var result = hostTable.TryGet(remoteClientId, out channel, out var isTimedOut);
+            var result = hostTable.TryGet(clientId, out channel, out var isTimedOut);
             if (isTimedOut && RemoteClientRemoved != null)
             {
-                RemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId));
+                RemoteClientRemoved(this, new ClientIdEventArgs(clientId));
             }
             if (!result) //try local
             {
-                if (clients.ContainsKey(remoteClientId))
+                if (clients.ContainsKey(clientId))
                 {
-                    channel = BuildRedisChannel(remoteClientId);
+                    channel = BuildRedisChannel(clientId);
                     result = true;
                 }
             }
@@ -842,9 +842,9 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid remoteClientId)
+        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid clientId)
         {
-            return hostTable.TryResolveVirtualHost(virtualHostId, out remoteClientId);
+            return hostTable.TryResolveVirtualHost(virtualHostId, out clientId);
         }
     }
 }

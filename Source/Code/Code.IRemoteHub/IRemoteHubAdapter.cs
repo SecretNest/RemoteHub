@@ -86,9 +86,9 @@ namespace SecretNest.RemoteHub
         /// Tries to resolve virtual host by id to remote client id.
         /// </summary>
         /// <param name="virtualHostId">Virtual host id to be resolved.</param>
-        /// <param name="remoteClientId">Remote client id as the result.</param>
+        /// <param name="clientId">Client id as the result.</param>
         /// <returns>Whether the resolving is succeeded or not.</returns>
-        bool TryResolveVirtualHost(Guid virtualHostId, out Guid remoteClientId);
+        bool TryResolveVirtualHost(Guid virtualHostId, out Guid clientId);
 
         /// <summary>
         /// Occurs while an connection related exception is thrown.
@@ -125,19 +125,19 @@ namespace SecretNest.RemoteHub
     public interface IRemoteHubAdapter<T> : IRemoteHubAdapter
     {
         /// <summary>
-        /// Sends private message to remote client specified by id.
+        /// Sends private message to a client specified by id.
         /// </summary>
-        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="clientId">Client id.</param>
         /// <param name="message">Message to be sent.</param>
         /// <returns>A task that represents the sending job.</returns>
-        Task SendPrivateMessageAsync(Guid remoteClientId, T message);
+        Task SendPrivateMessageAsync(Guid clientId, T message);
 
         /// <summary>
-        /// Sends private message to remote client specified by id.
+        /// Sends private message to a client specified by id.
         /// </summary>
-        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="clientId">Client id.</param>
         /// <param name="message">Message to be sent.</param>
-        void SendPrivateMessage(Guid remoteClientId, T message);
+        void SendPrivateMessage(Guid clientId, T message);
 
         /// <summary>
         /// Adds a callback that will be used for dealing received private message.

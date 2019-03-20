@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SecretNest.RemoteHub
 {
-    internal class ClientEntity
+    internal partial class ClientEntity
     {
         public string CommandTextRefresh { get; private set; } 
         public string CommandTextRefreshFull { get; private set; }

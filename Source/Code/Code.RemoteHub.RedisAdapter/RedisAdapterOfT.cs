@@ -101,39 +101,39 @@ namespace SecretNest.RemoteHub
         }
 
         /// <summary>
-        /// Sends private message to remote client specified by id.
+        /// Sends private message to a client specified by id.
         /// </summary>
-        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="clientId">Client id.</param>
         /// <param name="message">Message to be sent.</param>
         /// <returns>A task that represents the sending job.</returns>
         /// <remarks>Redis Adapter will always return true because it won't check whether the target specified by id exists or not.</remarks>
-        public async Task SendPrivateMessageAsync(Guid remoteClientId, T message)
+        public async Task SendPrivateMessageAsync(Guid clientId, T message)
         {
-            if (IsSelf(remoteClientId))
+            if (IsSelf(clientId))
             {
-                OnPrivateMessageReceived(remoteClientId, message);
+                OnPrivateMessageReceived(clientId, message);
             }
             else
             {
-                await SendPrivateMessageAsync(remoteClientId, valueConverter.ConvertToMessage(message));
+                await SendPrivateMessageAsync(clientId, valueConverter.ConvertToMessage(message));
             }
         }
 
         /// <summary>
-        /// Sends private message to remote client specified by id.
+        /// Sends private message to a client specified by id.
         /// </summary>
-        /// <param name="remoteClientId">Remote client id.</param>
+        /// <param name="clientId">Client id.</param>
         /// <param name="message">Message to be sent.</param>
         /// <remarks>Redis Adapter will always return true because it won't check whether the target specified by id exists or not.</remarks>
-        public void SendPrivateMessage(Guid remoteClientId, T message)
+        public void SendPrivateMessage(Guid clientId, T message)
         {
-            if (IsSelf(remoteClientId))
+            if (IsSelf(clientId))
             {
-                OnPrivateMessageReceived(remoteClientId, message);
+                OnPrivateMessageReceived(clientId, message);
             }
             else
             {
-                SendPrivateMessage(remoteClientId, valueConverter.ConvertToMessage(message));
+                SendPrivateMessage(clientId, valueConverter.ConvertToMessage(message));
             }
         }
 

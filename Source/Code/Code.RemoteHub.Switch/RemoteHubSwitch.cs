@@ -255,7 +255,7 @@ namespace SecretNest.RemoteHub
             {
                 if (adapters.TryAdd(adapter, idList))
                 {
-                    adapter.AddOnMessageReceivedCallback(OnMessageReceivedCallback);
+                    adapter.AddOnMessageReceivedCallback(OnPrivateMessageReceivedCallback);
 
                     adapter.RemoteClientUpdated += OnAdapterRemoteClientUpdated;
                     adapter.RemoteClientRemoved += OnAdapterRemoteClientRemoved;
@@ -307,7 +307,7 @@ namespace SecretNest.RemoteHub
             adapter.RemoteClientUpdated -= OnAdapterRemoteClientUpdated;
             adapter.RemoteClientRemoved -= OnAdapterRemoteClientRemoved;
 
-            adapter.RemoveOnMessageReceivedCallback(OnMessageReceivedCallback);
+            adapter.RemoveOnMessageReceivedCallback(OnPrivateMessageReceivedCallback);
 
             if (adapters.TryGetValue(adapter, out var idList))
             {
@@ -373,7 +373,7 @@ namespace SecretNest.RemoteHub
         }
         #endregion
 
-        void OnMessageReceivedCallback(Guid receiverClientId, byte[] message)
+        void OnPrivateMessageReceivedCallback(Guid receiverClientId, byte[] message)
         {
             if (adapterOfClients.TryGetValue(receiverClientId, out var adapterCollection))
             {

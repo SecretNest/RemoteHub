@@ -75,28 +75,28 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public void SendPrivateMessage(Guid remoteClientId, T message)
+        public void SendPrivateMessage(Guid clientId, T message)
         {
-            if (IsSelf(remoteClientId))
+            if (IsSelf(clientId))
             {
-                OnPrivateMessageReceived(remoteClientId, message);
+                OnPrivateMessageReceived(clientId, message);
             }
             else
             {
-                SendingPrivateMessage(remoteClientId, valueConverter.ConvertToMessage(message));
+                SendingPrivateMessage(clientId, valueConverter.ConvertToMessage(message));
             }
         }
 
         /// <inheritdoc/>
-        public async Task SendPrivateMessageAsync(Guid remoteClientId, T message)
+        public async Task SendPrivateMessageAsync(Guid clientId, T message)
         {
-            if (IsSelf(remoteClientId))
+            if (IsSelf(clientId))
             {
-                await OnPrivateMessageReceivedAsync(remoteClientId, message);
+                await OnPrivateMessageReceivedAsync(clientId, message);
             }
             else
             {
-                await Task.Run(() => SendingPrivateMessage(remoteClientId, valueConverter.ConvertToMessage(message)));
+                await Task.Run(() => SendingPrivateMessage(clientId, valueConverter.ConvertToMessage(message)));
             }
         }
 
