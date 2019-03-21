@@ -526,7 +526,7 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public IEnumerable<Guid> GetAllRemoteClients() => hostTable.GetAllRemoteClientsId();
+        public IEnumerable<Guid> GetAllRemoteClients() => hostTable.GetAllRemoteClientsId().ToArray();
 
         /// <inheritdoc/>
         public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)

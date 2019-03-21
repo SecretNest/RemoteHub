@@ -790,16 +790,18 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public IEnumerable<Guid> GetAllRemoteClients()
         {
+            Guid[] result;
             try
             {
                 clientsChangingLock.WaitOne();
 
-                return hostTable.GetAllRemoteClientsId(clients.Keys);
+                result = hostTable.GetAllRemoteClientsId(clients.Keys).ToArray();
             }
             finally
             {
                 clientsChangingLock.Set();
             }
+            return result;
         }
 
         /// <inheritdoc/>
