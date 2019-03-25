@@ -17,7 +17,7 @@ namespace SecretNest.RemoteHub
         RedisChannel mainChannel;
         IDatabase redisDatabase;
         ISubscriber publisher, subscriber;
-        int clientsListVersion = int.MinValue;
+        ReaderWriterLockSlim clientsLock = new ReaderWriterLockSlim();
         Dictionary<Guid, ClientEntity> clients = new Dictionary<Guid, ClientEntity>();
         ConcurrentDictionary<RedisChannel, Guid> targets = new ConcurrentDictionary<RedisChannel, Guid>(); //listening channel and it's client id
         readonly string redisConfiguration, mainChannelName, privateChannelNamePrefix;
@@ -29,7 +29,6 @@ namespace SecretNest.RemoteHub
         bool sendingNormal = false;
         bool isStopping = false;
         ManualResetEventSlim startingLock = new ManualResetEventSlim();
-        AutoResetEvent clientsChangingLock = new AutoResetEvent(true); //also used in refresh sending
 
         /// <inheritdoc/>
         public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
@@ -50,12 +49,13 @@ namespace SecretNest.RemoteHub
         {
             if (!disposedValue)
             {
+                StopConnection();
+
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects).
+                    clientsLock.Dispose();
                 }
-
-                StopConnection();
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
                 // TODO: set large fields to null.
@@ -176,7 +176,7 @@ namespace SecretNest.RemoteHub
                 {
                     try
                     {
-                        clientsChangingLock.WaitOne();
+                        clientsLock.EnterWriteLock();
 
                         foreach (var remoteClientId in hostTable.GetAllRemoteClientsId(clients.Keys))
                         {
@@ -185,7 +185,7 @@ namespace SecretNest.RemoteHub
                     }
                     finally
                     {
-                        clientsChangingLock.Set();
+                        clientsLock.ExitWriteLock();
                     }
                 }
 
@@ -275,7 +275,7 @@ namespace SecretNest.RemoteHub
                     var clientId = Guid.Parse(texts[2]);
                     try
                     {
-                        clientsChangingLock.WaitOne();
+                        clientsLock.EnterReadLock();
                         if (clients.TryGetValue(clientId, out var client))
                         {
                             MainChannelPublishing(client.CommandTextRefreshFull);
@@ -283,7 +283,7 @@ namespace SecretNest.RemoteHub
                     }
                     finally
                     {
-                        clientsChangingLock.Set();
+                        clientsLock.ExitReadLock();
                     }
                 }
                 else if (texts[1] == "Shutdown")
@@ -337,7 +337,7 @@ namespace SecretNest.RemoteHub
 
                 try
                 {
-                    clientsChangingLock.WaitOne();
+                    clientsLock.EnterReadLock();
                     if (needRefreshFull)
                     {
                         needRefreshFull = false;
@@ -356,7 +356,7 @@ namespace SecretNest.RemoteHub
                 }
                 finally
                 {
-                    clientsChangingLock.Set();
+                    clientsLock.ExitReadLock();
                 }
             }
         }
@@ -541,21 +541,15 @@ namespace SecretNest.RemoteHub
 
         protected bool IsSelf(Guid clientId)
         {
-            bool result;
-            int start;
-            do
+            try
             {
-                start = clientsListVersion;
-                try
-                {
-                    result = clients.ContainsKey(clientId);
-                }
-                catch //when clients changed, it MAY throw an exception
-                {
-                    result = false;
-                }
-            } while (start != clientsListVersion);
-            return result;
+                clientsLock.EnterReadLock();
+                return clients.ContainsKey(clientId);
+            }
+            finally
+            {
+                clientsLock.ExitReadLock();
+            }
         }
 
         protected bool IsSelf(RedisChannel redisChannel, out Guid clientId)
@@ -568,33 +562,32 @@ namespace SecretNest.RemoteHub
         {
             try
             {
-                clientsChangingLock.WaitOne();
+                clientsLock.EnterWriteLock();
 
                 var updatingToken = updatingRedisCancellation.Token;
                 foreach (var id in clientId)
                 {
-                    if (clients.ContainsKey(id))
-                        continue;
-
-                    string idText = id.ToString("N");
-                    var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
-                    clients[id] = client;
-                    Interlocked.Increment(ref clientsListVersion);
-
-                    if (updatingRedis != null)
+                    if (!clients.ContainsKey(id))
                     {
-                        RedisChannel redisChannel = BuildRedisChannel(idText);
-                        if (targets.TryAdd(redisChannel, id))
+                        string idText = id.ToString("N");
+                        var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
+                        clients[id] = client;
+
+                        if (updatingRedis != null)
                         {
-                            await subscriber.SubscribeAsync(redisChannel, OnPrivateChannelReceived);
+                            RedisChannel redisChannel = BuildRedisChannel(idText);
+                            if (targets.TryAdd(redisChannel, id))
+                            {
+                                await subscriber.SubscribeAsync(redisChannel, OnPrivateChannelReceived);
+                            }
+                            await MainChannelPublishingAsync(client.CommandTextRefreshFull, updatingToken);
                         }
-                        await MainChannelPublishingAsync(client.CommandTextRefreshFull, updatingToken);
                     }
                 }
             }
             finally
             {
-                clientsChangingLock.Set();
+                clientsLock.ExitReadLock();
             }
         }
 
@@ -603,32 +596,31 @@ namespace SecretNest.RemoteHub
         {
             try
             {
-                clientsChangingLock.WaitOne();
+                clientsLock.EnterWriteLock();
 
                 foreach (var id in clientId)
                 {
-                    if (clients.ContainsKey(id))
-                        continue;
-
-                    string idText = id.ToString("N");
-                    var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
-                    clients[id] = client;
-                    Interlocked.Increment(ref clientsListVersion);
-
-                    if (updatingRedis != null)
+                    if (!clients.ContainsKey(id))
                     {
-                        RedisChannel redisChannel = BuildRedisChannel(idText);
-                        if (targets.TryAdd(redisChannel, id))
+                        string idText = id.ToString("N");
+                        var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
+                        clients[id] = client;
+
+                        if (updatingRedis != null)
                         {
-                            subscriber.Subscribe(redisChannel, OnPrivateChannelReceived);
+                            RedisChannel redisChannel = BuildRedisChannel(idText);
+                            if (targets.TryAdd(redisChannel, id))
+                            {
+                                subscriber.Subscribe(redisChannel, OnPrivateChannelReceived);
+                            }
+                            MainChannelPublishing(client.CommandTextRefreshFull);
                         }
-                        MainChannelPublishing(client.CommandTextRefreshFull);
                     }
                 }
             }
             finally
             {
-                clientsChangingLock.Set();
+                clientsLock.ExitReadLock();
             }
         }
 
@@ -649,7 +641,6 @@ namespace SecretNest.RemoteHub
                 }
 
                 clients.Remove(clientId);
-                Interlocked.Increment(ref clientsListVersion);
             }
         }
 
@@ -670,7 +661,6 @@ namespace SecretNest.RemoteHub
                 }
 
                 clients.Remove(clientId);
-                Interlocked.Increment(ref clientsListVersion);
             }
         }
 
@@ -679,7 +669,7 @@ namespace SecretNest.RemoteHub
         {
             try
             {
-                clientsChangingLock.WaitOne();
+                clientsLock.EnterWriteLock();
 
                 foreach (var id in clientId)
                 {
@@ -688,7 +678,7 @@ namespace SecretNest.RemoteHub
             }
             finally
             {
-                clientsChangingLock.Set();
+                clientsLock.ExitReadLock();
             }
         }
 
@@ -697,7 +687,7 @@ namespace SecretNest.RemoteHub
         {
             try
             {
-                clientsChangingLock.WaitOne();
+                clientsLock.EnterWriteLock();
 
                 foreach (var id in clientId)
                 {
@@ -706,7 +696,7 @@ namespace SecretNest.RemoteHub
             }
             finally
             {
-                clientsChangingLock.Set();
+                clientsLock.ExitReadLock();
             }
         }
 
@@ -715,7 +705,7 @@ namespace SecretNest.RemoteHub
         {
             try
             {
-                clientsChangingLock.WaitOne();
+                clientsLock.EnterWriteLock();
 
                 Guid[] allId = null;
 
@@ -733,7 +723,7 @@ namespace SecretNest.RemoteHub
             }
             finally
             {
-                clientsChangingLock.Set();
+                clientsLock.ExitReadLock();
             }
         }
 
@@ -742,7 +732,7 @@ namespace SecretNest.RemoteHub
         {
             try
             {
-                clientsChangingLock.WaitOne();
+                clientsLock.EnterWriteLock();
 
                 Guid[] allId = null;
 
@@ -760,7 +750,7 @@ namespace SecretNest.RemoteHub
             }
             finally
             {
-                clientsChangingLock.Set();
+                clientsLock.ExitReadLock();
             }
         }
 
@@ -770,7 +760,7 @@ namespace SecretNest.RemoteHub
             Guid[] result = null;
             try
             {
-                clientsChangingLock.WaitOne();
+                clientsLock.EnterReadLock();
                 int length = clients.Count;
                 result = new Guid[length];
                 if (length > 0)
@@ -780,7 +770,7 @@ namespace SecretNest.RemoteHub
             }
             finally
             {
-                clientsChangingLock.Set();
+                clientsLock.ExitReadLock();
             }
             return result;
         }
@@ -793,13 +783,13 @@ namespace SecretNest.RemoteHub
             Guid[] result;
             try
             {
-                clientsChangingLock.WaitOne();
+                clientsLock.EnterReadLock();
 
                 result = hostTable.GetAllRemoteClientsId(clients.Keys).ToArray();
             }
             finally
             {
-                clientsChangingLock.Set();
+                clientsLock.ExitReadLock();
             }
             return result;
         }
@@ -809,7 +799,7 @@ namespace SecretNest.RemoteHub
         {
             try
             {
-                clientsChangingLock.WaitOne();
+                clientsLock.EnterReadLock();
 
                 if (clients.TryGetValue(clientId, out var client))
                 {
@@ -820,7 +810,7 @@ namespace SecretNest.RemoteHub
             }
             finally
             {
-                clientsChangingLock.Set();
+                clientsLock.ExitReadLock();
             }
         }
 
@@ -834,10 +824,18 @@ namespace SecretNest.RemoteHub
             }
             if (!result) //try local
             {
-                if (clients.ContainsKey(clientId))
+                try
                 {
-                    channel = BuildRedisChannel(clientId);
-                    result = true;
+                    clientsLock.EnterReadLock();
+                    if (clients.ContainsKey(clientId))
+                    {
+                        channel = BuildRedisChannel(clientId);
+                        result = true;
+                    }
+                }
+                finally
+                {
+                    clientsLock.ExitReadLock();
                 }
             }
             return result;

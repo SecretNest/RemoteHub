@@ -16,8 +16,8 @@ namespace SecretNest.RemoteHub
     {
         Stream inputStream;
         Stream outputStream;
-        int clientsListVersion = int.MinValue;
         readonly int streamRefreshingIntervalInSeconds;
+        ReaderWriterLockSlim clientsLock = new ReaderWriterLockSlim();
         Dictionary<Guid, byte[]> clients = new Dictionary<Guid, byte[]>(); //value is null if no virtual host; or value is virtual host setting id + count + setting data.
         ClientTable hostTable = new ClientTable();
         Task readingJob, writingJob, keepingJob;
@@ -25,7 +25,7 @@ namespace SecretNest.RemoteHub
         bool isStopping = false;
         CancellationTokenSource shuttingdownTokenSource;
         CancellationToken shuttingdownToken;
-        ManualResetEventSlim startingLock = new ManualResetEventSlim();
+        ManualResetEventSlim startingLock = new ManualResetEventSlim(); //also used as a lock when need to query IsStarted
         BlockingCollection<byte[]> sendingBuffers;
 
         protected abstract void OnPrivateMessageReceived(Guid targetClientId, byte[] dataPackage);
@@ -56,12 +56,13 @@ namespace SecretNest.RemoteHub
         {
             if (!disposedValue)
             {
+                StopProcessing();
+
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects).
+                    clientsLock.Dispose();
                 }
-
-                StopProcessing();
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
                 // TODO: set large fields to null.
@@ -326,9 +327,17 @@ namespace SecretNest.RemoteHub
 
         void SendingRefreshAllClients()
         {
-            foreach (var client in clients)
+            try
             {
-                SendingRefreshClient(client.Key, client.Value);
+                clientsLock.EnterReadLock();
+                foreach (var client in clients)
+                {
+                    SendingRefreshClient(client.Key, client.Value);
+                }
+            }
+            finally
+            {
+                clientsLock.ExitReadLock();
             }
         }
 
@@ -455,8 +464,9 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public void AddClient(params Guid[] clientId)
         {
-            lock (clients)
+            try
             {
+                clientsLock.EnterWriteLock();
                 lock (startingLock)
                 {
                     foreach (var client in clientId)
@@ -464,7 +474,6 @@ namespace SecretNest.RemoteHub
                         if (!clients.ContainsKey(client))
                         {
                             clients[client] = null;
-                            Interlocked.Increment(ref clientsListVersion);
                             hostTable.AddOrUpdate(client, true);
                             if (IsStarted)
                             {
@@ -474,20 +483,24 @@ namespace SecretNest.RemoteHub
                     }
                 }
             }
+            finally
+            {
+                clientsLock.ExitWriteLock();
+            }
         }
 
         /// <inheritdoc/>
         public void RemoveClient(params Guid[] clientId)
         {
-            lock (clients)
+            try
             {
+                clientsLock.EnterWriteLock();
                 lock (startingLock)
                 {
                     foreach (var client in clientId)
                     {
                         if (clients.Remove(client))
                         {
-                            Interlocked.Increment(ref clientsListVersion);
                             hostTable.Remove(client);
 
                             if (IsStarted)
@@ -498,13 +511,18 @@ namespace SecretNest.RemoteHub
                     }
                 }
             }
+            finally
+            {
+                clientsLock.ExitWriteLock();
+            }
         }
 
         /// <inheritdoc/>
         public void RemoveAllClients()
         {
-            lock (clients)
+            try
             {
+                clientsLock.EnterWriteLock();
                 if (clients.Count == 0) return;
                 lock (startingLock)
                 {
@@ -512,15 +530,24 @@ namespace SecretNest.RemoteHub
                     RemoveClient(id);
                 }
             }
+            finally
+            {
+                clientsLock.ExitWriteLock();
+            }
         }
 
         /// <inheritdoc/>
         public IEnumerable<Guid> GetAllClients()
         {
             Guid[] id;
-            lock (clients)
+            try
             {
+                clientsLock.EnterReadLock();
                 id = clients.Keys.ToArray();
+            }
+            finally
+            {
+                clientsLock.ExitReadLock();
             }
             return id;
         }
@@ -531,8 +558,9 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)
         {
-            lock (clients)
+            try
             {
+                clientsLock.EnterWriteLock();
                 if (clients.TryGetValue(clientId, out var currentSetting))
                 {
                     if (settings == null || settings.Length == 0)
@@ -607,6 +635,10 @@ namespace SecretNest.RemoteHub
                     throw new KeyNotFoundException("Client specified cannot be found.");
                 }
             }
+            finally
+            {
+                clientsLock.ExitWriteLock();
+            }
         }
 
         void WriteInt32ToByteArray(int value, byte[] buffer, int location)
@@ -630,21 +662,15 @@ namespace SecretNest.RemoteHub
 
         protected bool IsSelf(Guid clientId)
         {
-            bool result;
-            int start;
-            do
+            try
             {
-                start = clientsListVersion;
-                try
-                {
-                    result = clients.ContainsKey(clientId);
-                }
-                catch //when clients changed, it MAY throw an exception
-                {
-                    result = false;
-                }
-            } while (start != clientsListVersion);
-            return result;
+                clientsLock.EnterReadLock();
+                return clients.ContainsKey(clientId);
+            }
+            finally
+            {
+                clientsLock.ExitReadLock();
+            }
         }
     }
 }
