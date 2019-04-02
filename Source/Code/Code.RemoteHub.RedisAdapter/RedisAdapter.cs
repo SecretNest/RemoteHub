@@ -160,7 +160,9 @@ namespace SecretNest.RemoteHub
                 updatingRedisCancellation.Cancel();
                 updatingRedis.Wait();
                 updatingRedis = null;
+                updatingRedisCancellation.Dispose();
                 updatingRedisCancellation = null;
+                updatingRedisWaitingCancellation.Dispose();
                 updatingRedisWaitingCancellation = null;
 
                 RemoveAllClients();
@@ -304,59 +306,62 @@ namespace SecretNest.RemoteHub
             await MainChannelPublishingAsync(messageTextHello, updatingToken);  // This Hello message will also be received by the sender, which will cause the delay in the 1st round of keeping will be cancelled.
 
             //started
-            var waitingToken = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token).Token;
-            var nextRefresh = DateTime.Now.AddSeconds(clientRefreshingInterval);
-
-            startingLock.Set();
-
-            //keeping
-            while (!updatingToken.IsCancellationRequested)
+            using (var waitingTokenSource = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token))
             {
-                try
-                {
-                    TimeSpan delay = nextRefresh - DateTime.Now - smallTimeFix;
-                    if (delay > TimeSpan.Zero)
-                        await Task.Delay(delay, waitingToken);
-                    nextRefresh = nextRefresh.AddSeconds(clientRefreshingInterval);
-                }
-                catch (TaskCanceledException)
-                {
-                    if (!updatingToken.IsCancellationRequested)
-                    {
-                        nextRefresh = DateTime.Now.AddSeconds(clientRefreshingInterval);
-                        waitingToken = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token).Token;
-                    }
-                }
+                var waitingToken = waitingTokenSource.Token;
+                var nextRefresh = DateTime.Now.AddSeconds(clientRefreshingInterval);
 
-                hostTable.ClearAllExpired(out var expired);
-                if (RemoteClientRemoved != null)
-                    foreach (var id in expired)
-                    {
-                        RemoteClientRemoved(this, new ClientIdEventArgs(id));
-                    }
+                startingLock.Set();
 
-                try
+                //keeping
+                while (!updatingToken.IsCancellationRequested)
                 {
-                    clientsLock.EnterReadLock();
-                    if (needRefreshFull)
+                    try
                     {
-                        needRefreshFull = false;
-                        foreach (var client in clients.Values)
+                        TimeSpan delay = nextRefresh - DateTime.Now - smallTimeFix;
+                        if (delay > TimeSpan.Zero)
+                            await Task.Delay(delay, waitingToken);
+                        nextRefresh = nextRefresh.AddSeconds(clientRefreshingInterval);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        if (!updatingToken.IsCancellationRequested)
                         {
-                            await MainChannelPublishingAsync(client.CommandTextRefreshFull, updatingToken);
+                            nextRefresh = DateTime.Now.AddSeconds(clientRefreshingInterval);
+                            waitingToken = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token).Token;
                         }
                     }
-                    else
-                    {
-                        foreach (var client in clients.Values)
+
+                    hostTable.ClearAllExpired(out var expired);
+                    if (RemoteClientRemoved != null)
+                        foreach (var id in expired)
                         {
-                            await MainChannelPublishingAsync(client.CommandTextRefresh, updatingToken);
+                            RemoteClientRemoved(this, new ClientIdEventArgs(id));
+                        }
+
+                    try
+                    {
+                        clientsLock.EnterReadLock();
+                        if (needRefreshFull)
+                        {
+                            needRefreshFull = false;
+                            foreach (var client in clients.Values)
+                            {
+                                await MainChannelPublishingAsync(client.CommandTextRefreshFull, updatingToken);
+                            }
+                        }
+                        else
+                        {
+                            foreach (var client in clients.Values)
+                            {
+                                await MainChannelPublishingAsync(client.CommandTextRefresh, updatingToken);
+                            }
                         }
                     }
-                }
-                finally
-                {
-                    clientsLock.ExitReadLock();
+                    finally
+                    {
+                        clientsLock.ExitReadLock();
+                    }
                 }
             }
         }

@@ -156,6 +156,8 @@ namespace SecretNest.RemoteHub
                 outputStream = null;
                 sendingBuffers = null;
 
+                shuttingdownTokenSource.Dispose();
+
                 //OnAdapterStopped will be raised at the end of receiving procedure.
             }
         }
