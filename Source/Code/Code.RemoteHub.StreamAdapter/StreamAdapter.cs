@@ -17,7 +17,7 @@ namespace SecretNest.RemoteHub
         Stream inputStream;
         Stream outputStream;
         readonly int streamRefreshingIntervalInSeconds;
-        ReaderWriterLockSlim clientsLock = new ReaderWriterLockSlim();
+        ReaderWriterLockSlim clientsLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
         Dictionary<Guid, byte[]> clients = new Dictionary<Guid, byte[]>(); //value is null if no virtual host; or value is virtual host setting id + count + setting data.
         ClientTable hostTable = new ClientTable();
         Task readingJob, writingJob, keepingJob;

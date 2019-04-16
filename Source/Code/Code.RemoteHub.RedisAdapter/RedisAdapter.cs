@@ -17,7 +17,7 @@ namespace SecretNest.RemoteHub
         RedisChannel mainChannel;
         IDatabase redisDatabase;
         ISubscriber publisher, subscriber;
-        ReaderWriterLockSlim clientsLock = new ReaderWriterLockSlim();
+        ReaderWriterLockSlim clientsLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
         Dictionary<Guid, ClientEntity> clients = new Dictionary<Guid, ClientEntity>();
         ConcurrentDictionary<RedisChannel, Guid> targets = new ConcurrentDictionary<RedisChannel, Guid>(); //listening channel and it's client id
         readonly string redisConfiguration, mainChannelName, privateChannelNamePrefix;
@@ -25,6 +25,7 @@ namespace SecretNest.RemoteHub
         ClientTable hostTable;
         bool needRefreshFull = false;
         CancellationTokenSource updatingRedisCancellation, updatingRedisWaitingCancellation;
+        CancellationToken updatingToken;
         Task updatingRedis;
         bool sendingNormal = false;
         bool isStopping = false;
@@ -137,6 +138,7 @@ namespace SecretNest.RemoteHub
                 }
 
                 updatingRedisCancellation = new CancellationTokenSource();
+                updatingToken = updatingRedisCancellation.Token;
                 updatingRedisWaitingCancellation = new CancellationTokenSource();
 
                 startingLock.Reset();
@@ -176,18 +178,20 @@ namespace SecretNest.RemoteHub
 
                 if (RemoteClientRemoved != null)
                 {
+                    Guid[] remoteClientIds;
                     try
                     {
                         clientsLock.EnterWriteLock();
-
-                        foreach (var remoteClientId in hostTable.GetAllRemoteClientsId(clients.Keys))
-                        {
-                            RemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId));
-                        }
+                        remoteClientIds = hostTable.GetAllRemoteClientsId(clients.Keys).ToArray();
                     }
                     finally
                     {
                         clientsLock.ExitWriteLock();
+                    }
+
+                    if (remoteClientIds.Length > 0)
+                    {
+                        Array.ForEach(remoteClientIds, i => RemoteClientRemoved(this, new ClientIdEventArgs(i)));
                     }
                 }
 
@@ -275,17 +279,26 @@ namespace SecretNest.RemoteHub
                 else if (texts[1] == "NeedRefreshFull")
                 {
                     var clientId = Guid.Parse(texts[2]);
+                    string refreshText;
                     try
                     {
                         clientsLock.EnterReadLock();
                         if (clients.TryGetValue(clientId, out var client))
                         {
-                            MainChannelPublishing(client.CommandTextRefreshFull);
+                            refreshText = client.CommandTextRefreshFull;
+                        }
+                        else
+                        {
+                            refreshText = null;
                         }
                     }
                     finally
                     {
                         clientsLock.ExitReadLock();
+                    }
+                    if (refreshText != null)
+                    {
+                        MainChannelPublishing(refreshText);
                     }
                 }
                 else if (texts[1] == "Shutdown")
@@ -302,11 +315,11 @@ namespace SecretNest.RemoteHub
         async Task UpdateRedisAsync()
         {
             //start
-            var updatingToken = updatingRedisCancellation.Token;
-            await MainChannelPublishingAsync(messageTextHello, updatingToken);  // This Hello message will also be received by the sender, which will cause the delay in the 1st round of keeping will be cancelled.
+            await MainChannelPublishingAsync(messageTextHello, updatingToken);  // This Hello message will also be received by the sender, which will cause the delay in the 1st round of keeping will be canceled.
 
             //started
-            using (var waitingTokenSource = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token))
+            var waitingTokenSource = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token);
+            try
             {
                 var waitingToken = waitingTokenSource.Token;
                 var nextRefresh = DateTime.Now.AddSeconds(clientRefreshingInterval);
@@ -328,7 +341,10 @@ namespace SecretNest.RemoteHub
                         if (!updatingToken.IsCancellationRequested)
                         {
                             nextRefresh = DateTime.Now.AddSeconds(clientRefreshingInterval);
-                            waitingToken = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token).Token;
+                            var old = waitingTokenSource;
+                            waitingTokenSource = CancellationTokenSource.CreateLinkedTokenSource(updatingToken, updatingRedisWaitingCancellation.Token);
+                            waitingToken = waitingTokenSource.Token;
+                            old.Dispose();
                         }
                     }
 
@@ -339,30 +355,40 @@ namespace SecretNest.RemoteHub
                             RemoteClientRemoved(this, new ClientIdEventArgs(id));
                         }
 
+                    var threadId = Thread.CurrentThread.ManagedThreadId;
+
+                    string[] refreshTexts;
                     try
                     {
                         clientsLock.EnterReadLock();
                         if (needRefreshFull)
                         {
                             needRefreshFull = false;
-                            foreach (var client in clients.Values)
-                            {
-                                await MainChannelPublishingAsync(client.CommandTextRefreshFull, updatingToken);
-                            }
+                            refreshTexts = clients.Values.Select(i => i.CommandTextRefreshFull).ToArray();
                         }
                         else
                         {
-                            foreach (var client in clients.Values)
-                            {
-                                await MainChannelPublishingAsync(client.CommandTextRefresh, updatingToken);
-                            }
+                            refreshTexts = clients.Values.Select(i => i.CommandTextRefresh).ToArray();
                         }
                     }
                     finally
                     {
                         clientsLock.ExitReadLock();
                     }
+                    if (refreshTexts.Length > 0)
+                    {
+                        try
+                        {
+                            Array.ForEach(refreshTexts, async i => await MainChannelPublishingAsync(i, updatingToken));
+
+                        }
+                        catch (TaskCanceledException) { }
+                    }
                 }
+            }
+            finally
+            {
+                waitingTokenSource.Dispose();
             }
         }
 
@@ -562,64 +588,101 @@ namespace SecretNest.RemoteHub
             return targets.TryGetValue(redisChannel, out clientId); //targets: contains all local listening channel and it's client id.
         }
 
+        List<string> AddClientWithoutSendingRefresh(Guid[] clientId)
+        {
+            List<string> refreshTexts = new List<string>();
+            List<RedisChannel> channelToBeSubscribed = new List<RedisChannel>();
+            try
+            {
+                clientsLock.EnterWriteLock();
+
+                foreach (var id in clientId)
+                {
+                    if (!clients.ContainsKey(id))
+                    {
+                        string idText = id.ToString("N");
+                        var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
+                        clients[id] = client;
+
+                        if (updatingRedis != null)
+                        {
+                            RedisChannel redisChannel = BuildRedisChannel(idText);
+                            if (targets.TryAdd(redisChannel, id))
+                            {
+                                channelToBeSubscribed.Add(redisChannel);
+                            }
+                            refreshTexts.Add(client.CommandTextRefreshFull);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                clientsLock.ExitWriteLock();
+            }
+            channelToBeSubscribed.ForEach(async i => await subscriber.SubscribeAsync(i, OnPrivateChannelReceived));
+            return refreshTexts;
+        }
+
         /// <inheritdoc/>
         public async Task AddClientAsync(params Guid[] clientId)
         {
             try
             {
-                clientsLock.EnterWriteLock();
-
-                var updatingToken = updatingRedisCancellation.Token;
-                foreach (var id in clientId)
+                var toRefresh = AddClientWithoutSendingRefresh(clientId);
+                foreach(var text in toRefresh)
                 {
-                    if (!clients.ContainsKey(id))
-                    {
-                        string idText = id.ToString("N");
-                        var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
-                        clients[id] = client;
-
-                        if (updatingRedis != null)
-                        {
-                            RedisChannel redisChannel = BuildRedisChannel(idText);
-                            if (targets.TryAdd(redisChannel, id))
-                            {
-                                await subscriber.SubscribeAsync(redisChannel, OnPrivateChannelReceived);
-                            }
-                            await MainChannelPublishingAsync(client.CommandTextRefreshFull, updatingToken);
-                        }
-                    }
+                    await MainChannelPublishingAsync(text, updatingToken);
                 }
             }
-            finally
-            {
-                clientsLock.ExitWriteLock();
-            }
+            catch (TaskCanceledException) { }
         }
 
         /// <inheritdoc/>
         public void AddClient(params Guid[] clientId)
         {
+            AddClientWithoutSendingRefresh(clientId).ForEach(i => MainChannelPublishing(i));
+        }
+
+        async Task RemoveOneClientAsync(string idText)
+        {
+            RedisChannel redisChannel = BuildRedisChannel(idText);
+
+            if (updatingRedis != null)
+            {
+                await MainChannelPublishingAsync(string.Format("v1:Shutdown:{0}", idText), updatingRedisCancellation.Token);
+                if (targets.TryRemove(redisChannel, out _))
+                {
+                    await subscriber.UnsubscribeAsync(redisChannel, OnPrivateChannelReceived);
+                }
+            }
+        }
+
+        void RemoveOneClient(string idText)
+        {
+            RedisChannel redisChannel = BuildRedisChannel(idText);
+
+            if (updatingRedis != null)
+            {
+                MainChannelPublishing(string.Format("v1:Shutdown:{0}", idText));
+                if (targets.TryRemove(redisChannel, out _))
+                {
+                    subscriber.Unsubscribe(redisChannel, OnPrivateChannelReceived);
+                }
+            }
+        }
+
+        List<string> RemoveClientWithoutTargetNorRedisOperating(Guid[] clientId)
+        {
+            List<string> allIdText = new List<string>();
             try
             {
                 clientsLock.EnterWriteLock();
-
                 foreach (var id in clientId)
                 {
-                    if (!clients.ContainsKey(id))
+                    if (clients.Remove(id))
                     {
-                        string idText = id.ToString("N");
-                        var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
-                        clients[id] = client;
-
-                        if (updatingRedis != null)
-                        {
-                            RedisChannel redisChannel = BuildRedisChannel(idText);
-                            if (targets.TryAdd(redisChannel, id))
-                            {
-                                subscriber.Subscribe(redisChannel, OnPrivateChannelReceived);
-                            }
-                            MainChannelPublishing(client.CommandTextRefreshFull);
-                        }
+                        allIdText.Add(id.ToString("N"));
                     }
                 }
             }
@@ -627,136 +690,62 @@ namespace SecretNest.RemoteHub
             {
                 clientsLock.ExitWriteLock();
             }
-        }
-
-        async Task RemoveOneClientAsync(Guid clientId)
-        {
-            if (clients.TryGetValue(clientId, out var client))
-            {
-                string idText = clientId.ToString("N");
-                RedisChannel redisChannel = BuildRedisChannel(idText);
-
-                if (updatingRedis != null)
-                {
-                    await MainChannelPublishingAsync(string.Format("v1:Shutdown:{0}", idText), updatingRedisCancellation.Token);
-                    if (targets.TryRemove(redisChannel, out _))
-                    {
-                        await subscriber.UnsubscribeAsync(redisChannel, OnPrivateChannelReceived);
-                    }
-                }
-
-                clients.Remove(clientId);
-            }
-        }
-
-        void RemoveOneClient(Guid clientId)
-        {
-            if (clients.TryGetValue(clientId, out var client))
-            {
-                string idText = clientId.ToString("N");
-                RedisChannel redisChannel = BuildRedisChannel(idText);
-
-                if (updatingRedis != null)
-                {
-                    MainChannelPublishing(string.Format("v1:Shutdown:{0}", idText));
-                    if (targets.TryRemove(redisChannel, out _))
-                    {
-                        subscriber.Unsubscribe(redisChannel, OnPrivateChannelReceived);
-                    }
-                }
-
-                clients.Remove(clientId);
-            }
+            return allIdText;
         }
 
         /// <inheritdoc/>
         public async Task RemoveClientAsync(params Guid[] clientId)
         {
-            try
-            {
-                clientsLock.EnterWriteLock();
+            List<string> allIdText = RemoveClientWithoutTargetNorRedisOperating(clientId);
 
-                foreach (var id in clientId)
-                {
-                    await RemoveOneClientAsync(id);
-                }
-            }
-            finally
+            foreach(var idText in allIdText)
             {
-                clientsLock.ExitWriteLock();
+                await RemoveOneClientAsync(idText);
             }
         }
 
         /// <inheritdoc/>
         public void RemoveClient(params Guid[] clientId)
         {
+            List<string> allIdText = RemoveClientWithoutTargetNorRedisOperating(clientId);
+            allIdText.ForEach(i => RemoveOneClient(i));
+        }
+
+        List<string> RemoveAllClientWithoutTargetNorRedisOperating()
+        {
+            List<string> allIdText = new List<string>();
             try
             {
                 clientsLock.EnterWriteLock();
-
-                foreach (var id in clientId)
+                foreach (var id in clients)
                 {
-                    RemoveOneClient(id);
+                    allIdText.Add(id.Key.ToString("N"));
                 }
+                clients.Clear();
             }
             finally
             {
                 clientsLock.ExitWriteLock();
             }
+            return allIdText;
         }
 
         /// <inheritdoc/>
         public async Task RemoveAllClientsAsync()
         {
-            try
+            List<string> allIdText = RemoveAllClientWithoutTargetNorRedisOperating();
+
+            foreach (var idText in allIdText)
             {
-                clientsLock.EnterWriteLock();
-
-                Guid[] allId = null;
-
-                int length = clients.Count;
-                allId = new Guid[length];
-                if (length > 0)
-                {
-                    clients.Keys.CopyTo(allId, 0);
-                }
-
-                foreach (var id in allId)
-                {
-                    await RemoveOneClientAsync(id);
-                }
-            }
-            finally
-            {
-                clientsLock.ExitWriteLock();
+                await RemoveOneClientAsync(idText);
             }
         }
 
         /// <inheritdoc/>
         public void RemoveAllClients()
         {
-            try
-            {
-                clientsLock.EnterWriteLock();
-
-                Guid[] allId = null;
-
-                int length = clients.Count;
-                allId = new Guid[length];
-                if (length > 0)
-                {
-                    clients.Keys.CopyTo(allId, 0);
-                }
-
-                foreach (var id in allId)
-                {
-                    RemoveOneClient(id);
-                }
-            }
-            finally
-            {
-                clientsLock.ExitWriteLock();
-            }
+            List<string> allIdText = RemoveAllClientWithoutTargetNorRedisOperating();
+            allIdText.ForEach(i => RemoveOneClient(i));
         }
 
         /// <inheritdoc/>
@@ -802,6 +791,7 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)
         {
+            string refreshText;
             try
             {
                 clientsLock.EnterReadLock();
@@ -809,13 +799,20 @@ namespace SecretNest.RemoteHub
                 if (clients.TryGetValue(clientId, out var client))
                 {
                     client.ApplyVirtualHostSetting(settings);
-
-                    MainChannelPublishing(client.CommandTextRefreshFull);
+                    refreshText = client.CommandTextRefreshFull;
+                }
+                else
+                {
+                    refreshText = null;
                 }
             }
             finally
             {
                 clientsLock.ExitReadLock();
+            }
+            if (refreshText != null)
+            {
+                MainChannelPublishing(refreshText);
             }
         }
 
