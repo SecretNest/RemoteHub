@@ -355,8 +355,6 @@ namespace SecretNest.RemoteHub
                             RemoteClientRemoved(this, new ClientIdEventArgs(id));
                         }
 
-                    var threadId = Thread.CurrentThread.ManagedThreadId;
-
                     string[] refreshTexts;
                     try
                     {
