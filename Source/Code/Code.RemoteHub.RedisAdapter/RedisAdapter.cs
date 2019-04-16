@@ -592,7 +592,7 @@ namespace SecretNest.RemoteHub
             }
             finally
             {
-                clientsLock.ExitReadLock();
+                clientsLock.ExitWriteLock();
             }
         }
 
@@ -625,7 +625,7 @@ namespace SecretNest.RemoteHub
             }
             finally
             {
-                clientsLock.ExitReadLock();
+                clientsLock.ExitWriteLock();
             }
         }
 
@@ -683,7 +683,7 @@ namespace SecretNest.RemoteHub
             }
             finally
             {
-                clientsLock.ExitReadLock();
+                clientsLock.ExitWriteLock();
             }
         }
 
@@ -701,7 +701,7 @@ namespace SecretNest.RemoteHub
             }
             finally
             {
-                clientsLock.ExitReadLock();
+                clientsLock.ExitWriteLock();
             }
         }
 
@@ -728,7 +728,7 @@ namespace SecretNest.RemoteHub
             }
             finally
             {
-                clientsLock.ExitReadLock();
+                clientsLock.ExitWriteLock();
             }
         }
 
@@ -755,7 +755,7 @@ namespace SecretNest.RemoteHub
             }
             finally
             {
-                clientsLock.ExitReadLock();
+                clientsLock.ExitWriteLock();
             }
         }
 
