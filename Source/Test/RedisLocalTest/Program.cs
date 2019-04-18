@@ -7,9 +7,6 @@ namespace RedisLocalTest
     class Program
     {
         const string connectionString = "localhost";
-        const string mainChannel = "Main";
-        const string hostKeyPrefix = "TestClient_";
-        const string privateChannelPrefix = "Private_";
         static Dictionary<Guid, string> clientNames = new Dictionary<Guid, string>();
 
         static void Main(string[] args)
