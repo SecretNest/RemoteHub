@@ -3,7 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace StreamLocalTest
@@ -14,6 +17,10 @@ namespace StreamLocalTest
 
         static void Main(string[] args)
         {
+            var serverCertificate = BuildSelfSignedServerCertificate("localhost");
+            var clientCertificate = BuildSelfSignedClientCertificate("localClient");
+            var clientCertificateCollection = new X509CertificateCollection(new X509Certificate[] { clientCertificate });
+
             Guid client1Id = Guid.NewGuid();
             Guid client2Id = Guid.NewGuid();
             clientNames.Add(client1Id, "Client1");
@@ -26,9 +33,13 @@ namespace StreamLocalTest
 
             using (TcpClient tcpClient2 = new TcpClient("localhost", 60001))
             using (TcpClient tcpClient1 = acceptConnecting.Result)
-            using (var stream1 = tcpClient1.GetStream())
-            using (var stream2 = tcpClient2.GetStream())
+            using (SslStream stream2 = new SslStream(tcpClient2.GetStream(), false, CertificateValidation))
+            using (SslStream stream1 = new SslStream(tcpClient1.GetStream(), false, CertificateValidation))
             {
+                var serverAuth = stream1.AuthenticateAsServerAsync(serverCertificate);
+                stream2.AuthenticateAsClient("localhost", clientCertificateCollection, false);
+                serverAuth.Wait();
+
                 server.Stop();
 
                 RemoteHubOverStream<string> client1 = new RemoteHubOverStream<string>(client1Id, stream1, stream1, Received);
@@ -93,6 +104,64 @@ Other: Shutdown.");
         static void Received(Guid clientId, string text)
         {
             Console.WriteLine(string.Format("Received: {0}: {1}", clientNames[clientId], text));
+        }
+
+        static bool CertificateValidation(Object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+        {
+            return true;
+        }
+
+        static X509Certificate2 BuildSelfSignedServerCertificate(string certificateName)
+        {
+            SubjectAlternativeNameBuilder sanBuilder = new SubjectAlternativeNameBuilder();
+            sanBuilder.AddIpAddress(IPAddress.Loopback);
+            //sanBuilder.AddIpAddress(IPAddress.IPv6Loopback);
+            sanBuilder.AddDnsName(certificateName);
+            //sanBuilder.AddDnsName("localhost");
+            //sanBuilder.AddDnsName(Environment.MachineName);
+
+            X500DistinguishedName distinguishedName = new X500DistinguishedName($"CN={certificateName}");
+
+            using (RSA rsa = RSA.Create(2048))
+            {
+                var request = new CertificateRequest(distinguishedName, rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+                request.CertificateExtensions.Add(
+                    new X509KeyUsageExtension(X509KeyUsageFlags.DataEncipherment | X509KeyUsageFlags.KeyEncipherment | X509KeyUsageFlags.DigitalSignature, false));
+
+                request.CertificateExtensions.Add(
+                   new X509EnhancedKeyUsageExtension(
+                       new OidCollection { new Oid("1.3.6.1.5.5.7.3.1") }, false));
+
+                request.CertificateExtensions.Add(sanBuilder.Build());
+
+                var certificate = request.CreateSelfSigned(new DateTimeOffset(DateTime.UtcNow.AddDays(-1)), new DateTimeOffset(DateTime.UtcNow.AddDays(3650)));
+                certificate.FriendlyName = certificateName;
+
+                return new X509Certificate2(certificate.Export(X509ContentType.Pfx, "SomePassword"), "SomePassword", X509KeyStorageFlags.MachineKeySet);
+            }
+        }
+
+        static X509Certificate2 BuildSelfSignedClientCertificate(string certificateName)
+        {
+            X500DistinguishedName distinguishedName = new X500DistinguishedName($"CN={certificateName}");
+
+            using (RSA rsa = RSA.Create(2048))
+            {
+                var request = new CertificateRequest(distinguishedName, rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+                request.CertificateExtensions.Add(
+                    new X509KeyUsageExtension(X509KeyUsageFlags.DataEncipherment | X509KeyUsageFlags.KeyEncipherment | X509KeyUsageFlags.DigitalSignature, false));
+
+                request.CertificateExtensions.Add(
+                   new X509EnhancedKeyUsageExtension(
+                       new OidCollection { new Oid("1.3.6.1.5.5.7.3.2") }, false));
+
+                var certificate = request.CreateSelfSigned(new DateTimeOffset(DateTime.UtcNow.AddDays(-1)), new DateTimeOffset(DateTime.UtcNow.AddDays(3650)));
+                certificate.FriendlyName = certificateName;
+
+                return new X509Certificate2(certificate.Export(X509ContentType.Pfx, "SomePassword"), "SomePassword", X509KeyStorageFlags.MachineKeySet);
+            }
         }
     }
 }

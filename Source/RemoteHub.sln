@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2046
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code", "Code", "{36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}"
 EndProject
@@ -47,9 +47,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.Switch", "Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.RemoteHub.Switch", "DirectRelease\Release.RemoteHub.Switch\Release.RemoteHub.Switch.csproj", "{B8B79421-5498-4FEF-B923-5DF66EC18F6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisLocalTest", "Test\RedisLocalTest\RedisLocalTest.csproj", "{F19235BC-5E0B-45A7-9351-C577840D6F14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedisLocalTest", "Test\RedisLocalTest\RedisLocalTest.csproj", "{F19235BC-5E0B-45A7-9351-C577840D6F14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreamLocalTest", "Test\StreamLocalTest\StreamLocalTest.csproj", "{80FE98FD-1085-4F72-A78B-68D81764990F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamLocalTest", "Test\StreamLocalTest\StreamLocalTest.csproj", "{80FE98FD-1085-4F72-A78B-68D81764990F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwitchTest", "Test\SwitchTest\SwitchTest.csproj", "{6A0DE5D4-7E34-42E8-995B-D9ACD63BD4E0}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -111,6 +113,10 @@ Global
 		{80FE98FD-1085-4F72-A78B-68D81764990F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80FE98FD-1085-4F72-A78B-68D81764990F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80FE98FD-1085-4F72-A78B-68D81764990F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A0DE5D4-7E34-42E8-995B-D9ACD63BD4E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A0DE5D4-7E34-42E8-995B-D9ACD63BD4E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A0DE5D4-7E34-42E8-995B-D9ACD63BD4E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A0DE5D4-7E34-42E8-995B-D9ACD63BD4E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -136,6 +142,7 @@ Global
 		{B8B79421-5498-4FEF-B923-5DF66EC18F6B} = {189A414D-B434-442A-AD84-E6CA16C00C30}
 		{F19235BC-5E0B-45A7-9351-C577840D6F14} = {BD94B882-AC56-4132-BFC6-B987EC7A65B8}
 		{80FE98FD-1085-4F72-A78B-68D81764990F} = {BD94B882-AC56-4132-BFC6-B987EC7A65B8}
+		{6A0DE5D4-7E34-42E8-995B-D9ACD63BD4E0} = {BD94B882-AC56-4132-BFC6-B987EC7A65B8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E700BB2-4439-4C11-8DCD-41829F557945}
