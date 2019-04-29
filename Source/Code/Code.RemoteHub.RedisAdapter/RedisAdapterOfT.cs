@@ -19,13 +19,15 @@ namespace SecretNest.RemoteHub
         /// Initializes an instance of RedisAdapter.
         /// </summary>
         /// <param name="redisConfiguration">The string configuration to use for Redis multiplexer.</param>
-        /// <param name="onMessageReceivedCallback">The callback to be used for dealing received private message.</param>
-        /// <param name="mainChannelName">Main channel name.</param>
-        /// <param name="privateChannelNamePrefix">Prefix in naming of the private channel.</param>
-        /// <param name="redisDb">The id to get a database for. Used in getting Redis database.</param>
-        /// <param name="clientTimeToLive">Time to live (TTL) value of the host in seconds. Any records of hosts expired will be removed.</param>
-        /// <param name="clientRefreshingInterval">Interval between refresh command sending operations in seconds.</param>
-        public RedisAdapter(string redisConfiguration, OnMessageReceivedCallback<T> onMessageReceivedCallback, string mainChannelName, string privateChannelNamePrefix, int redisDb, int clientTimeToLive, int clientRefreshingInterval)
+        /// <param name="onMessageReceivedCallback">The callback to be used for dealing received private message. Default value is null.</param>
+        /// <param name="mainChannelName">Main channel name. Default value is "RemoteHub".</param>
+        /// <param name="privateChannelNamePrefix">Prefix in naming of the private channel. Default value is "RemoteHubPrivate_".</param>
+        /// <param name="redisDb">The id to get a database for. Used in getting Redis database. Default value is 0.</param>
+        /// <param name="clientTimeToLive">Time to live (TTL) value of the host in seconds. Any records of hosts expired will be removed. Default value is 30 seconds.</param>
+        /// <param name="clientRefreshingInterval">Interval between refresh command sending operations in seconds. Default value is 15 seconds.</param>
+        public RedisAdapter(string redisConfiguration, OnMessageReceivedCallback<T> onMessageReceivedCallback = null,
+            string mainChannelName = "RemoteHub", string privateChannelNamePrefix = "RemoteHubPrivate_", int redisDb = 0,
+            int clientTimeToLive = 30, int clientRefreshingInterval = 15)
             : base(redisConfiguration, mainChannelName, privateChannelNamePrefix, redisDb, clientTimeToLive, clientRefreshingInterval)
         {
             privateMessageCallbackHelper = new PrivateMessageCallbackHelper<T>(onMessageReceivedCallback);

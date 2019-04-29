@@ -5,4 +5,12 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\DirectRelease\Release.RemoteHub.RedisAdapter\Release.RemoteHub.RedisAdapter.csproj" />
+    <ProjectReference Include="..\..\DirectRelease\Release.RemoteHub.Redis\Release.RemoteHub.Redis.csproj" />
+    <ProjectReference Include="..\..\DirectRelease\Release.RemoteHub.StreamAdapter\Release.RemoteHub.StreamAdapter.csproj" />
+    <ProjectReference Include="..\..\DirectRelease\Release.RemoteHub.Stream\Release.RemoteHub.Stream.csproj" />
+    <ProjectReference Include="..\..\DirectRelease\Release.RemoteHub.Switch\Release.RemoteHub.Switch.csproj" />
+  </ItemGroup>
+
 </Project>

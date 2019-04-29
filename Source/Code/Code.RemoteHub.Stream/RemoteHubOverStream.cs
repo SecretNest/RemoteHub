@@ -91,7 +91,7 @@ namespace SecretNest.RemoteHub
         /// <param name="inputStream">Stream for reading.</param>
         /// <param name="outputStream">Stream for writing.</param>
         /// <param name="onMessageReceivedCallback">The callback to be used for dealing received private message.</param>
-        /// <param name="refreshingIntervalInSeconds">The interval in seconds before sending a data package for keeping it alive when streams are idle. Default value is 60.</param>
+        /// <param name="refreshingIntervalInSeconds">The interval in seconds before sending a data package for keeping it alive when streams are idle. Default value is 60 seconds.</param>
         /// <param name="encoding">The encoder for converting between string and byte array. Default value is Encoding.Default. Will be ignored if type is not string.</param>
         public RemoteHubOverStream(Guid clientId, Stream inputStream, Stream outputStream, OnMessageReceivedCallback<T> onMessageReceivedCallback, int refreshingIntervalInSeconds = 60, Encoding encoding = null)
         {

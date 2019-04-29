@@ -20,10 +20,10 @@ namespace SecretNest.RemoteHub
         /// </summary>
         /// <param name="inputStream">Stream for reading.</param>
         /// <param name="outputStream">Stream for writing.</param>
-        /// <param name="onMessageReceivedCallback">The callback to be used for dealing received private message.</param>
-        /// <param name="refreshingIntervalInSeconds">The interval in seconds before sending a data package for keeping it alive when streams are idle.</param>
+        /// <param name="onMessageReceivedCallback">The callback to be used for dealing received private message. Default value is null.</param>
+        /// <param name="refreshingIntervalInSeconds">The interval in seconds before sending a data package for keeping it alive when streams are idle. Default value is 60 seconds.</param>
         /// <param name="encoding">The encoder for converting between string and byte array. Default value is Encoding.Default. Will be ignored if type is not string.</param>
-        public StreamAdapter(Stream inputStream, Stream outputStream, OnMessageReceivedCallback<T> onMessageReceivedCallback, int refreshingIntervalInSeconds, Encoding encoding = null)
+        public StreamAdapter(Stream inputStream, Stream outputStream, OnMessageReceivedCallback<T> onMessageReceivedCallback = null, int refreshingIntervalInSeconds = 60, Encoding encoding = null)
             : base(inputStream, outputStream, refreshingIntervalInSeconds)
         {
             privateMessageCallbackHelper = new PrivateMessageCallbackHelper<T>(onMessageReceivedCallback);
