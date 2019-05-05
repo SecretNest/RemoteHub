@@ -26,16 +26,18 @@ namespace SecretNest.RemoteHub
             this.channelPrefix = channelPrefix;
         }
 
-        public void AddOrRefresh(Guid clientId, int seconds, out Guid virtualHostSettingId)
+        public void AddOrRefresh(Guid clientId, int seconds, out Guid virtualHostSettingId, out bool isNewCreated)
         {
             lock (clients)
             {
                 if (clients.TryGetValue(clientId, out var entity))
                 {
+                    isNewCreated = false;
                     entity.Refresh(seconds);
                 }
                 else
                 {
+                    isNewCreated = true;
                     entity = new ClientEntity(seconds, channelPrefix + clientId.ToString("N"));
                     clients.Add(clientId, entity);
                 }

@@ -230,20 +230,29 @@ namespace SecretNest.RemoteHub
                 {
                     var clientId = Guid.Parse(texts[2]);
                     var seconds = int.Parse(texts[3]);
-                    hostTable.AddOrRefresh(clientId, seconds, out var currentVirtualHostSettingId);
+                    hostTable.AddOrRefresh(clientId, seconds, out var currentVirtualHostSettingId, out bool isNewCreated);
                     if (texts[4] != "")
                     {
                         Guid virtualHostId = Guid.Parse(texts[4]);
                         if (currentVirtualHostSettingId != virtualHostId)
                         {
+                            //new created with having-virtual-host
                             MainChannelPublishing("v1:NeedRefreshFull:" + texts[2]);
+                            //delay sending RemoteClientUpdated until RefreshFull received.
                         }
                     }
                     else
                     {
                         if (currentVirtualHostSettingId != Guid.Empty)
                         {
+                            //From having-virtual-host state to no-virtual-host state
                             hostTable.ClearVirtualHosts(clientId);
+                            RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
+                        }
+                        else if (isNewCreated)
+                        {
+                            //new created with no-virtual-host
+                            RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
                         }
                     }
                 }
@@ -251,12 +260,13 @@ namespace SecretNest.RemoteHub
                 {
                     var clientId = Guid.Parse(texts[2]);
                     var seconds = int.Parse(texts[3]);
-                    hostTable.AddOrRefresh(clientId, seconds, out var currentVirtualHostSettingId);
+                    hostTable.AddOrRefresh(clientId, seconds, out var currentVirtualHostSettingId, out bool isNewCreated);
                     if (texts[4] != "")
                     {
                         Guid virtualHostId = Guid.Parse(texts[4]);
                         if (currentVirtualHostSettingId != virtualHostId)
                         {
+                            //From no-virtual-host state to having-virtual-host state, or change virtual host setting
                             var setting = hostTable.ApplyVirtualHosts(clientId, virtualHostId, texts[5]);
                             RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, virtualHostId, setting.ToArray()));
                         }
@@ -266,6 +276,13 @@ namespace SecretNest.RemoteHub
                         if (currentVirtualHostSettingId != Guid.Empty)
                         {
                             hostTable.ClearVirtualHosts(clientId);
+                            //From having-virtual-host state to no-virtual-host state
+                            RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
+                        }
+                        else if (isNewCreated)
+                        {
+                            //new created with no-virtual-host
+                            RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
                         }
                     }
                 }

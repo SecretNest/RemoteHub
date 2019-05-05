@@ -91,10 +91,12 @@ namespace SwitchTest
             clients[3].Start();
             StreamAdapter<byte[]> streamAdapterOnSwitch2 = new StreamAdapter<byte[]>(streamsOfTcpClients[5], streamsOfTcpClients[5]);
             RemoteHubSwitch remoteHubSwitch1 = new RemoteHubSwitch();
+            remoteHubSwitch1.RemoteClientAdded += RemoteHubSwitch1_RemoteClientAdded;
             remoteHubSwitch1.AddAdapters(streamAdaptersOnSwitch1);
 
             //Switch2 part
             RemoteHubSwitch remoteHubSwitch2 = new RemoteHubSwitch();
+            remoteHubSwitch2.RemoteClientAdded += RemoteHubSwitch2_RemoteClientAdded;
             remoteHubSwitch2.AddAdapter(redisAdapterOnRedisHub);
             remoteHubSwitch2.AddAdapter(streamAdapterOnSwitch2);
 
@@ -102,23 +104,31 @@ namespace SwitchTest
             while (true)
             {
                 Console.WriteLine("From: 0/1/2/3 other to quit...");
-                if (!TryGetClientIndex(out int index))
+                if (!TryGetClientIndex(out int sourceIndex))
                 {
                     break;
                 }
-                var client = clients[index];
+                var client = clients[sourceIndex];
                 Console.WriteLine("To: 0/1/2/3 other to quit...");
-                if (!TryGetClientIndex(out index))
+                if (!TryGetClientIndex(out int targetIndex))
                 {
                     break;
                 }
-                var target = clients[index].ClientId; //Get Id only. Not related to any operating on target client.
-                Console.WriteLine("From: {0} To: {1}");
+                var target = clients[targetIndex].ClientId; //Get Id only. Not related to any operating on target client.
+                Console.WriteLine("From: {0} To: {1}", sourceIndex, targetIndex);
                 client.SendMessage(target, "Test Message");
             }
 
             Console.WriteLine("Press any key to quit...");
             Console.ReadKey(true);
+
+
+            /* Test to do:
+             * normal test
+             * adding / removing client
+             * connect / disconnect switch links
+             */
+
 
             //Dispose
             remoteHubSwitch1.RemoveAllAdapters(true);
@@ -141,6 +151,16 @@ namespace SwitchTest
             {
                 adapter.Dispose();
             }
+        }
+
+        private static void RemoteHubSwitch1_RemoteClientAdded(object sender, ClientIdWithAdapterEventArgs e)
+        {
+            Console.WriteLine("Switch1 Add Client: " + clientNames[e.ClientId]);
+        }
+
+        private static void RemoteHubSwitch2_RemoteClientAdded(object sender, ClientIdWithAdapterEventArgs e)
+        {
+            Console.WriteLine("Switch2 Add Client: " + clientNames[e.ClientId]);
         }
 
         static bool TryGetClientIndex(out int index)
