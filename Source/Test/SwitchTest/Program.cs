@@ -92,11 +92,13 @@ namespace SwitchTest
             StreamAdapter<byte[]> streamAdapterOnSwitch2 = new StreamAdapter<byte[]>(streamsOfTcpClients[5], streamsOfTcpClients[5]);
             RemoteHubSwitch remoteHubSwitch1 = new RemoteHubSwitch();
             remoteHubSwitch1.RemoteClientAdded += RemoteHubSwitch1_RemoteClientAdded;
+            remoteHubSwitch1.RemoteClientRemoved += RemoteHubSwitch1_RemoteClientRemoved;
             remoteHubSwitch1.AddAdapters(streamAdaptersOnSwitch1);
 
             //Switch2 part
             RemoteHubSwitch remoteHubSwitch2 = new RemoteHubSwitch();
             remoteHubSwitch2.RemoteClientAdded += RemoteHubSwitch2_RemoteClientAdded;
+            remoteHubSwitch2.RemoteClientRemoved += RemoteHubSwitch2_RemoteClientRemoved;
             remoteHubSwitch2.AddAdapter(redisAdapterOnRedisHub);
             remoteHubSwitch2.AddAdapter(streamAdapterOnSwitch2);
 
@@ -124,7 +126,6 @@ namespace SwitchTest
 
 
             /* Test to do:
-             * normal test
              * adding / removing client
              * connect / disconnect switch links
              */
@@ -151,6 +152,16 @@ namespace SwitchTest
             {
                 adapter.Dispose();
             }
+        }
+
+        private static void RemoteHubSwitch1_RemoteClientRemoved(object sender, ClientIdWithAdapterEventArgs e)
+        {
+            Console.WriteLine("Switch1 Remove Client: " + clientNames[e.ClientId]);
+        }
+
+        private static void RemoteHubSwitch2_RemoteClientRemoved(object sender, ClientIdWithAdapterEventArgs e)
+        {
+            Console.WriteLine("Switch2 Remove Client: " + clientNames[e.ClientId]);
         }
 
         private static void RemoteHubSwitch1_RemoteClientAdded(object sender, ClientIdWithAdapterEventArgs e)
