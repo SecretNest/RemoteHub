@@ -10,9 +10,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)AdapterEventArgs.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ClientIdWithAdapterEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)RemoteClientChangedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ConnectionExceptionWithAdapterEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IGetRelatedRemoteHubAdapterInstance.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MessageRoutedEventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MessageRoutingFailedEventArgs.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RemoteHubSwitch.cs" />
   </ItemGroup>
 </Project>

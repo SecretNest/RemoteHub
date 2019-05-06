@@ -10,7 +10,7 @@ namespace SecretNest.RemoteHub
     public class AdapterEventArgs : EventArgs, IGetRelatedRemoteHubAdapterInstance
     {
         /// <inheritdoc/>
-        public IRemoteHubAdapter<byte[]> RemoteHubAdapter { get; }
+        public IRemoteHubAdapter<byte[]> Adapter { get; }
 
         /// <summary>
         /// Initializes an instance of AdapterEventArgs.
@@ -18,7 +18,7 @@ namespace SecretNest.RemoteHub
         /// <param name="remoteHubAdapter">Related RemoteHub Adapter instance.</param>
         public AdapterEventArgs(IRemoteHubAdapter<byte[]> remoteHubAdapter)
         {
-            RemoteHubAdapter = remoteHubAdapter;
+            Adapter = remoteHubAdapter;
         }
     }
 }

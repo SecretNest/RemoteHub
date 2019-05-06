@@ -16,8 +16,7 @@ namespace SecretNest.RemoteHub
     public class RemoteHubSwitch
     {
         ConcurrentDictionary<Guid, IRemoteHubAdapter<byte[]>> adapterOfClients = new ConcurrentDictionary<Guid, IRemoteHubAdapter<byte[]>>(); //lock when changing, not reading
-        ConcurrentDictionary<IRemoteHubAdapter<byte[]>, HashSet<Guid>> adapters = new ConcurrentDictionary<IRemoteHubAdapter<byte[]>, HashSet<Guid>>(); //HashSet need to be locked while remote client id of this adapter changing.
-
+        ConcurrentDictionary<IRemoteHubAdapter<byte[]>, ConcurrentDictionary<Guid, DateTime>> adapters = new ConcurrentDictionary<IRemoteHubAdapter<byte[]>, ConcurrentDictionary<Guid, DateTime>>(); //DateTime in value is not used yet. Preserved for future using. Set as the time the client id added.
         /// <summary>
         /// Occurs while an adapter is added.
         /// </summary>
@@ -33,7 +32,7 @@ namespace SecretNest.RemoteHub
         /// Occurs while a remote client is added.
         /// </summary>
         /// <remarks>For avoiding client status mismatched, introduced by adding and removing the same client within a tiny timespan, this event should be processed synchronously only.</remarks>
-        public event EventHandler<ClientIdWithAdapterEventArgs> RemoteClientAdded;
+        public event EventHandler<RemoteClientChangedEventArgs> RemoteClientAdded;
         void OnAdapterRemoteClientUpdated(object sender, ClientIdEventArgs e)
         {
             var adapter = (IRemoteHubAdapter<byte[]>)sender;
@@ -41,17 +40,22 @@ namespace SecretNest.RemoteHub
 
             if (adapters.TryGetValue(adapter, out var idList))
             {
-                lock (idList)
+                if (adapters.ContainsKey(adapter))
                 {
-                    if (adapters.ContainsKey(adapter))
-                    {
-                        idList.Add(remoteClientId);
+                    idList[remoteClientId] = DateTime.Now;
 
-                        AddAdapterToAdapterOfClients(remoteClientId, adapter);
-                    }
+                    AddAdapterToAdapterOfClients(remoteClientId, adapter);
                 }
             }
         }
+        #endregion
+
+        #region Event - RemoteClientChanged
+        /// <summary>
+        /// Occurs while a remote client is reattached to another adapter.
+        /// </summary>
+        /// <remarks>For avoiding client status mismatched, introduced by adding and removing the same client within a tiny timespan, this event should be processed synchronously only.</remarks>
+        public event EventHandler<RemoteClientChangedEventArgs> RemoteClientChanged;
         #endregion
 
         #region Event - RemoteClientRemoved
@@ -59,7 +63,7 @@ namespace SecretNest.RemoteHub
         /// Occurs while a remote client is removed.
         /// </summary>
         /// <remarks>For avoiding client status mismatched, introduced by adding and removing the same client within a tiny timespan, this event should be processed synchronously only.</remarks>
-        public event EventHandler<ClientIdWithAdapterEventArgs> RemoteClientRemoved;
+        public event EventHandler<RemoteClientChangedEventArgs> RemoteClientRemoved;
         void OnAdapterRemoteClientRemoved(object sender, ClientIdEventArgs e)
         {
             var adapter = (IRemoteHubAdapter<byte[]>)sender;
@@ -67,14 +71,11 @@ namespace SecretNest.RemoteHub
 
             if (adapters.TryGetValue(adapter, out var idList))
             {
-                lock (idList)
+                if (adapters.ContainsKey(adapter))
                 {
-                    if (adapters.ContainsKey(adapter))
-                    {
-                        RemoveAdapterFromAdapterOfClients(remoteClientId, adapter);
+                    RemoveAdapterFromAdapterOfClients(remoteClientId, adapter);
 
-                        idList.Remove(remoteClientId);
-                    }
+                    idList.TryRemove(remoteClientId, out _);
                 }
             }
         }
@@ -234,7 +235,7 @@ namespace SecretNest.RemoteHub
             {
                 lock (set)
                 {
-                    return set.ToArray();
+                    return set.Keys.ToArray();
                 }
             }
             else
@@ -255,11 +256,9 @@ namespace SecretNest.RemoteHub
 
                         if (adapters.TryGetValue(old, out var idList))
                         {
-                            lock (idList)
-                            {
-                                idList.Remove(remoteClientId);
-                            }
+                            idList.TryRemove(remoteClientId, out _);
                         }
+                        RemoteClientChanged?.Invoke(this, new RemoteClientChangedEventArgs(remoteClientId, adapter));
                     }
                     return;
                 }
@@ -267,7 +266,7 @@ namespace SecretNest.RemoteHub
                 {
                     adapterOfClients[remoteClientId] = adapter;
 
-                    RemoteClientAdded?.Invoke(this, new ClientIdWithAdapterEventArgs(remoteClientId, adapter));
+                    RemoteClientAdded?.Invoke(this, new RemoteClientChangedEventArgs(remoteClientId, adapter));
                 }
             }
 
@@ -288,7 +287,7 @@ namespace SecretNest.RemoteHub
                 {
                     adapterOfClients.TryRemove(remoteClientId, out _);
 
-                    RemoteClientRemoved?.Invoke(this, new ClientIdWithAdapterEventArgs(remoteClientId, adapter));
+                    RemoteClientRemoved?.Invoke(this, new RemoteClientChangedEventArgs(remoteClientId, adapter));
                 }
                 else
                 {
@@ -311,26 +310,24 @@ namespace SecretNest.RemoteHub
         /// <param name="adapter">Adapter to be attached.</param>
         public void AddAdapter(IRemoteHubAdapter<byte[]> adapter)
         {
-            var idList = new HashSet<Guid>();
-            lock (idList)
+            var idList = new ConcurrentDictionary<Guid, DateTime>();
+            if (adapters.TryAdd(adapter, idList))
             {
-                if (adapters.TryAdd(adapter, idList))
-                {
-                    adapter.AddOnMessageReceivedCallback(OnPrivateMessageReceivedCallback);
+                adapter.AddOnMessageReceivedCallback(OnPrivateMessageReceivedCallback);
 
-                    adapter.RemoteClientUpdated += OnAdapterRemoteClientUpdated;
-                    adapter.RemoteClientRemoved += OnAdapterRemoteClientRemoved;
+                adapter.RemoteClientUpdated += OnAdapterRemoteClientUpdated;
+                adapter.RemoteClientRemoved += OnAdapterRemoteClientRemoved;
 
-                    foreach (var remoteClientId in adapter.GetAllRemoteClients())
-                    {
-                        AddAdapterToAdapterOfClients(remoteClientId, adapter);
-                        idList.Add(remoteClientId);
-                    }
-                }
-                else
+                foreach (var remoteClientId in adapter.GetAllRemoteClients())
                 {
-                    return;
+                    AddAdapterToAdapterOfClients(remoteClientId, adapter);
+                    idList[remoteClientId] = DateTime.Now;
+                    RemoteClientAdded?.Invoke(this, new RemoteClientChangedEventArgs(remoteClientId, adapter));
                 }
+            }
+            else
+            {
+                return;
             }
 
             if (ConnectionErrorOccurredInternal != null)
@@ -386,19 +383,17 @@ namespace SecretNest.RemoteHub
 
             if (adapters.TryGetValue(adapter, out var idList))
             {
-                lock (idList)
+                if (adapters.TryRemove(adapter, out _))
                 {
-                    if (adapters.TryRemove(adapter, out _))
+                    foreach (var remoteClientId in idList.Keys)
                     {
-                        foreach (var remoteClientId in idList)
-                        {
-                            RemoveAdapterFromAdapterOfClients(remoteClientId, adapter);
-                        }
+                        RemoveAdapterFromAdapterOfClients(remoteClientId, adapter);
+                        RemoteClientRemoved?.Invoke(this, new RemoteClientChangedEventArgs(remoteClientId, adapter));
                     }
-                    else
-                    {
-                        return;
-                    }
+                }
+                else
+                {
+                    return;
                 }
             }
             else
@@ -472,12 +467,31 @@ namespace SecretNest.RemoteHub
         }
         #endregion
 
+        #region Routing
+
+        /// <summary>
+        /// Occurs when a message is routed.
+        /// </summary>
+        public event EventHandler<MessageRoutedEventArgs> MessageRouted;
+
+        /// <summary>
+        /// Occurs when a message is received but no adapter is registered with the client id specified by the message.
+        /// </summary>
+        public event EventHandler<MessageRoutingFailedEventArgs> MessageRoutingFailed;
+
         void OnPrivateMessageReceivedCallback(Guid receiverClientId, byte[] message)
         {
             if (adapterOfClients.TryGetValue(receiverClientId, out var adapter))
             {
                 adapter.SendPrivateMessage(receiverClientId, message);
+                MessageRouted?.Invoke(this, new MessageRoutedEventArgs(receiverClientId, adapter, message));
+            }
+            else
+            {
+                MessageRoutingFailed?.Invoke(this, new MessageRoutingFailedEventArgs(receiverClientId, message));
             }
         }
+
+        #endregion
     }
 }

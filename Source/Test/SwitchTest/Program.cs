@@ -31,6 +31,8 @@ namespace SwitchTest
     class Program
     {
         static Dictionary<Guid, string> clientNames = new Dictionary<Guid, string>();
+        static Dictionary<IRemoteHubAdapter<byte[]>, string> adapterNamesForSwitch1 = new Dictionary<IRemoteHubAdapter<byte[]>, string>();
+        static Dictionary<IRemoteHubAdapter<byte[]>, string> adapterNamesForSwitch2 = new Dictionary<IRemoteHubAdapter<byte[]>, string>();
 
         static void Received(Guid clientId, string text)
         {
@@ -83,6 +85,9 @@ namespace SwitchTest
                 new StreamAdapter<byte[]>(streamsOfTcpClients[1], streamsOfTcpClients[1]),
                 new StreamAdapter<byte[]>(streamsOfTcpClients[2], streamsOfTcpClients[2])
             };
+            adapterNamesForSwitch1[streamAdaptersOnSwitch1[0]] = "To Client 2";
+            adapterNamesForSwitch1[streamAdaptersOnSwitch1[1]] = "To Client 3";
+            adapterNamesForSwitch1[streamAdaptersOnSwitch1[2]] = "To Switch 2";
             clients.Add(new RemoteHubOverStream<string>(Guid.NewGuid(), streamsOfTcpClients[3], streamsOfTcpClients[3], Received));
             clients.Add(new RemoteHubOverStream<string>(Guid.NewGuid(), streamsOfTcpClients[4], streamsOfTcpClients[4], Received));
             clientNames.Add(clients[2].ClientId, "Client 2");
@@ -92,13 +97,21 @@ namespace SwitchTest
             StreamAdapter<byte[]> streamAdapterOnSwitch2 = new StreamAdapter<byte[]>(streamsOfTcpClients[5], streamsOfTcpClients[5]);
             RemoteHubSwitch remoteHubSwitch1 = new RemoteHubSwitch();
             remoteHubSwitch1.RemoteClientAdded += RemoteHubSwitch1_RemoteClientAdded;
+            remoteHubSwitch1.RemoteClientChanged += RemoteHubSwitch1_RemoteClientChanged;
             remoteHubSwitch1.RemoteClientRemoved += RemoteHubSwitch1_RemoteClientRemoved;
+            remoteHubSwitch1.MessageRouted += RemoteHubSwitch1_MessageRouted;
+            remoteHubSwitch1.MessageRoutingFailed += RemoteHubSwitch1_MessageRoutingFailed;
             remoteHubSwitch1.AddAdapters(streamAdaptersOnSwitch1);
 
             //Switch2 part
+            adapterNamesForSwitch2[redisAdapterOnRedisHub] = "To Redis";
+            adapterNamesForSwitch2[streamAdapterOnSwitch2] = "To Switch 1";
             RemoteHubSwitch remoteHubSwitch2 = new RemoteHubSwitch();
             remoteHubSwitch2.RemoteClientAdded += RemoteHubSwitch2_RemoteClientAdded;
+            remoteHubSwitch2.RemoteClientChanged += RemoteHubSwitch2_RemoteClientChanged;
             remoteHubSwitch2.RemoteClientRemoved += RemoteHubSwitch2_RemoteClientRemoved;
+            remoteHubSwitch2.MessageRouted += RemoteHubSwitch2_MessageRouted;
+            remoteHubSwitch2.MessageRoutingFailed += RemoteHubSwitch2_MessageRoutingFailed;
             remoteHubSwitch2.AddAdapter(redisAdapterOnRedisHub);
             remoteHubSwitch2.AddAdapter(streamAdapterOnSwitch2);
 
@@ -154,24 +167,36 @@ namespace SwitchTest
             }
         }
 
-        private static void RemoteHubSwitch1_RemoteClientRemoved(object sender, ClientIdWithAdapterEventArgs e)
+
+        private static void RemoteHubSwitch1_MessageRoutingFailed(object sender, MessageRoutingFailedEventArgs e) => WriteLog("Switch1 Message Routing Failed.", e);
+
+        private static void RemoteHubSwitch1_MessageRouted(object sender, MessageRoutedEventArgs e) => WriteLog("Switch1 Message Routed.", e, adapterNamesForSwitch1);
+
+        private static void RemoteHubSwitch2_MessageRoutingFailed(object sender, MessageRoutingFailedEventArgs e) => WriteLog("Switch2 Message Routing Failed.", e);
+
+        private static void RemoteHubSwitch2_MessageRouted(object sender, MessageRoutedEventArgs e) => WriteLog("Switch2 Message Routed.", e, adapterNamesForSwitch2);
+
+        private static void RemoteHubSwitch1_RemoteClientRemoved(object sender, RemoteClientChangedEventArgs e) => WriteLog("Switch1 Client Removed.", e, adapterNamesForSwitch1);
+
+        private static void RemoteHubSwitch2_RemoteClientRemoved(object sender, RemoteClientChangedEventArgs e) => WriteLog("Switch2 Client Removed.", e, adapterNamesForSwitch2);
+
+        private static void RemoteHubSwitch1_RemoteClientAdded(object sender, RemoteClientChangedEventArgs e) => WriteLog("Switch1 Client Added.", e, adapterNamesForSwitch1);
+
+        private static void RemoteHubSwitch2_RemoteClientAdded(object sender, RemoteClientChangedEventArgs e) => WriteLog("Switch2 Client Added.", e, adapterNamesForSwitch2);
+
+        private static void RemoteHubSwitch1_RemoteClientChanged(object sender, RemoteClientChangedEventArgs e) => WriteLog("Switch1 Client Changed.", e, adapterNamesForSwitch1);
+
+        private static void RemoteHubSwitch2_RemoteClientChanged(object sender, RemoteClientChangedEventArgs e) => WriteLog("Switch2 Client Changed.", e, adapterNamesForSwitch2);
+
+
+        static void WriteLog(string name, ClientIdEventArgs e)
         {
-            Console.WriteLine("Switch1 Remove Client: " + clientNames[e.ClientId]);
+            Console.WriteLine("{0} ClientId: {1}", name, clientNames[e.ClientId]);
         }
 
-        private static void RemoteHubSwitch2_RemoteClientRemoved(object sender, ClientIdWithAdapterEventArgs e)
+        static void WriteLog(string name, IGetRelatedRemoteHubAdapterInstance e, Dictionary<IRemoteHubAdapter<byte[]>, string> adapterNames)
         {
-            Console.WriteLine("Switch2 Remove Client: " + clientNames[e.ClientId]);
-        }
-
-        private static void RemoteHubSwitch1_RemoteClientAdded(object sender, ClientIdWithAdapterEventArgs e)
-        {
-            Console.WriteLine("Switch1 Add Client: " + clientNames[e.ClientId]);
-        }
-
-        private static void RemoteHubSwitch2_RemoteClientAdded(object sender, ClientIdWithAdapterEventArgs e)
-        {
-            Console.WriteLine("Switch2 Add Client: " + clientNames[e.ClientId]);
+            Console.WriteLine("{0} ClientId: {1}; Adapter: {2}", name, clientNames[((ClientIdEventArgs)e).ClientId], adapterNames[e.Adapter]);
         }
 
         static bool TryGetClientIndex(out int index)

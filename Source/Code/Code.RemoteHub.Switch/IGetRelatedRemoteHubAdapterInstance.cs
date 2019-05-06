@@ -12,6 +12,6 @@ namespace SecretNest.RemoteHub
         /// <summary>
         /// Gets the related RemoteHub Adapter instance.
         /// </summary>
-        IRemoteHubAdapter<byte[]> RemoteHubAdapter { get; }
+        IRemoteHubAdapter<byte[]> Adapter { get; }
     }
 }

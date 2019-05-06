@@ -42,6 +42,22 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public event EventHandler AdapterStopped;
 
+        void CallRemoteClientUpdated(Guid clientId, Guid virtualHostSettingId, KeyValuePair<Guid, VirtualHostSetting>[] virtuaHostSetting)
+        {
+            if (!IsSelf(clientId))
+            {
+                RemoteClientUpdated(this, new ClientWithVirtualHostSettingEventArgs(clientId, virtualHostSettingId, virtuaHostSetting));
+            }
+        }
+
+        void CallRemoteClientRemoved(Guid clientId)
+        {
+            if (!IsSelf(clientId))
+            {
+                RemoteClientRemoved(this, new ClientIdEventArgs(clientId));
+            }
+        }
+
         #region IDisposable Support
 
         private bool disposedValue = false; // To detect redundant calls
@@ -191,7 +207,7 @@ namespace SecretNest.RemoteHub
 
                     if (remoteClientIds.Length > 0)
                     {
-                        Array.ForEach(remoteClientIds, i => RemoteClientRemoved(this, new ClientIdEventArgs(i)));
+                        Array.ForEach(remoteClientIds, i => CallRemoteClientRemoved(i));
                     }
                 }
 
@@ -247,12 +263,18 @@ namespace SecretNest.RemoteHub
                         {
                             //From having-virtual-host state to no-virtual-host state
                             hostTable.ClearVirtualHosts(clientId);
-                            RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
+                            if (RemoteClientUpdated != null)
+                            {
+                                CallRemoteClientUpdated(clientId, Guid.Empty, null);
+                            }
                         }
                         else if (isNewCreated)
                         {
                             //new created with no-virtual-host
-                            RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
+                            if (RemoteClientUpdated != null)
+                            {
+                                CallRemoteClientUpdated(clientId, Guid.Empty, null);
+                            }
                         }
                     }
                 }
@@ -268,7 +290,10 @@ namespace SecretNest.RemoteHub
                         {
                             //From no-virtual-host state to having-virtual-host state, or change virtual host setting
                             var setting = hostTable.ApplyVirtualHosts(clientId, virtualHostId, texts[5]);
-                            RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, virtualHostId, setting.ToArray()));
+                            if (RemoteClientUpdated != null)
+                            {
+                                CallRemoteClientUpdated(clientId, virtualHostId, setting.ToArray());
+                            }
                         }
                     }
                     else
@@ -277,12 +302,18 @@ namespace SecretNest.RemoteHub
                         {
                             hostTable.ClearVirtualHosts(clientId);
                             //From having-virtual-host state to no-virtual-host state
-                            RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
+                            if (RemoteClientUpdated != null)
+                            {
+                                CallRemoteClientUpdated(clientId, Guid.Empty, null);
+                            }
                         }
                         else if (isNewCreated)
                         {
                             //new created with no-virtual-host
-                            RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
+                            if (RemoteClientUpdated != null)
+                            {
+                                CallRemoteClientUpdated(clientId, Guid.Empty, null);
+                            }
                         }
                     }
                 }
@@ -322,7 +353,10 @@ namespace SecretNest.RemoteHub
                 {
                     var clientId = Guid.Parse(texts[2]);
                     hostTable.Remove(clientId);
-                    RemoteClientRemoved?.Invoke(this, new ClientIdEventArgs(clientId));
+                    if (RemoteClientRemoved != null)
+                    {
+                        CallRemoteClientRemoved(clientId);
+                    }
                 }
             }
         }
@@ -369,7 +403,7 @@ namespace SecretNest.RemoteHub
                     if (RemoteClientRemoved != null)
                         foreach (var id in expired)
                         {
-                            RemoteClientRemoved(this, new ClientIdEventArgs(id));
+                            CallRemoteClientRemoved(id);
                         }
 
                     string[] refreshTexts;
@@ -605,38 +639,47 @@ namespace SecretNest.RemoteHub
 
         List<string> AddClientWithoutSendingRefresh(Guid[] clientId)
         {
-            List<string> refreshTexts = new List<string>();
-            List<RedisChannel> channelToBeSubscribed = new List<RedisChannel>();
-            try
+            lock (startingLock)
             {
-                clientsLock.EnterWriteLock();
-
-                foreach (var id in clientId)
+                List<string> refreshTexts = new List<string>();
+                bool isStarted = IsStarted;
+                List<RedisChannel> channelToBeSubscribed;
+                if (isStarted)
+                    channelToBeSubscribed = new List<RedisChannel>();
+                else
+                    channelToBeSubscribed = null;
+                try
                 {
-                    if (!clients.ContainsKey(id))
-                    {
-                        string idText = id.ToString("N");
-                        var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
-                        clients[id] = client;
+                    clientsLock.EnterWriteLock();
 
-                        if (updatingRedis != null)
+                    foreach (var id in clientId)
+                    {
+                        if (!clients.ContainsKey(id))
                         {
-                            RedisChannel redisChannel = BuildRedisChannel(idText);
-                            if (targets.TryAdd(redisChannel, id))
+                            string idText = id.ToString("N");
+                            var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
+                            clients[id] = client;
+
+                            if (isStarted)
                             {
-                                channelToBeSubscribed.Add(redisChannel);
+                                RedisChannel redisChannel = BuildRedisChannel(idText);
+                                if (targets.TryAdd(redisChannel, id))
+                                {
+                                    channelToBeSubscribed.Add(redisChannel);
+                                }
+                                refreshTexts.Add(client.CommandTextRefreshFull);
                             }
-                            refreshTexts.Add(client.CommandTextRefreshFull);
                         }
                     }
                 }
+                finally
+                {
+                    clientsLock.ExitWriteLock();
+                }
+                if (isStarted)
+                    channelToBeSubscribed.ForEach(i => subscriber.Subscribe(i, OnPrivateChannelReceived));
+                return refreshTexts;
             }
-            finally
-            {
-                clientsLock.ExitWriteLock();
-            }
-            channelToBeSubscribed.ForEach(async i => await subscriber.SubscribeAsync(i, OnPrivateChannelReceived));
-            return refreshTexts;
         }
 
         /// <inheritdoc/>
@@ -661,11 +704,12 @@ namespace SecretNest.RemoteHub
 
         async Task RemoveOneClientAsync(string idText)
         {
-            RedisChannel redisChannel = BuildRedisChannel(idText);
-
-            if (updatingRedis != null)
+            //dont need to lock. no harm if removing while not started.
+            bool isStarted = IsStarted;
+            if (isStarted)
             {
                 await MainChannelPublishingAsync(string.Format("v1:Shutdown:{0}", idText), updatingRedisCancellation.Token);
+                RedisChannel redisChannel = BuildRedisChannel(idText);
                 if (targets.TryRemove(redisChannel, out _))
                 {
                     await subscriber.UnsubscribeAsync(redisChannel, OnPrivateChannelReceived);
@@ -675,11 +719,12 @@ namespace SecretNest.RemoteHub
 
         void RemoveOneClient(string idText)
         {
-            RedisChannel redisChannel = BuildRedisChannel(idText);
-
-            if (updatingRedis != null)
+            //dont need to lock. no harm if removing while not started.
+            bool isStarted = IsStarted;
+            if (isStarted)
             {
                 MainChannelPublishing(string.Format("v1:Shutdown:{0}", idText));
+                RedisChannel redisChannel = BuildRedisChannel(idText);
                 if (targets.TryRemove(redisChannel, out _))
                 {
                     subscriber.Unsubscribe(redisChannel, OnPrivateChannelReceived);
@@ -837,7 +882,7 @@ namespace SecretNest.RemoteHub
             var result = hostTable.TryGet(clientId, out channel, out var isTimedOut);
             if (isTimedOut && RemoteClientRemoved != null)
             {
-                RemoteClientRemoved(this, new ClientIdEventArgs(clientId));
+                CallRemoteClientRemoved(clientId);
             }
             if (!result) //try local
             {

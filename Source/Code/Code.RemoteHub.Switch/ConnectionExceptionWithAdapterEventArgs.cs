@@ -12,7 +12,7 @@ namespace SecretNest.RemoteHub
         /// <summary>
         /// Gets the RemoteHub Adapter instance which throw the exception.
         /// </summary>
-        public IRemoteHubAdapter<byte[]> RemoteHubAdapter { get; }
+        public IRemoteHubAdapter<byte[]> Adapter { get; }
 
         /// <summary>
         /// Initializes an instance of ConnectionExceptionWithAdapterEventArgs.
@@ -22,7 +22,7 @@ namespace SecretNest.RemoteHub
         public ConnectionExceptionWithAdapterEventArgs(ConnectionExceptionEventArgs e, IRemoteHubAdapter<byte[]> remoteHubAdapter)
             : base(e.Exception, e.IsFatal, e.IsRetried)
         {
-            RemoteHubAdapter = remoteHubAdapter;
+            Adapter = remoteHubAdapter;
         }
     }
 }
