@@ -282,7 +282,7 @@ namespace SecretNest.RemoteHub
 
         void RemoveAdapterFromAdapterOfClients(Guid remoteClientId, IRemoteHubAdapter<byte[]> adapter)
         {
-            lock (adapterOfClients)
+            lock (adapterOfClients) //lock while changing
             {
                 if (adapterOfClients.TryGetValue(remoteClientId, out var old) && old == adapter)
                 {
