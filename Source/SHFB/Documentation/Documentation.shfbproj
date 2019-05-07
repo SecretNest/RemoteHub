@@ -14,7 +14,7 @@
     <Name>Documentation</Name>
     <!-- SHFB properties -->
     <FrameworkVersion>Cross-platform (.NET Core/.NET Standard)</FrameworkVersion>
-    <OutputPath>..\..\docs\</OutputPath>
+    <OutputPath>..\..\..\docs\</OutputPath>
     <HtmlHelpName>Doc</HtmlHelpName>
     <Language>en-US</Language>
     <TransformComponentArguments>
@@ -27,14 +27,6 @@
       <Argument Key="maxVersionParts" Value="" xmlns="" />
     </TransformComponentArguments>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub\SecretNest.IRemoteHub.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Redis\SecretNest.IRemoteHub.Redis.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Stream\SecretNest.IRemoteHub.Stream.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Redis\SecretNest.RemoteHub.Redis.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.RedisAdapter\SecretNest.RemoteHub.RedisAdapter.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Stream\SecretNest.RemoteHub.Stream.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.StreamAdapter\SecretNest.RemoteHub.StreamAdapter.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Switch\SecretNest.RemoteHub.Switch.xml" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub\Release.IRemoteHub.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Redis\Release.IRemoteHub.Redis.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Stream\Release.IRemoteHub.Stream.csproj" />
@@ -67,6 +59,8 @@
       <NamespaceSummaryItem name="SecretNest.RemoteHub" isDocumented="True" xmlns="">RemoteHub from SecretNest.info</NamespaceSummaryItem>
     </NamespaceSummaries>
     <WarnOnMissingSourceContext>False</WarnOnMissingSourceContext>
+    <ComponentConfigurations>
+    </ComponentConfigurations>
   </PropertyGroup>
   <!-- There are no properties for these groups.  AnyCPU needs to appear in order for Visual Studio to perform
 			 the build.  The others are optional common platform types that may appear. -->
