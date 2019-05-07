@@ -322,7 +322,6 @@ namespace SecretNest.RemoteHub
                 {
                     AddAdapterToAdapterOfClients(remoteClientId, adapter);
                     idList[remoteClientId] = DateTime.Now;
-                    RemoteClientAdded?.Invoke(this, new RemoteClientChangedEventArgs(remoteClientId, adapter));
                 }
             }
             else

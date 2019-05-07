@@ -38,8 +38,8 @@ namespace SwitchTest
             Console.WriteLine("Please wait a while for clients (New Stream Client & New Redis Client) discovery.");
 
             //Sending test messages
-            Task one = Task.Run(async () => await SendTestMessages());
-            one.Wait();
+            Task sending = Task.Run(async () => await SendTestMessages());
+            sending.Wait();
 
             //removing the new added clients
             remoteHubSwitch2.RemoveAdapter(streamAdapterOnSwitch2);
@@ -66,8 +66,8 @@ namespace SwitchTest
             Console.WriteLine("Please wait a while for clients (New Stream Client & New Redis Client) removal.");
 
             //Sending test messages
-            Task two = Task.Run(async () => await SendTestMessages());
-            two.Wait();
+            sending = Task.Run(async () => await SendTestMessages());
+            sending.Wait();
         }
 
         static async Task SendTestMessages()

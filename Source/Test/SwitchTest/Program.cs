@@ -98,7 +98,7 @@ namespace SwitchTest
             remoteHubSwitch1.RemoteClientChanged += RemoteHubSwitch1_RemoteClientChanged;
             remoteHubSwitch1.RemoteClientRemoved += RemoteHubSwitch1_RemoteClientRemoved;
             //remoteHubSwitch1.MessageRouted += RemoteHubSwitch1_MessageRouted;
-            remoteHubSwitch1.MessageRoutingFailed += RemoteHubSwitch1_MessageRoutingFailed;
+            //remoteHubSwitch1.MessageRoutingFailed += RemoteHubSwitch1_MessageRoutingFailed;
             remoteHubSwitch1.AddAdapters(streamAdaptersOnSwitch1); //add the new created adapter to the 1st Switch
 
             //Switch2 part
@@ -109,23 +109,18 @@ namespace SwitchTest
             remoteHubSwitch2.RemoteClientChanged += RemoteHubSwitch2_RemoteClientChanged;
             remoteHubSwitch2.RemoteClientRemoved += RemoteHubSwitch2_RemoteClientRemoved;
             //remoteHubSwitch2.MessageRouted += RemoteHubSwitch2_MessageRouted;
-            remoteHubSwitch2.MessageRoutingFailed += RemoteHubSwitch2_MessageRoutingFailed;
+            //remoteHubSwitch2.MessageRoutingFailed += RemoteHubSwitch2_MessageRoutingFailed;
             remoteHubSwitch2.AddAdapter(redisAdapterOnRedisHub); //add the redis adapter to Switch 2
             remoteHubSwitch2.AddAdapter(streamAdapterOnSwitch2); //add the switch adapter to Switch 2
 
             //Test
 
             //SimpleMessageTest();
-            AddRemoveClientTest(remoteHubSwitch2);
+            //AddRemoveClientTest(remoteHubSwitch2);
+            ConnectAndDisconnectSwitchTest(remoteHubSwitch1, streamAdaptersOnSwitch1[2]);
 
             Console.WriteLine("Press any key to quit...");
             Console.ReadKey(true);
-
-
-            /* Test to do:
-             * connect / disconnect switch links
-             */
-
 
             //Dispose
             remoteHubSwitch1.RemoveAllAdapters(true); //remove all adapters attached in Switch 1
