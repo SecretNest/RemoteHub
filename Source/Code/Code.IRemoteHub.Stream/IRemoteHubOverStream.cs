@@ -5,6 +5,9 @@ using System.Text;
 
 namespace SecretNest.RemoteHub
 {
+    /// <summary>
+    /// Represents the methods, properties and event of RemoteHub, based on streams.
+    /// </summary>
     public interface IRemoteHubOverStream : IRemoteHub
     {
         /// <summary>

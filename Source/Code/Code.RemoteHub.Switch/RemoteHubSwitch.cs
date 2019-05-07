@@ -10,9 +10,9 @@ namespace SecretNest.RemoteHub
     /// <summary>
     /// Connects RemoteHub Adapters by using data switching to receive, process and forward data to the destination client.
     /// </summary>
-    /// <remarks><para>Only <see cref="IRemoteHubAdapter{byte[]}"/> is supported as adapter.</para>
+    /// <remarks><para>Only <see cref="IRemoteHubAdapter{T}"/> of byte array (byte[]) is supported as adapter.</para>
     /// <para>Though only byte array is only the acceptable type parameter of adapter, all adapter which encoded private messages as byte array could be supported due to no private message will be decoded in RemoteHub Switch.</para>
-    /// <para>For example, a stream, which is connected to a instance of <see cref="IRemoteHubAdapter{string}"/> in another endpoint, can be handled by a instance of <see cref="IRemoteHubAdapter{byte[]}"/> for linked to this RemoteHub Switch instance. </para></remarks>
+    /// <para>For example, a stream, which is connected to a instance of <see cref="IRemoteHubAdapter{T}"/> of string in another endpoint, can be handled by a instance of <see cref="IRemoteHubAdapter{T}"/> of byte array (byte[]) for linked to this RemoteHub Switch instance. </para></remarks>
     public class RemoteHubSwitch
     {
         ConcurrentDictionary<Guid, IRemoteHubAdapter<byte[]>> adapterOfClients = new ConcurrentDictionary<Guid, IRemoteHubAdapter<byte[]>>(); //lock when changing, not reading

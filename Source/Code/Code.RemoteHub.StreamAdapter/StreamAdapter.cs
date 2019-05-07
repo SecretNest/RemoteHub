@@ -17,16 +17,21 @@ namespace SecretNest.RemoteHub
         Stream inputStream;
         Stream outputStream;
         readonly int streamRefreshingIntervalInSeconds;
-        ConcurrentDictionary<Guid, byte[]> clients = new ConcurrentDictionary<Guid, byte[]>(); //value is null if no virtual host; or value is virtual host setting id + count + setting data.
-        ClientTable hostTable = new ClientTable();
+        readonly ConcurrentDictionary<Guid, byte[]> clients = new ConcurrentDictionary<Guid, byte[]>(); //value is null if no virtual host; or value is virtual host setting id + count + setting data.
+        readonly ClientTable hostTable = new ClientTable();
         Task readingJob, writingJob, keepingJob;
         bool sendingNormal = false;
         bool isStopping = false;
         CancellationTokenSource shuttingdownTokenSource;
         CancellationToken shuttingdownToken;
-        ManualResetEventSlim startingLock = new ManualResetEventSlim(); //also used as a lock when need to query IsStarted
+        readonly ManualResetEventSlim startingLock = new ManualResetEventSlim(); //also used as a lock when need to query IsStarted
         BlockingCollection<byte[]> sendingBuffers;
 
+        /// <summary>
+        /// Will be called when a private message is received from the stream.
+        /// </summary>
+        /// <param name="targetClientId">Client id of the receiver.</param>
+        /// <param name="dataPackage">Data package of the message.</param>
         protected abstract void OnPrivateMessageReceived(Guid targetClientId, byte[] dataPackage);
 
         /// <inheritdoc/>
@@ -40,6 +45,12 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public event EventHandler AdapterStopped;
 
+        /// <summary>
+        /// Initializes an instance of StreamAdapter.
+        /// </summary>
+        /// <param name="inputStream">Stream for reading.</param>
+        /// <param name="outputStream">Stream for writing.</param>
+        /// <param name="refreshingIntervalInSeconds">The interval in seconds before sending a data package for keeping it alive when streams are idle.</param>
         protected StreamAdapter(Stream inputStream, Stream outputStream, int refreshingIntervalInSeconds)
         {
             this.inputStream = inputStream;
@@ -50,7 +61,10 @@ namespace SecretNest.RemoteHub
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
-
+        /// <summary>
+        /// Disposes of the resources (other than memory) used by this instance.
+        /// </summary>
+        /// <param name="disposing">True: release both managed and unmanaged resources; False: release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -76,6 +90,9 @@ namespace SecretNest.RemoteHub
         // }
 
         // This code added to correctly implement the disposable pattern.
+        /// <summary>
+        /// Releases all resources used by this instance.
+        /// </summary>
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
@@ -410,6 +427,11 @@ namespace SecretNest.RemoteHub
             AddToSendingBuffer(package);
         }
 
+        /// <summary>
+        /// Sends the private message.
+        /// </summary>
+        /// <param name="targetClientId">Client id of the receiver.</param>
+        /// <param name="data">Data package of the message.</param>
         protected void SendingPrivateMessage(Guid targetClientId, byte[] data)
         {
             int length = data.Length;
@@ -610,6 +632,11 @@ namespace SecretNest.RemoteHub
             return hostTable.TryResolveVirtualHost(virtualHostId, out remoteClientId);
         }
 
+        /// <summary>
+        /// Gets whether the client specified is registered as local.
+        /// </summary>
+        /// <param name="clientId">Client to check.</param>
+        /// <returns>Whether the client is registered as local.</returns>
         protected bool IsSelf(Guid clientId)
         {
             return clients.ContainsKey(clientId);

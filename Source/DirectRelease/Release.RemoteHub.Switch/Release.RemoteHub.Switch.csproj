@@ -4,6 +4,15 @@
     <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
     <RootNamespace>SecretNest.RemoteHub</RootNamespace>
     <AssemblyName>SecretNest.RemoteHub.Switch</AssemblyName>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>D:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.Switch\SecretNest.RemoteHub.Switch.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile>D:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.Switch\SecretNest.RemoteHub.Switch.xml</DocumentationFile>
   </PropertyGroup>
 
   <Import Project="..\..\Code\Code.RemoteHub.Switch\Code.RemoteHub.Switch.projitems" Label="Shared" />

@@ -4,6 +4,15 @@
     <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
     <RootNamespace>SecretNest.RemoteHub</RootNamespace>
     <AssemblyName>SecretNest.RemoteHub.RedisAdapter</AssemblyName>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>D:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.RedisAdapter\SecretNest.RemoteHub.RedisAdapter.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile>D:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.RedisAdapter\SecretNest.RemoteHub.RedisAdapter.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

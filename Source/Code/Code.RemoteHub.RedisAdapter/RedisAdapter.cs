@@ -14,12 +14,12 @@ namespace SecretNest.RemoteHub
     public abstract class RedisAdapter : IDisposable, IRemoteHubRedisAdapter
     {
         ConnectionMultiplexer redisConnection;
-        RedisChannel mainChannel;
+        readonly RedisChannel mainChannel;
         IDatabase redisDatabase;
         ISubscriber publisher, subscriber;
         ConcurrentDictionary<Guid, ClientEntity> clients = new ConcurrentDictionary<Guid, ClientEntity>();
         ConcurrentDictionary<RedisChannel, Guid> targets = new ConcurrentDictionary<RedisChannel, Guid>(); //listening channel and it's client id
-        readonly string redisConfiguration, mainChannelName, privateChannelNamePrefix;
+        readonly string redisConfiguration, privateChannelNamePrefix;
         readonly int redisDb, clientTimeToLive, clientRefreshingInterval;
         ClientTable hostTable;
         bool needRefreshFull = false;
@@ -28,7 +28,7 @@ namespace SecretNest.RemoteHub
         Task updatingRedis;
         bool sendingNormal = false;
         bool isStopping = false;
-        ManualResetEventSlim startingLock = new ManualResetEventSlim();
+        readonly ManualResetEventSlim startingLock = new ManualResetEventSlim();
 
         /// <inheritdoc/>
         public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred;
@@ -61,6 +61,10 @@ namespace SecretNest.RemoteHub
 
         private bool disposedValue = false; // To detect redundant calls
 
+        /// <summary>
+        /// Disposes of the resources (other than memory) used by this instance.
+        /// </summary>
+        /// <param name="disposing">True: release both managed and unmanaged resources; False: release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -86,6 +90,9 @@ namespace SecretNest.RemoteHub
         // }
 
         // This code added to correctly implement the disposable pattern.
+        /// <summary>
+        /// Releases all resources used by this instance.
+        /// </summary>
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
@@ -108,7 +115,6 @@ namespace SecretNest.RemoteHub
         protected RedisAdapter(string redisConfiguration, string mainChannelName, string privateChannelNamePrefix, int redisDb, int clientTimeToLive, int clientRefreshingInterval)
         {
             this.redisConfiguration = redisConfiguration;
-            this.mainChannelName = mainChannelName;
             this.privateChannelNamePrefix = privateChannelNamePrefix;
             this.redisDb = redisDb;
             mainChannel = new RedisChannel(mainChannelName, RedisChannel.PatternMode.Literal);
@@ -344,7 +350,7 @@ namespace SecretNest.RemoteHub
         }
 
         const string messageTextHello = "v1:Hello";
-        TimeSpan smallTimeFix = new TimeSpan(0, 0, 0, 0, 200); //help to make sure at least twice refreshes before record expired.
+        readonly TimeSpan smallTimeFix = new TimeSpan(0, 0, 0, 0, 200); //help to make sure at least twice refreshes before record expired.
         async Task UpdateRedisAsync()
         {
             //start
@@ -499,6 +505,11 @@ namespace SecretNest.RemoteHub
 
         #region Private Channel Operating
 
+        /// <summary>
+        /// Will be called when a private message is received from the redis channel.
+        /// </summary>
+        /// <param name="targetClientId">Client id of the receiver.</param>
+        /// <param name="value">Data of the message.</param>
         protected abstract void OnPrivateMessageReceived(Guid targetClientId, RedisValue value);
 
         void OnPrivateChannelReceived(RedisChannel channel, RedisValue value)
@@ -509,6 +520,12 @@ namespace SecretNest.RemoteHub
             }
         }
 
+        /// <summary>
+        /// Sends the private message.
+        /// </summary>
+        /// <param name="channel">Channel of the receiver.</param>
+        /// <param name="value">Data of the message.</param>
+        /// <returns>A task that represents the sending job.</returns>
         protected async Task SendPrivateMessageAsync(RedisChannel channel, RedisValue value)
         {
             if (!IsStarted)
@@ -542,15 +559,26 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        protected async Task SendPrivateMessageAsync(Guid remoteClientId, RedisValue value)
+        /// <summary>
+        /// Sends the private message.
+        /// </summary>
+        /// <param name="targetClientId">Client id of the receiver.</param>
+        /// <param name="value">Data of the message.</param>
+        /// <returns>A task that represents the sending job.</returns>
+        protected async Task SendPrivateMessageAsync(Guid targetClientId, RedisValue value)
         {
             if (!IsStarted)
                 throw new InvalidOperationException();
 
-            RedisChannel redisChannel = BuildRedisChannel(remoteClientId);
+            RedisChannel redisChannel = BuildRedisChannel(targetClientId);
             await SendPrivateMessageAsync(redisChannel, value);
         }
 
+        /// <summary>
+        /// Sends the private message.
+        /// </summary>
+        /// <param name="channel">Channel of the receiver.</param>
+        /// <param name="value">Data of the message.</param>
         protected void SendPrivateMessage(RedisChannel channel, RedisValue value)
         {
             if (!IsStarted)
@@ -580,12 +608,17 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        protected void SendPrivateMessage(Guid remoteClientId, RedisValue value)
+        /// <summary>
+        /// Sends the private message.
+        /// </summary>
+        /// <param name="targetClientId">Client id of the receiver.</param>
+        /// <param name="value">Data of the message.</param>
+        protected void SendPrivateMessage(Guid targetClientId, RedisValue value)
         {
             if (!IsStarted)
                 throw new InvalidOperationException();
 
-            RedisChannel redisChannel = BuildRedisChannel(remoteClientId);
+            RedisChannel redisChannel = BuildRedisChannel(targetClientId);
             SendPrivateMessage(redisChannel, value);
         }
 
@@ -593,11 +626,22 @@ namespace SecretNest.RemoteHub
 
         #region Client Id
 
+        /// <summary>
+        /// Gets whether the client specified is registered as local.
+        /// </summary>
+        /// <param name="clientId">Client to be checked.</param>
+        /// <returns>Whether the client is registered as local.</returns>
         protected bool IsSelf(Guid clientId)
         {
             return clients.ContainsKey(clientId);
         }
 
+        /// <summary>
+        /// Gets whether the client specified by redis channel is registered as local. Output the client id if it is.
+        /// </summary>
+        /// <param name="redisChannel">Redis channel of the client to be checked.</param>
+        /// <param name="clientId">The client id if it is the local. This is an out parameter.</param>
+        /// <returns>Whether the client is registered as local.</returns>
         protected bool IsSelf(RedisChannel redisChannel, out Guid clientId)
         {
             return targets.TryGetValue(redisChannel, out clientId); //targets: contains all local listening channel and it's client id.

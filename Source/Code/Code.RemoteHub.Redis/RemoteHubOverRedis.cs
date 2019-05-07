@@ -107,7 +107,10 @@ namespace SecretNest.RemoteHub
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 
-
+        /// <summary>
+        /// Disposes of the resources (other than memory) used by this instance.
+        /// </summary>
+        /// <param name="disposing">True: release both managed and unmanaged resources; False: release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -132,6 +135,9 @@ namespace SecretNest.RemoteHub
         // }
 
         // This code added to correctly implement the disposable pattern.
+        /// <summary>
+        /// Releases all resources used by this instance.
+        /// </summary>
         public void Dispose()
         {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.

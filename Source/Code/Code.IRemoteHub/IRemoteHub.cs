@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-/// <summary>
-/// RemoteHub from SecretNest.info
-/// </summary>
 namespace SecretNest.RemoteHub
 {
     /// <summary>

@@ -100,6 +100,7 @@ namespace SecretNest.RemoteHub
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnPrivateMessageReceived(Guid targetClientId, byte[] dataPackage)
         {
             OnPrivateMessageReceived(targetClientId, valueConverter.ConvertFromMessage(dataPackage));

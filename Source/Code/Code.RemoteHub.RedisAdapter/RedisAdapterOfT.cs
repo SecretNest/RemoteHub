@@ -139,6 +139,7 @@ namespace SecretNest.RemoteHub
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnPrivateMessageReceived(Guid targetClientId, RedisValue value)
         {
             OnPrivateMessageReceived(targetClientId, valueConverter.ConvertFromMessage(value));
