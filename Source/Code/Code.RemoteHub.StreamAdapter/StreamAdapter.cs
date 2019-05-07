@@ -17,8 +17,7 @@ namespace SecretNest.RemoteHub
         Stream inputStream;
         Stream outputStream;
         readonly int streamRefreshingIntervalInSeconds;
-        ReaderWriterLockSlim clientsLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
-        Dictionary<Guid, byte[]> clients = new Dictionary<Guid, byte[]>(); //value is null if no virtual host; or value is virtual host setting id + count + setting data.
+        ConcurrentDictionary<Guid, byte[]> clients = new ConcurrentDictionary<Guid, byte[]>(); //value is null if no virtual host; or value is virtual host setting id + count + setting data.
         ClientTable hostTable = new ClientTable();
         Task readingJob, writingJob, keepingJob;
         bool sendingNormal = false;
@@ -61,7 +60,6 @@ namespace SecretNest.RemoteHub
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects).
-                    clientsLock.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
@@ -330,17 +328,9 @@ namespace SecretNest.RemoteHub
 
         void SendingRefreshAllClients()
         {
-            try
+            foreach (var client in clients)
             {
-                clientsLock.EnterReadLock();
-                foreach (var client in clients)
-                {
-                    SendingRefreshClient(client.Key, client.Value);
-                }
-            }
-            finally
-            {
-                clientsLock.ExitReadLock();
+                SendingRefreshClient(client.Key, client.Value);
             }
         }
 
@@ -366,8 +356,7 @@ namespace SecretNest.RemoteHub
 
         void OnRemoveClientReceived(Guid senderClientId)
         {
-            hostTable.Remove(senderClientId);
-            if (RemoteClientRemoved != null)
+            if (hostTable.Remove(senderClientId) && RemoteClientRemoved != null)
             {
                 ClientIdEventArgs e = new ClientIdEventArgs(senderClientId);
                 RemoteClientRemoved(this, e);
@@ -469,26 +458,16 @@ namespace SecretNest.RemoteHub
         {
             lock (startingLock)
             {
-                try
+                foreach (var client in clientId)
                 {
-                    clientsLock.EnterWriteLock();
-
-                    foreach (var client in clientId)
+                    if (clients.TryAdd(client, null))
                     {
-                        if (!clients.ContainsKey(client))
+                        hostTable.AddOrUpdate(client, true);
+                        if (IsStarted)
                         {
-                            clients[client] = null;
-                            hostTable.AddOrUpdate(client, true);
-                            if (IsStarted)
-                            {
-                                SendingRefreshClient(client, null);
-                            }
+                            SendingRefreshClient(client, null);
                         }
                     }
-                }
-                finally
-                {
-                    clientsLock.ExitWriteLock();
                 }
             }
         }
@@ -498,26 +477,15 @@ namespace SecretNest.RemoteHub
         {
             lock (startingLock)
             {
-                try
+                foreach (var client in clientId)
                 {
-                    clientsLock.EnterWriteLock();
-
-                    foreach (var client in clientId)
+                    if (clients.TryRemove(client, out _))
                     {
-                        if (clients.Remove(client))
+                        if (hostTable.Remove(client) && IsStarted)
                         {
-                            hostTable.Remove(client);
-
-                            if (IsStarted)
-                            {
-                                SendingRemoveClient(client);
-                            }
+                            SendingRemoveClient(client);
                         }
                     }
-                }
-                finally
-                {
-                    clientsLock.ExitWriteLock();
                 }
             }
         }
@@ -527,34 +495,16 @@ namespace SecretNest.RemoteHub
         {
             lock (startingLock)
             {
-                try
-                {
-                    clientsLock.EnterWriteLock();
-                    if (clients.Count == 0) return;
-
-                    var id = clients.Keys.ToArray();
-                    RemoveClient(id);
-                }
-                finally
-                {
-                    clientsLock.ExitWriteLock();
-                }
+                var id = clients.Keys.ToArray();
+                if (id.Length == 0) return;
+                RemoveClient(id);
             }
         }
 
         /// <inheritdoc/>
         public IEnumerable<Guid> GetAllClients()
         {
-            Guid[] id;
-            try
-            {
-                clientsLock.EnterReadLock();
-                id = clients.Keys.ToArray();
-            }
-            finally
-            {
-                clientsLock.ExitReadLock();
-            }
+            Guid[] id = clients.Keys.ToArray();
             return id;
         }
 
@@ -566,84 +516,77 @@ namespace SecretNest.RemoteHub
         {
             lock (startingLock)
             {
-                try
+                if (!clients.TryGetValue(clientId, out var currentSetting))
                 {
-                    clientsLock.EnterWriteLock();
-                    if (clients.TryGetValue(clientId, out var currentSetting))
+                    throw new KeyNotFoundException("Client specified cannot be found.");
+                }
+
+                if (settings == null || settings.Length == 0)
+                {
+                    if (currentSetting != null)
                     {
-                        if (settings == null || settings.Length == 0)
+                        if (!clients.TryUpdate(clientId, null, currentSetting))
                         {
-                            if (currentSetting != null)
-                            {
-                                clients[clientId] = null;
-
-                                if (IsStarted)
-                                {
-                                    SendingRefreshClient(clientId, null);
-                                }
-
-                                hostTable.ClearVirtualHosts(clientId);
-                            }
+                            throw new InvalidOperationException("Client specified is removed or virtual hosts setting is changed.");
                         }
-                        else
+
+                        if (IsStarted)
                         {
-                            int length = settings.Length;
-                            if (length > 65536)
-                                throw new InvalidDataException("Too many (>64k) settings applied.");
-                            byte[] newSetting = new byte[18 + 24 * length];
-                            Array.Copy(Guid.NewGuid().ToByteArray(), newSetting, 16);
-                            newSetting[16] = (byte)(length / 256);
-                            newSetting[17] = (byte)(length % 256);
-                            int location = 18;
-
-                            //This block looks like a shit:
-                            //var settingEnumerator = settings.GetEnumerator();
-                            //settingEnumerator.MoveNext();
-                            //while (true)
-                            //{
-                            //    var item = (KeyValuePair<Guid, VirtualHostSetting>)settingEnumerator.Current;
-                            //    Array.Copy(item.Key.ToByteArray(), 0, newSetting, location, 16);
-                            //    WriteInt32ToByteArray(item.Value.Priority, newSetting, location + 16);
-                            //    WriteInt32ToByteArray(item.Value.Weight, newSetting, location + 20);
-
-                            //    if (settingEnumerator.MoveNext())
-                            //    {
-                            //        location += 24;
-                            //    }
-                            //    else
-                            //    {
-                            //        break;
-                            //    }
-                            //}
-
-                            foreach (var item in settings)
-                            {
-                                Array.Copy(item.Key.ToByteArray(), 0, newSetting, location, 16);
-                                WriteInt32ToByteArray(item.Value.Priority, newSetting, location + 16);
-                                WriteInt32ToByteArray(item.Value.Weight, newSetting, location + 20);
-                                location += 24;
-                            }
-
-                            clients[clientId] = newSetting;
-                            lock (startingLock)
-                            {
-                                if (IsStarted)
-                                {
-                                    SendingRefreshClient(clientId, newSetting);
-                                }
-                            }
-
-                            hostTable.AddOrUpdate(clientId, settings);
+                            SendingRefreshClient(clientId, null);
                         }
-                    }
-                    else
-                    {
-                        throw new KeyNotFoundException("Client specified cannot be found.");
+
+                        hostTable.ClearVirtualHosts(clientId);
                     }
                 }
-                finally
+                else
                 {
-                    clientsLock.ExitWriteLock();
+                    int length = settings.Length;
+                    if (length > 65536)
+                        throw new InvalidDataException("Too many (>64k) settings applied.");
+                    byte[] newSetting = new byte[18 + 24 * length];
+                    Array.Copy(Guid.NewGuid().ToByteArray(), newSetting, 16);
+                    newSetting[16] = (byte)(length / 256);
+                    newSetting[17] = (byte)(length % 256);
+                    int location = 18;
+
+                    //This block looks like a shit:
+                    //var settingEnumerator = settings.GetEnumerator();
+                    //settingEnumerator.MoveNext();
+                    //while (true)
+                    //{
+                    //    var item = (KeyValuePair<Guid, VirtualHostSetting>)settingEnumerator.Current;
+                    //    Array.Copy(item.Key.ToByteArray(), 0, newSetting, location, 16);
+                    //    WriteInt32ToByteArray(item.Value.Priority, newSetting, location + 16);
+                    //    WriteInt32ToByteArray(item.Value.Weight, newSetting, location + 20);
+
+                    //    if (settingEnumerator.MoveNext())
+                    //    {
+                    //        location += 24;
+                    //    }
+                    //    else
+                    //    {
+                    //        break;
+                    //    }
+                    //}
+
+                    foreach (var item in settings)
+                    {
+                        Array.Copy(item.Key.ToByteArray(), 0, newSetting, location, 16);
+                        WriteInt32ToByteArray(item.Value.Priority, newSetting, location + 16);
+                        WriteInt32ToByteArray(item.Value.Weight, newSetting, location + 20);
+                        location += 24;
+                    }
+
+                    if (!clients.TryUpdate(clientId, newSetting, currentSetting))
+                    {
+                        throw new InvalidOperationException("Client specified is removed or virtual hosts setting is changed.");
+                    }
+                    if (IsStarted)
+                    {
+                        SendingRefreshClient(clientId, newSetting);
+                    }
+
+                    hostTable.AddOrUpdate(clientId, settings);
                 }
             }
         }
@@ -669,15 +612,7 @@ namespace SecretNest.RemoteHub
 
         protected bool IsSelf(Guid clientId)
         {
-            try
-            {
-                clientsLock.EnterReadLock();
-                return clients.ContainsKey(clientId);
-            }
-            finally
-            {
-                clientsLock.ExitReadLock();
-            }
+            return clients.ContainsKey(clientId);
         }
     }
 }

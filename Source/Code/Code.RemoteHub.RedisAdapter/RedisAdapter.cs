@@ -17,8 +17,7 @@ namespace SecretNest.RemoteHub
         RedisChannel mainChannel;
         IDatabase redisDatabase;
         ISubscriber publisher, subscriber;
-        ReaderWriterLockSlim clientsLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
-        Dictionary<Guid, ClientEntity> clients = new Dictionary<Guid, ClientEntity>();
+        ConcurrentDictionary<Guid, ClientEntity> clients = new ConcurrentDictionary<Guid, ClientEntity>();
         ConcurrentDictionary<RedisChannel, Guid> targets = new ConcurrentDictionary<RedisChannel, Guid>(); //listening channel and it's client id
         readonly string redisConfiguration, mainChannelName, privateChannelNamePrefix;
         readonly int redisDb, clientTimeToLive, clientRefreshingInterval;
@@ -71,7 +70,6 @@ namespace SecretNest.RemoteHub
                 if (disposing)
                 {
                     // TODO: dispose managed state (managed objects).
-                    clientsLock.Dispose();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
@@ -175,6 +173,8 @@ namespace SecretNest.RemoteHub
 
                 isStopping = true;
 
+                RemoveAllClients();
+
                 updatingRedisCancellation.Cancel();
                 updatingRedis.Wait();
                 updatingRedis = null;
@@ -182,8 +182,6 @@ namespace SecretNest.RemoteHub
                 updatingRedisCancellation = null;
                 updatingRedisWaitingCancellation.Dispose();
                 updatingRedisWaitingCancellation = null;
-
-                RemoveAllClients();
 
                 subscriber.UnsubscribeAll();
 
@@ -195,15 +193,8 @@ namespace SecretNest.RemoteHub
                 if (RemoteClientRemoved != null)
                 {
                     Guid[] remoteClientIds;
-                    try
-                    {
-                        clientsLock.EnterWriteLock();
-                        remoteClientIds = hostTable.GetAllRemoteClientsId(clients.Keys).ToArray();
-                    }
-                    finally
-                    {
-                        clientsLock.ExitWriteLock();
-                    }
+                    Guid[] localClientIds = clients.Keys.ToArray();
+                    remoteClientIds = hostTable.GetAllRemoteClientsId(localClientIds).ToArray();
 
                     if (remoteClientIds.Length > 0)
                     {
@@ -212,7 +203,7 @@ namespace SecretNest.RemoteHub
                 }
 
                 hostTable = new ClientTable(privateChannelNamePrefix);
-                clients = new Dictionary<Guid, ClientEntity>();
+                clients = new ConcurrentDictionary<Guid, ClientEntity>();
                 targets = new ConcurrentDictionary<RedisChannel, Guid>();
                 AdapterStopped?.Invoke(this, EventArgs.Empty);
             }
@@ -328,21 +319,13 @@ namespace SecretNest.RemoteHub
                 {
                     var clientId = Guid.Parse(texts[2]);
                     string refreshText;
-                    try
+                    if (clients.TryGetValue(clientId, out var client))
                     {
-                        clientsLock.EnterReadLock();
-                        if (clients.TryGetValue(clientId, out var client))
-                        {
-                            refreshText = client.CommandTextRefreshFull;
-                        }
-                        else
-                        {
-                            refreshText = null;
-                        }
+                        refreshText = client.CommandTextRefreshFull;
                     }
-                    finally
+                    else
                     {
-                        clientsLock.ExitReadLock();
+                        refreshText = null;
                     }
                     if (refreshText != null)
                     {
@@ -352,8 +335,7 @@ namespace SecretNest.RemoteHub
                 else if (texts[1] == "Shutdown")
                 {
                     var clientId = Guid.Parse(texts[2]);
-                    hostTable.Remove(clientId);
-                    if (RemoteClientRemoved != null)
+                    if (hostTable.Remove(clientId) && RemoteClientRemoved != null)
                     {
                         CallRemoteClientRemoved(clientId);
                     }
@@ -407,22 +389,14 @@ namespace SecretNest.RemoteHub
                         }
 
                     string[] refreshTexts;
-                    try
+                    if (needRefreshFull)
                     {
-                        clientsLock.EnterReadLock();
-                        if (needRefreshFull)
-                        {
-                            needRefreshFull = false;
-                            refreshTexts = clients.Values.Select(i => i.CommandTextRefreshFull).ToArray();
-                        }
-                        else
-                        {
-                            refreshTexts = clients.Values.Select(i => i.CommandTextRefresh).ToArray();
-                        }
+                        needRefreshFull = false;
+                        refreshTexts = clients.Values.Select(i => i.CommandTextRefreshFull).ToArray();
                     }
-                    finally
+                    else
                     {
-                        clientsLock.ExitReadLock();
+                        refreshTexts = clients.Values.Select(i => i.CommandTextRefresh).ToArray();
                     }
                     if (refreshTexts.Length > 0)
                     {
@@ -621,15 +595,7 @@ namespace SecretNest.RemoteHub
 
         protected bool IsSelf(Guid clientId)
         {
-            try
-            {
-                clientsLock.EnterReadLock();
-                return clients.ContainsKey(clientId);
-            }
-            finally
-            {
-                clientsLock.ExitReadLock();
-            }
+            return clients.ContainsKey(clientId);
         }
 
         protected bool IsSelf(RedisChannel redisChannel, out Guid clientId)
@@ -648,33 +614,24 @@ namespace SecretNest.RemoteHub
                     channelToBeSubscribed = new List<RedisChannel>();
                 else
                     channelToBeSubscribed = null;
-                try
+
+
+                foreach (var id in clientId)
                 {
-                    clientsLock.EnterWriteLock();
-
-                    foreach (var id in clientId)
-                    {
-                        if (!clients.ContainsKey(id))
+                    string idText = id.ToString("N");
+                    var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
+                    if (clients.TryAdd(id, client))
+                    { 
+                        if (isStarted)
                         {
-                            string idText = id.ToString("N");
-                            var client = new ClientEntity(string.Format("v1:Refresh:{0}:{1}:", idText, clientTimeToLive), string.Format("v1:RefreshFull:{0}:{1}:", idText, clientTimeToLive));
-                            clients[id] = client;
-
-                            if (isStarted)
+                            RedisChannel redisChannel = BuildRedisChannel(idText);
+                            if (targets.TryAdd(redisChannel, id))
                             {
-                                RedisChannel redisChannel = BuildRedisChannel(idText);
-                                if (targets.TryAdd(redisChannel, id))
-                                {
-                                    channelToBeSubscribed.Add(redisChannel);
-                                }
-                                refreshTexts.Add(client.CommandTextRefreshFull);
+                                channelToBeSubscribed.Add(redisChannel);
                             }
+                            refreshTexts.Add(client.CommandTextRefreshFull);
                         }
                     }
-                }
-                finally
-                {
-                    clientsLock.ExitWriteLock();
                 }
                 if (isStarted)
                     channelToBeSubscribed.ForEach(i => subscriber.Subscribe(i, OnPrivateChannelReceived));
@@ -714,6 +671,8 @@ namespace SecretNest.RemoteHub
                 {
                     await subscriber.UnsubscribeAsync(redisChannel, OnPrivateChannelReceived);
                 }
+
+
             }
         }
 
@@ -735,20 +694,12 @@ namespace SecretNest.RemoteHub
         List<string> RemoveClientWithoutTargetNorRedisOperating(Guid[] clientId)
         {
             List<string> allIdText = new List<string>();
-            try
+            foreach (var id in clientId)
             {
-                clientsLock.EnterWriteLock();
-                foreach (var id in clientId)
+                if (clients.TryRemove(id, out _))
                 {
-                    if (clients.Remove(id))
-                    {
-                        allIdText.Add(id.ToString("N"));
-                    }
+                    allIdText.Add(id.ToString("N"));
                 }
-            }
-            finally
-            {
-                clientsLock.ExitWriteLock();
             }
             return allIdText;
         }
@@ -771,29 +722,16 @@ namespace SecretNest.RemoteHub
             allIdText.ForEach(i => RemoveOneClient(i));
         }
 
-        List<string> RemoveAllClientWithoutTargetNorRedisOperating()
+        string[] RemoveAllClientWithoutTargetNorRedisOperating()
         {
-            List<string> allIdText = new List<string>();
-            try
-            {
-                clientsLock.EnterWriteLock();
-                foreach (var id in clients)
-                {
-                    allIdText.Add(id.Key.ToString("N"));
-                }
-                clients.Clear();
-            }
-            finally
-            {
-                clientsLock.ExitWriteLock();
-            }
+            string[] allIdText = Array.ConvertAll(clients.Keys.ToArray(), i => i.ToString("N"));
             return allIdText;
         }
 
         /// <inheritdoc/>
         public async Task RemoveAllClientsAsync()
         {
-            List<string> allIdText = RemoveAllClientWithoutTargetNorRedisOperating();
+            string[] allIdText = RemoveAllClientWithoutTargetNorRedisOperating();
 
             foreach (var idText in allIdText)
             {
@@ -804,28 +742,17 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public void RemoveAllClients()
         {
-            List<string> allIdText = RemoveAllClientWithoutTargetNorRedisOperating();
-            allIdText.ForEach(i => RemoveOneClient(i));
+            string[] allIdText = RemoveAllClientWithoutTargetNorRedisOperating();
+            foreach (var idText in allIdText)
+            {
+                RemoveOneClient(idText);
+            }
         }
 
         /// <inheritdoc/>
         public IEnumerable<Guid> GetAllClients()
         {
-            Guid[] result = null;
-            try
-            {
-                clientsLock.EnterReadLock();
-                int length = clients.Count;
-                result = new Guid[length];
-                if (length > 0)
-                {
-                    clients.Keys.CopyTo(result, 0);
-                }
-            }
-            finally
-            {
-                clientsLock.ExitReadLock();
-            }
+            Guid[] result = clients.Keys.ToArray();
             return result;
         }
 
@@ -834,17 +761,8 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public IEnumerable<Guid> GetAllRemoteClients()
         {
-            Guid[] result;
-            try
-            {
-                clientsLock.EnterReadLock();
-
-                result = hostTable.GetAllRemoteClientsId(clients.Keys).ToArray();
-            }
-            finally
-            {
-                clientsLock.ExitReadLock();
-            }
+            Guid[] localClients = clients.Keys.ToArray();
+            Guid[] result = hostTable.GetAllRemoteClientsId(localClients).ToArray();
             return result;
         }
 
@@ -852,23 +770,15 @@ namespace SecretNest.RemoteHub
         public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)
         {
             string refreshText;
-            try
-            {
-                clientsLock.EnterReadLock();
 
-                if (clients.TryGetValue(clientId, out var client))
-                {
-                    client.ApplyVirtualHostSetting(settings);
-                    refreshText = client.CommandTextRefreshFull;
-                }
-                else
-                {
-                    refreshText = null;
-                }
-            }
-            finally
+            if (clients.TryGetValue(clientId, out var client))
             {
-                clientsLock.ExitReadLock();
+                client.ApplyVirtualHostSetting(settings);
+                refreshText = client.CommandTextRefreshFull;
+            }
+            else
+            {
+                refreshText = null;
             }
             if (refreshText != null)
             {
@@ -886,18 +796,10 @@ namespace SecretNest.RemoteHub
             }
             if (!result) //try local
             {
-                try
+                if (clients.ContainsKey(clientId))
                 {
-                    clientsLock.EnterReadLock();
-                    if (clients.ContainsKey(clientId))
-                    {
-                        channel = BuildRedisChannel(clientId);
-                        result = true;
-                    }
-                }
-                finally
-                {
-                    clientsLock.ExitReadLock();
+                    channel = BuildRedisChannel(clientId);
+                    result = true;
                 }
             }
             return result;

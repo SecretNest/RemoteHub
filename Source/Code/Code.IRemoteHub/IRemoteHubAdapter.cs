@@ -12,44 +12,44 @@ namespace SecretNest.RemoteHub
     {
 
         /// <summary>
-        /// Adds a client by id.
+        /// Adds a local client by id.
         /// </summary>
         /// <param name="clientId">Client id.</param>
         /// <returns>A task that represents the adding operating.</returns>
         Task AddClientAsync(params Guid[] clientId);
 
         /// <summary>
-        /// Removes a client by id.
+        /// Removes a local client by id.
         /// </summary>
         /// <param name="clientId">Client id.</param>
         /// <returns>A task that represents the removing operating.</returns>
         Task RemoveClientAsync(params Guid[] clientId);
 
         /// <summary>
-        /// Removes all clients.
+        /// Removes all registered local clients.
         /// </summary>
         /// <returns>A task that represents the removing operating.</returns>
         Task RemoveAllClientsAsync();
 
         /// <summary>
-        /// Adds a client by id.
+        /// Adds a local client by id.
         /// </summary>
         /// <param name="clientId">Client id.</param>
         void AddClient(params Guid[] clientId);
 
         /// <summary>
-        /// Removes a client by id.
+        /// Removes a local client by id.
         /// </summary>
         /// <param name="clientId">Client id.</param>
         void RemoveClient(params Guid[] clientId);
 
         /// <summary>
-        /// Removes all clients.
+        /// Removes all registered local clients.
         /// </summary>
         void RemoveAllClients();
 
         /// <summary>
-        /// Gets all current registered clients.
+        /// Gets all current registered local clients.
         /// </summary>
         /// <returns>Ids of all current registered clients.</returns>
         IEnumerable<Guid> GetAllClients();

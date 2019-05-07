@@ -21,7 +21,7 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        public void Remove(Guid clientId)
+        public bool Remove(Guid clientId)
         {
             lock (clients)
             {
@@ -29,6 +29,11 @@ namespace SecretNest.RemoteHub
                 {
                     clients.Remove(clientId);
                     RefreshVirtualHost(record.VirtualHosts.Keys);
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
         }

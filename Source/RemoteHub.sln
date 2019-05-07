@@ -51,7 +51,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RedisLocalTest", "Test\Redi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StreamLocalTest", "Test\StreamLocalTest\StreamLocalTest.csproj", "{80FE98FD-1085-4F72-A78B-68D81764990F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwitchTest", "Test\SwitchTest\SwitchTest.csproj", "{6A0DE5D4-7E34-42E8-995B-D9ACD63BD4E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwitchTest", "Test\SwitchTest\SwitchTest.csproj", "{6A0DE5D4-7E34-42E8-995B-D9ACD63BD4E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisMonitoring", "Test\RedisMonitoring\RedisMonitoring.csproj", "{24E87741-3581-468A-AF03-787E7473449C}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -117,6 +119,10 @@ Global
 		{6A0DE5D4-7E34-42E8-995B-D9ACD63BD4E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6A0DE5D4-7E34-42E8-995B-D9ACD63BD4E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6A0DE5D4-7E34-42E8-995B-D9ACD63BD4E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24E87741-3581-468A-AF03-787E7473449C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24E87741-3581-468A-AF03-787E7473449C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24E87741-3581-468A-AF03-787E7473449C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24E87741-3581-468A-AF03-787E7473449C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -143,6 +149,7 @@ Global
 		{F19235BC-5E0B-45A7-9351-C577840D6F14} = {BD94B882-AC56-4132-BFC6-B987EC7A65B8}
 		{80FE98FD-1085-4F72-A78B-68D81764990F} = {BD94B882-AC56-4132-BFC6-B987EC7A65B8}
 		{6A0DE5D4-7E34-42E8-995B-D9ACD63BD4E0} = {BD94B882-AC56-4132-BFC6-B987EC7A65B8}
+		{24E87741-3581-468A-AF03-787E7473449C} = {BD94B882-AC56-4132-BFC6-B987EC7A65B8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E700BB2-4439-4C11-8DCD-41829F557945}

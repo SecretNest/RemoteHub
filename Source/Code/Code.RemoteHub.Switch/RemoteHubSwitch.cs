@@ -388,7 +388,6 @@ namespace SecretNest.RemoteHub
                     foreach (var remoteClientId in idList.Keys)
                     {
                         RemoveAdapterFromAdapterOfClients(remoteClientId, adapter);
-                        RemoteClientRemoved?.Invoke(this, new RemoteClientChangedEventArgs(remoteClientId, adapter));
                     }
                 }
                 else
