@@ -12,7 +12,7 @@ namespace SecretNest.RemoteHub
     /// <typeparam name="T">Type of the message data. Only string and byte array (byte[]) are supported.</typeparam>
     public class RemoteHubOverStream<T> : IDisposable, IRemoteHubOverStream, IRemoteHub<T>
     {
-        StreamAdapter<T> streamAdapter;
+        readonly StreamAdapter<T> streamAdapter;
         readonly Guid clientId;
 
         /// <inheritdoc/>
@@ -157,9 +157,9 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid hostId)
+        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid clientId)
         {
-            return streamAdapter.TryResolveVirtualHost(virtualHostId, out hostId);
+            return streamAdapter.TryResolveVirtualHost(virtualHostId, out clientId);
         }
 
         /// <inheritdoc/>

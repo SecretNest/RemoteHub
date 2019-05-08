@@ -627,9 +627,9 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid remoteClientId)
+        public bool TryResolveVirtualHost(Guid virtualHostId, out Guid clientId)
         {
-            return hostTable.TryResolveVirtualHost(virtualHostId, out remoteClientId);
+            return hostTable.TryResolveVirtualHost(virtualHostId, out clientId);
         }
 
         /// <summary>

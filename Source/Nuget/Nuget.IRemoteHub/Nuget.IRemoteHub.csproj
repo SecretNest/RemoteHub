@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
+    <RootNamespace>SecretNest.RemoteHub</RootNamespace>
+    <AssemblyName>SecretNest.IRemoteHub</AssemblyName>
+    <Configurations>Release</Configurations>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Authors>Allen Cui</Authors>
+    <Company>SecretNest.info</Company>
+    <Product>Remote Hub</Product>
+    <Description>Base classes, interfaces and attributes of Remote Hub.</Description>
+    <Copyright>Allen Cui</Copyright>
+    <PackageProjectUrl>https://scegg.github.io/RemoteHub</PackageProjectUrl>
+    <PackageIconUrl>https://scegg.github.io/RemoteHub/icons/Help.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/scegg/RemoteHub</RepositoryUrl>
+    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>D:\VSProjects\RemoteHub\Source\DirectRelease\Release.IRemoteHub\SecretNest.IRemoteHub.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <Import Project="..\..\Code\Code.IRemoteHub\Code.IRemoteHub.projitems" Label="Shared" />
+
+</Project>

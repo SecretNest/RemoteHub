@@ -12,7 +12,7 @@ namespace SecretNest.RemoteHub
     /// <typeparam name="T">Type of the message data. Only string and byte array (byte[]) are supported.</typeparam>
     public class RemoteHubOverRedis<T> : IDisposable, IRemoteHubOverRedis<T>
     {
-        RedisAdapter<T> redisAdapter;
+        readonly RedisAdapter<T> redisAdapter;
         readonly Guid clientId;
 
         /// <summary>
@@ -160,9 +160,9 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public bool TryResolve(Guid remoteClientId, out RedisChannel channel)
+        public bool TryResolve(Guid clientId, out RedisChannel channel)
         {
-            return redisAdapter.TryResolve(remoteClientId, out channel);
+            return redisAdapter.TryResolve(clientId, out channel);
         }
 
         /// <summary>
@@ -181,34 +181,12 @@ namespace SecretNest.RemoteHub
         /// </summary>
         /// <param name="clientId">Client id.</param>
         /// <param name="message">Message to be sent.</param>
+        /// <returns>A task that represents the sending job.</returns>
         /// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message. Redis Adapter will always return true because it won't check whether the target specified by id exists or not.</remarks>
         public Task SendMessageAsync(Guid clientId, T message)
         {
             return redisAdapter.SendPrivateMessageAsync(clientId, message);
         }
-
-        ///// <summary>
-        ///// Sends a message to the remote client specified by private channel name.
-        ///// </summary>
-        ///// <param name="targetChannel">Name of the private channel of the remote client.</param>
-        ///// <param name="message">Message to be sent.</param>
-        ///// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
-        //public void SendMessage(string targetChannel, T message)
-        //{
-        //    redisAdapter.SendPrivateMessage(new RedisChannel(targetChannel, RedisChannel.PatternMode.Literal), message);
-        //}
-
-        ///// <summary>
-        ///// Creates a task that sends a message to the remote client specified by private channel name.
-        ///// </summary>
-        ///// <param name="targetChannel">Name of the private channel of the remote client.</param>
-        ///// <param name="message">Message to be sent.</param>
-        ///// <returns>A task that represents the sending job.</returns>
-        ///// <remarks><see cref="RedisServerException"/> and <see cref="RedisTimeoutException"/> may be thrown when the Redis error occurred while sending message.</remarks>
-        //public async Task SendMessageAsync(string targetChannel, T message)
-        //{
-        //    await redisAdapter.SendPrivateMessageAsync(new RedisChannel(targetChannel, RedisChannel.PatternMode.Literal), message);
-        //}
 
         /// <inheritdoc/>
         public void ApplyVirtualHosts(params KeyValuePair<Guid, VirtualHostSetting>[] settings)
