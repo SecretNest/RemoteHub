@@ -35,6 +35,7 @@
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Stream\Release.RemoteHub.Stream.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.StreamAdapter\Release.RemoteHub.StreamAdapter.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Switch\Release.RemoteHub.Switch.csproj" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.SwitchDirect\Release.RemoteHub.SwitchDirect.csproj" />
     </DocumentationSources>
     <HelpFileFormat>Website</HelpFileFormat>
     <SyntaxFilters>Standard</SyntaxFilters>

@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
+    <RootNamespace>SecretNest.RemoteHub</RootNamespace>
+    <AssemblyName>SecretNest.RemoteHub.SwitchDirect</AssemblyName>
+    <Configurations>Debug;Release</Configurations>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DocumentationFile>C:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.SwitchDirect\SecretNest.RemoteHub.SwitchDirect.xml</DocumentationFile>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>C:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.SwitchDirect\SecretNest.RemoteHub.SwitchDirect.xml</DocumentationFile>
+  </PropertyGroup>
+  
+  <Import Project="..\..\Code\Code.RemoteHub.SwitchDirect\Code.RemoteHub.SwitchDirect.projitems" Label="Shared" />
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Release.IRemoteHub\Release.IRemoteHub.csproj" />
+  </ItemGroup>
+
+</Project>
