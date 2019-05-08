@@ -18,7 +18,7 @@ namespace ChatServerOnRedis
 
             //Remote Hub
             var siteId = ServerId.SiteId;
-            remoteHub = new RemoteHubOverRedis<string>(siteId, connectionString, OnMessageReceivedFromHub);
+            remoteHub = new RemoteHubOverRedis<string>(siteId, connectionString, OnMessageReceivedFromRemoteHub);
             remoteHub.RemoteClientRemoved += RemoteHub_RemoteClientRemoved;
 
             //Remote Agency
@@ -43,7 +43,7 @@ namespace ChatServerOnRedis
             remoteHub.SendMessage(e.TargetSiteId, e.Message);
         }
 
-        static void OnMessageReceivedFromHub(Guid clientId, string text) //Note: clientId in the parameters is the target id of the message, not the source.
+        static void OnMessageReceivedFromRemoteHub(Guid clientId, string text) //Note: clientId in the parameters is the target id of the message, not the source.
         {
             remoteAgency.ProcessPackagedMessage(text);
         }

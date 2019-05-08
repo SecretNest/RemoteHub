@@ -123,13 +123,15 @@ namespace SwitchTest
             Console.ReadKey(true);
 
             //Dispose
-            remoteHubSwitch1.RemoveAllAdapters(true); //remove all adapters attached in Switch 1
-            remoteHubSwitch2.RemoveAllAdapters(true); //remove all adapters attached in Switch 2
             foreach (var client in clients) //stop all clients
             {
                 client.Stop();
                 ((IDisposable)client).Dispose();
             }
+
+            remoteHubSwitch1.RemoveAllAdapters(true); //remove all adapters attached in Switch 1
+            remoteHubSwitch2.RemoveAllAdapters(true); //remove all adapters attached in Switch 2
+
             redisAdapterOnRedisHub.Dispose();
             streamAdapterOnSwitch2.Dispose();
             foreach (var adapter in streamAdaptersOnSwitch1)

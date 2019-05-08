@@ -69,7 +69,7 @@ namespace SecretNest.RemoteHub
         {
             if (!disposedValue)
             {
-                StopProcessing();
+                StopProcessing(false);
 
                 if (disposing)
                 {
@@ -128,7 +128,7 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        void StopProcessing()
+        void StopProcessing(bool fromReadingJob)
         {
             if (isStopping) return;
             lock (startingLock) //only for starting lock
@@ -152,7 +152,8 @@ namespace SecretNest.RemoteHub
                 shuttingdownTokenSource.Cancel();
                 inputStream.Close(); //Need to close 1st to make readingJob closable.
 
-                readingJob.Wait();
+                if (!fromReadingJob)
+                    readingJob.Wait();
                 writingJob.Wait();
                 keepingJob.Wait();
 
@@ -188,7 +189,7 @@ namespace SecretNest.RemoteHub
         /// </summary>
         public void Stop()
         {
-            StopProcessing();
+            StopProcessing(false);
         }
 
         /// <inheritdoc/>
@@ -261,7 +262,7 @@ namespace SecretNest.RemoteHub
                         else if (commandCode == 255) //Link closed
                         {
                             binaryReader.Close();
-                            OnLinkClosedReceived();
+                            StopProcessing(true);
                             break;
                         }
                     }
@@ -275,7 +276,7 @@ namespace SecretNest.RemoteHub
                             ConnectionExceptionEventArgs e = new ConnectionExceptionEventArgs(ex, true, false);
                             ConnectionErrorOccurred(this, e);
                         }
-                        StopProcessing();
+                        StopProcessing(true);
                     }
                 }
             }
@@ -310,7 +311,7 @@ namespace SecretNest.RemoteHub
                     ConnectionExceptionEventArgs e = new ConnectionExceptionEventArgs(ex, true, false);
                     ConnectionErrorOccurred(this, e);
                 }
-                StopProcessing();
+                StopProcessing(false);
             }
         }
 
@@ -387,11 +388,6 @@ namespace SecretNest.RemoteHub
                 sendingBuffers.Add(new byte[] { 253 });
             }
             catch { }
-        }
-
-        void OnLinkClosedReceived()
-        {
-            StopProcessing();
         }
 
         void OnPrivateMessageReceived(int length, BinaryReader inputStreamReader)

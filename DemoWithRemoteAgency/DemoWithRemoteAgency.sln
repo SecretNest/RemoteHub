@@ -5,11 +5,15 @@ VisualStudioVersion = 16.0.28803.352
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Using Redis", "Using Redis", "{1B0D6F4E-6FDF-421D-B6B5-541950AC6816}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatServerOnRedis", "ChatServerOnRedis\ChatServerOnRedis.csproj", "{BA3158AA-D36A-4F57-AA9C-7AE9AF477ADB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatServerOnRedis", "ChatServerOnRedis\ChatServerOnRedis.csproj", "{BA3158AA-D36A-4F57-AA9C-7AE9AF477ADB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedInterface", "SharedInterface\SharedInterface.csproj", "{418C552A-06EC-4765-8ECE-0622C91C39AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedInterface", "SharedInterface\SharedInterface.csproj", "{418C552A-06EC-4765-8ECE-0622C91C39AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatClientOnRedis", "ChatClientOnRedis\ChatClientOnRedis.csproj", "{72EE46FC-F2DB-476B-A172-248C1DC21EBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatClientOnRedis", "ChatClientOnRedis\ChatClientOnRedis.csproj", "{72EE46FC-F2DB-476B-A172-248C1DC21EBF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Using SslStream", "Using SslStream", "{64B70CCF-73A2-4038-9F75-445F4DD1C145}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatServerOnSslStream", "ChatServerOnSslStream\ChatServerOnSslStream.csproj", "{4216444A-07F8-45F5-AD44-11AF0C9E0F68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +33,10 @@ Global
 		{72EE46FC-F2DB-476B-A172-248C1DC21EBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72EE46FC-F2DB-476B-A172-248C1DC21EBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72EE46FC-F2DB-476B-A172-248C1DC21EBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4216444A-07F8-45F5-AD44-11AF0C9E0F68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4216444A-07F8-45F5-AD44-11AF0C9E0F68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4216444A-07F8-45F5-AD44-11AF0C9E0F68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4216444A-07F8-45F5-AD44-11AF0C9E0F68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,6 +44,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BA3158AA-D36A-4F57-AA9C-7AE9AF477ADB} = {1B0D6F4E-6FDF-421D-B6B5-541950AC6816}
 		{72EE46FC-F2DB-476B-A172-248C1DC21EBF} = {1B0D6F4E-6FDF-421D-B6B5-541950AC6816}
+		{4216444A-07F8-45F5-AD44-11AF0C9E0F68} = {64B70CCF-73A2-4038-9F75-445F4DD1C145}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E61C91A7-0BFB-4883-9F56-7E793A861712}

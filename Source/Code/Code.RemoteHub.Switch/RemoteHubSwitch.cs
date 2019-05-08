@@ -300,6 +300,7 @@ namespace SecretNest.RemoteHub
             foreach (var target in allAdapters)
             {
                 if (target != adapter)
+
                     target.RemoveClient(remoteClientId);
             }
         }

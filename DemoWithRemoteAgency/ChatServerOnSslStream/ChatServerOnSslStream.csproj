@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SecretNest.RemoteAgency.DataContractSerializer.EasyEncapsulation" Version="1.6.0" />
+    <PackageReference Include="SecretNest.RemoteHub.Stream" Version="1.0.1" />
+    <PackageReference Include="SecretNest.RemoteHub.Switch" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SharedInterface\SharedInterface.csproj" />
+  </ItemGroup>
+
+</Project>
