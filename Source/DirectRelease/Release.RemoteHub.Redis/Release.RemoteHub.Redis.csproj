@@ -22,8 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Release.IRemoteHub.Redis\Release.IRemoteHub.Redis.csproj" />
-    <ProjectReference Include="..\Release.IRemoteHub\Release.IRemoteHub.csproj" />
     <ProjectReference Include="..\Release.RemoteHub.RedisAdapter\Release.RemoteHub.RedisAdapter.csproj" />
   </ItemGroup>
 

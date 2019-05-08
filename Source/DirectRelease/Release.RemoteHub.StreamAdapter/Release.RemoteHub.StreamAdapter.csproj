@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Release.IRemoteHub.Stream\Release.IRemoteHub.Stream.csproj" />
-    <ProjectReference Include="..\Release.IRemoteHub\Release.IRemoteHub.csproj" />
   </ItemGroup>
 
 </Project>

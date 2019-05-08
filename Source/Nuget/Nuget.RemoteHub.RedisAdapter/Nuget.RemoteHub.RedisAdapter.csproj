@@ -3,28 +3,34 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
     <RootNamespace>SecretNest.RemoteHub</RootNamespace>
-    <AssemblyName>SecretNest.IRemoteHub</AssemblyName>
+    <AssemblyName>SecretNest.RemoteHub.RedisAdapter</AssemblyName>
     <Configurations>Release</Configurations>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>Allen Cui</Authors>
     <Company>SecretNest.info</Company>
     <Product>Remote Hub</Product>
-    <Description>Interfaces, delegates and shared classes of Remote Hub.</Description>
+    <Description>Adapter of Remote Hub based on Redis database.</Description>
     <Copyright>Allen Cui</Copyright>
     <PackageProjectUrl>https://scegg.github.io/RemoteHub</PackageProjectUrl>
     <PackageIconUrl>https://scegg.github.io/RemoteHub/icons/Help.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/scegg/RemoteHub</RepositoryUrl>
-    <PackageReleaseNotes>Initial release. Add xml documentation.</PackageReleaseNotes>
-    <Version>1.0.3</Version>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
-    <FileVersion>1.0.3.0</FileVersion>
+    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\VSProjects\RemoteHub\Source\Nuget\Nuget.IRemoteHub\SecretNest.IRemoteHub.xml</DocumentationFile>
+    <DocumentationFile>D:\VSProjects\RemoteHub\Source\Nuget\Nuget.RemoteHub.RedisAdapter\SecretNest.RemoteHub.RedisAdapter.xml</DocumentationFile>
   </PropertyGroup>
+  
+  <Import Project="..\..\Code\Code.RemoteHub.RedisAdapter\Code.RemoteHub.RedisAdapter.projitems" Label="Shared" />
 
-  <Import Project="..\..\Code\Code.IRemoteHub\Code.IRemoteHub.projitems" Label="Shared" />
+  <Import Project="..\..\Code\Code.RemoteHub.AdapterShared\Code.RemoteHub.AdapterShared.projitems" Label="Shared" />
+
+  <ItemGroup>
+    <PackageReference Include="SecretNest.IRemoteHub.Redis" Version="1.0.1" />
+  </ItemGroup>
 
 </Project>

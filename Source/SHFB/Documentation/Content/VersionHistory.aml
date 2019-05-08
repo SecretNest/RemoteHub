@@ -9,13 +9,18 @@ life of the project.</para>
 		<section>
 			<title>Version History</title>
 			<content>
-				<para>Select a version below to see a description of its changes.</para>
-
 				<list class="bullet">
 					<listItem>
 						<para>Initial release.</para>
-						<para>IRemoteHub: 1.0.0</para>
-					</listItem>
+						<para>IRemoteHub: 1.0.3</para>
+            <para>IRemoteHub.Redis: 1.0.1</para>
+            <para>IRemoteHub.Stream: 1.0.0</para>
+            <para>RemoteHub.RedisAdapter: 1.0.0</para>
+            <para>RemoteHub.Redis: 1.0.0</para>
+            <para>RemoteHub.StreamAdapter: 1.0.0</para>
+            <para>RemoteHub.Stream: 1.0.0</para>
+            <para>RemoteHub.Switch: 1.0.0</para>
+				</listItem>
 
 				</list>
 
