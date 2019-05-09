@@ -30,5 +30,9 @@
   <ItemGroup>
     <PackageReference Include="SecretNest.IRemoteHub" Version="1.0.3" />
   </ItemGroup>
+
+  <Import Project="..\..\Code\Code.RemoteHub.AdapterShared\Code.RemoteHub.AdapterShared.projitems" Label="Shared" />
+
+  <Import Project="..\..\Code\Code.RemoteHub.ValueConverter\Code.RemoteHub.ValueConverter.projitems" Label="Shared" />
   
 </Project>

@@ -17,7 +17,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)StreamAdapter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StreamAdapterOfT.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StreamWritingExtensions.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ValueConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ClientEntity.StreamExtesnsion.cs" />

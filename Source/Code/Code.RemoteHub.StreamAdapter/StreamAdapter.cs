@@ -430,25 +430,34 @@ namespace SecretNest.RemoteHub
         /// <param name="data">Data package of the message.</param>
         protected void SendingPrivateMessage(Guid targetClientId, byte[] data)
         {
+            if (!IsStarted)
+                throw new InvalidOperationException();
+
             int length = data.Length;
             byte[] package = new byte[data.Length + 20];
             WriteInt32ToByteArray(length, package, 0);
             Array.Copy(targetClientId.ToByteArray(), 0, package, 4, 16);
             Array.Copy(data, 0, package, 20, length);
-            AddToSendingBuffer(package);
+            if (!AddToSendingBuffer(package))
+            {
+                throw new InvalidOperationException();
+            }
         }
 
-        void AddToSendingBuffer(byte[] package)
+        bool AddToSendingBuffer(byte[] package)
         {
             try
             {
                 sendingBuffers.Add(package);
+                return true;
             }
             catch (InvalidOperationException) //link closed.
             {
+                return false;
             }
             catch (NullReferenceException) //link closed.
             {
+                return false;
             }
         }
         #endregion

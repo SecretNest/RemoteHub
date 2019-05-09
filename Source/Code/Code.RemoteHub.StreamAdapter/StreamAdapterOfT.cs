@@ -27,24 +27,7 @@ namespace SecretNest.RemoteHub
             : base(inputStream, outputStream, refreshingIntervalInSeconds)
         {
             privateMessageCallbackHelper = new PrivateMessageCallbackHelper<T>(onMessageReceivedCallback);
-
-            var type = typeof(T);
-            if (type == typeof(string))
-            {
-                if (encoding == null)
-                    encoding = Encoding.Default;
-                ValueConverter<string> client = new ValueConverterOfString(encoding);
-                valueConverter = __refvalue(__makeref(client), ValueConverter<T>);
-            }
-            else if (type == typeof(byte[]))
-            {
-                ValueConverter<byte[]> client = new ValueConverterOfByteArray();
-                valueConverter = __refvalue(__makeref(client), ValueConverter<T>);
-            }
-            else
-            {
-                throw new NotSupportedException("Only string and byte array are supported.");
-            }
+            valueConverter = ValueConverter<T>.Create(encoding);
         }
 
         /// <inheritdoc/>

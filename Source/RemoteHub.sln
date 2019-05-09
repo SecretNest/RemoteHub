@@ -90,13 +90,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuget.RemoteHub.Switch", "N
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.SwitchDirect", "Code\Code.RemoteHub.SwitchDirect\Code.RemoteHub.SwitchDirect.shproj", "{E2AAF839-A4CA-4824-9920-7BA1C8FEB27A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Release.RemoteHub.SwitchDirect", "DirectRelease\Release.RemoteHub.SwitchDirect\Release.RemoteHub.SwitchDirect.csproj", "{6A6DDBC9-EA43-43C4-B671-F66C3FC26954}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Release.RemoteHub.SwitchDirect", "DirectRelease\Release.RemoteHub.SwitchDirect\Release.RemoteHub.SwitchDirect.csproj", "{6A6DDBC9-EA43-43C4-B671-F66C3FC26954}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nuget.RemoteHub.SwitchDirect", "Nuget\Nuget.RemoteHub.SwitchDirect\Nuget.RemoteHub.SwitchDirect.csproj", "{B9702807-C8D3-43FD-91EC-D0828E49A922}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuget.RemoteHub.SwitchDirect", "Nuget\Nuget.RemoteHub.SwitchDirect\Nuget.RemoteHub.SwitchDirect.csproj", "{B9702807-C8D3-43FD-91EC-D0828E49A922}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.ValueConverter", "Code\Code.RemoteHub.ValueConverter\Code.RemoteHub.ValueConverter.shproj", "{7469067C-C600-46FA-A4FB-5746152E47E9}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Code\Code.RemoteHub.RedisAdapter\Code.RemoteHub.RedisAdapter.projitems*{51769908-de8d-4517-8677-f43224590851}*SharedItemsImports = 13
+		Code\Code.RemoteHub.ValueConverter\Code.RemoteHub.ValueConverter.projitems*{7469067c-c600-46fa-a4fb-5746152e47e9}*SharedItemsImports = 13
 		Code\Code.RemoteHub.AdapterShared\Code.RemoteHub.AdapterShared.projitems*{851ee1d3-a2b8-4da6-829f-b8a118cc4bb4}*SharedItemsImports = 13
 		Code\Code.IRemoteHub.Stream\Code.IRemoteHub.Stream.projitems*{8ab8e164-2c93-42f1-a603-b79036db313b}*SharedItemsImports = 13
 		Code\Code.RemoteHub.Stream\Code.RemoteHub.Stream.projitems*{8c6b8ec4-a2f0-4fc4-9b93-54d8c0bcb1fc}*SharedItemsImports = 13
@@ -290,6 +293,7 @@ Global
 		{E2AAF839-A4CA-4824-9920-7BA1C8FEB27A} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
 		{6A6DDBC9-EA43-43C4-B671-F66C3FC26954} = {189A414D-B434-442A-AD84-E6CA16C00C30}
 		{B9702807-C8D3-43FD-91EC-D0828E49A922} = {9A28507E-865F-4584-A418-17299B6419A2}
+		{7469067C-C600-46FA-A4FB-5746152E47E9} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E700BB2-4439-4C11-8DCD-41829F557945}

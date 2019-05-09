@@ -23,4 +23,6 @@
     <ProjectReference Include="..\Release.IRemoteHub.Stream\Release.IRemoteHub.Stream.csproj" />
   </ItemGroup>
 
+  <Import Project="..\..\Code\Code.RemoteHub.ValueConverter\Code.RemoteHub.ValueConverter.projitems" Label="Shared" />
+
 </Project>

@@ -8,11 +8,11 @@
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile>C:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.SwitchDirect\SecretNest.RemoteHub.SwitchDirect.xml</DocumentationFile>
+    <DocumentationFile>D:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.SwitchDirect\SecretNest.RemoteHub.SwitchDirect.xml</DocumentationFile>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DocumentationFile>C:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.SwitchDirect\SecretNest.RemoteHub.SwitchDirect.xml</DocumentationFile>
+    <DocumentationFile>D:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.SwitchDirect\SecretNest.RemoteHub.SwitchDirect.xml</DocumentationFile>
   </PropertyGroup>
   
   <Import Project="..\..\Code\Code.RemoteHub.SwitchDirect\Code.RemoteHub.SwitchDirect.projitems" Label="Shared" />
@@ -20,5 +20,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Release.IRemoteHub\Release.IRemoteHub.csproj" />
   </ItemGroup>
+
+  <Import Project="..\..\Code\Code.RemoteHub.AdapterShared\Code.RemoteHub.AdapterShared.projitems" Label="Shared" />
+
+  <Import Project="..\..\Code\Code.RemoteHub.ValueConverter\Code.RemoteHub.ValueConverter.projitems" Label="Shared" />
 
 </Project>
