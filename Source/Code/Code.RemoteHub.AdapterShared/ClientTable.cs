@@ -11,7 +11,7 @@ namespace SecretNest.RemoteHub
         Dictionary<Guid, ClientEntity> clients = new Dictionary<Guid, ClientEntity>(); //key = client id
 
 
-        public IEnumerable<Guid> GetAllRemoteClientsId()
+        public IEnumerable<Guid> GetAllClientsId()
         {
             lock (clients)
             {

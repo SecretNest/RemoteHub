@@ -15,10 +15,10 @@ life of the project.</para>
 						<para>IRemoteHub: 1.1.0</para>
             <para>IRemoteHub.Redis: 1.1.0</para>
             <para>IRemoteHub.Stream: 1.1.0</para>
-            <para>RemoteHub.RedisAdapter: 1.1.0</para>
-            <para>RemoteHub.Redis: 1.1.0</para>
-            <para>RemoteHub.StreamAdapter: 1.1.0</para>
-            <para>RemoteHub.Stream: 1.1.0</para>
+            <para>RemoteHub.RedisAdapter: 1.1.1</para>
+            <para>RemoteHub.Redis: 1.1.1</para>
+            <para>RemoteHub.StreamAdapter: 1.1.1</para>
+            <para>RemoteHub.Stream: 1.1.1</para>
             <para>RemoteHub.Switch: 1.1.0</para>
             <para>RemoteHub.SwitchDirect: 1.1.0</para>
 				</listItem>

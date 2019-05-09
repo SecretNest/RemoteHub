@@ -100,22 +100,7 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public void ApplyVirtualHosts(params KeyValuePair<Guid, VirtualHostSetting>[] settings)
         {
-            lock (isStartedChangingLock)
-            {
-                if (settings == null || settings.Length == 0)
-                {
-                    var localClientEntity = clientTable.Get(clientId);
-                    if (localClientEntity.IsVirtualHostsDisabled)
-                        return; //nothing changed.
-
-                    clientTable.ClearVirtualHosts(clientId);
-
-                    if (isStarted && ToSwitch_RemoteClientUpdated != null)
-                    {
-                        ToSwitch_RemoteClientUpdated(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
-                    }
-                }
-            }
+            ApplyVirtualHosts(clientId, settings);
         }
 
         /// <inheritdoc/>
@@ -124,11 +109,34 @@ namespace SecretNest.RemoteHub
             return clientTable.TryResolveVirtualHost(virtualHostId, out clientId);
         }
 
+        /// <inheritdoc/>
+        public bool TryGetVirtualHosts(Guid clientId, out KeyValuePair<Guid, VirtualHostSetting>[] settings) //remotehub and adapter shared
+        {
+            var entity = clientTable.Get(clientId);
+            if (entity == null)
+            {
+                settings = default;
+                return false;
+            }
+            else
+            {
+                if (entity.IsVirtualHostsDisabled)
+                {
+                    settings = default;
+                }
+                else
+                {
+                    settings = entity.GetVirtualHosts();
+                }
+                return true;
+            }
+        }
+
         /// <summary>
         /// Starts instance operating.
         /// </summary>
         /// <remarks>The state of this instance is shared with adapter. The state of the adapter linked will always be the same as the state of this instance. Calling this method will set the state of adapter to started also.</remarks>
-        public void Start()
+        public void Start() //remotehub and adapter shared
         {
             if (isStarted) return;
             lock (isStartedChangingLock)
@@ -157,7 +165,7 @@ namespace SecretNest.RemoteHub
         /// Stops instance operating.
         /// </summary>
         /// <remarks>The state of this instance is shared with adapter. The state of the adapter linked will always be the same as the state of this instance. Calling this method will set the state of adapter to stopped also.</remarks>
-        public void Stop()
+        public void Stop() //remotehub and adapter shared
         {
             if (!isStarted) return;
             lock (isStartedChangingLock)
@@ -326,9 +334,9 @@ namespace SecretNest.RemoteHub
             return Task.Run(() => FromAdapter_RemoveClient(clientId));
         }
 
-        async Task IRemoteHubAdapter.RemoveAllClientsAsync()
+        Task IRemoteHubAdapter.RemoveAllClientsAsync()
         {
-            throw new NotImplementedException();
+            return Task.Run(() => FromAdapter_RemoveAllClients());
         }
 
         void IRemoteHubAdapter.AddClient(params Guid[] clientId)
@@ -378,44 +386,58 @@ namespace SecretNest.RemoteHub
 
         void IRemoteHubAdapter.RemoveAllClients()
         {
-            lock (isStartedChangingLock)
-            {
-                var id = clientTable.GetAllRemoteClientsId(this.clientId).ToArray();
-                if (id.Length == 0) return;
-                FromAdapter_RemoveClient(id);
-            }
+            FromAdapter_RemoveAllClients();
+        }
+
+        void FromAdapter_RemoveAllClients()
+        {
+            Guid[] all = FromAdapter_GetAllRemoteClients();
+            if (all.Length == 0) return;
+            FromAdapter_RemoveClient(all);
         }
 
         IEnumerable<Guid> IRemoteHubAdapter.GetAllClients()
         {
-            throw new NotImplementedException();
+            Guid[] id = clientTable.GetAllClientsId().ToArray();
+            return id;
         }
 
         IEnumerable<Guid> IRemoteHubAdapter.GetAllRemoteClients()
         {
-            throw new NotImplementedException();
+            Guid[] all = FromAdapter_GetAllRemoteClients();
+            return all;
         }
 
-        void IRemoteHubAdapter.Start() //shared with start
+        Guid[] FromAdapter_GetAllRemoteClients()
         {
-            Start();
+            Guid[] all;
+            lock (isStartedChangingLock)
+            {
+                all = clientTable.GetAllClientsId().Where(i => i != clientId).ToArray();
+            }
+            return all;
         }
 
-        void IRemoteHubAdapter.Stop() //shared with stop
+        /// <inheritdoc/>
+        public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)
         {
-            Stop();
-        }
+            lock (isStartedChangingLock)
+            {
+                if (settings == null || settings.Length == 0)
+                {
+                    var localClientEntity = clientTable.Get(clientId);
+                    if (localClientEntity.IsVirtualHostsDisabled)
+                        return; //nothing changed.
 
-        void IRemoteHubAdapter.ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)
-        {
-            throw new NotImplementedException();
-        }
+                    clientTable.ClearVirtualHosts(clientId);
 
-        bool IRemoteHubAdapter.TryResolveVirtualHost(Guid virtualHostId, out Guid clientId)
-        {
-            throw new NotImplementedException();
+                    if (isStarted && ToSwitch_RemoteClientUpdated != null)
+                    {
+                        ToSwitch_RemoteClientUpdated(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
+                    }
+                }
+            }
         }
-
         #endregion
 
         #region IDisposable Support

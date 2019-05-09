@@ -543,7 +543,7 @@ namespace SecretNest.RemoteHub
             {
                 localClients.Add(id);
             }
-            Guid[] result = clientTable.GetAllRemoteClientsId().ToArray();
+            Guid[] result = clientTable.GetAllClientsId().ToArray();
             foreach (var id in result)
             {
                 if (localClients.Contains(id))
