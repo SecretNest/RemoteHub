@@ -7,12 +7,8 @@
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DocumentationFile>D:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.StreamAdapter\SecretNest.RemoteHub.StreamAdapter.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile>D:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.StreamAdapter\SecretNest.RemoteHub.StreamAdapter.xml</DocumentationFile>
+  <PropertyGroup Condition="'|$(TargetFramework)|$(Platform)'=='netstandard2.0|AnyCPU'">
+    <DocumentationFile>SecretNest.RemoteHub.StreamAdapter.xml</DocumentationFile>
   </PropertyGroup>
 
   <Import Project="..\..\Code\Code.RemoteHub.StreamAdapter\Code.RemoteHub.StreamAdapter.projitems" Label="Shared" />
@@ -24,5 +20,7 @@
   </ItemGroup>
 
   <Import Project="..\..\Code\Code.RemoteHub.ValueConverter\Code.RemoteHub.ValueConverter.projitems" Label="Shared" />
+
+  <Import Project="..\..\Code\Code.RemoteHub.AdapterSharedForActiveProcessing\Code.RemoteHub.AdapterSharedForActiveProcessing.projitems" Label="Shared" />
 
 </Project>

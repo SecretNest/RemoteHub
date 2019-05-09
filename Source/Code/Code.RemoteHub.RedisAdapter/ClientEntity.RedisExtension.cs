@@ -7,8 +7,40 @@ namespace SecretNest.RemoteHub
 {
     partial class ClientEntity
     {
+
+        public string CommandTextRefresh { get; private set; }
+        public string CommandTextRefreshFull { get; private set; }
+
+        string prefixForRefresh, prefixForRefreshFull;
+
         public DateTime Timeout { get; private set; }
         public RedisChannel Channel { get; }
+
+
+        public ClientEntity(string prefixForRefresh, string prefixForRefreshFull)
+        {
+            this.prefixForRefresh = prefixForRefresh;
+            this.prefixForRefreshFull = prefixForRefreshFull;
+            CommandTextRefresh = prefixForRefresh;
+            CommandTextRefreshFull = prefixForRefreshFull;
+        }
+
+        public void ApplyVirtualHostSetting(params KeyValuePair<Guid, VirtualHostSetting>[] settings) //from client command. dont need to apply to VirtualHosts coz it will be done in processing the loopback message from redis.
+        {
+            if (settings == null || settings.Length == 0)
+            {
+                CommandTextRefresh = prefixForRefresh;
+                CommandTextRefreshFull = prefixForRefresh;
+            }
+            else
+            {
+                string id = Guid.NewGuid().ToString("N");
+                CommandTextRefresh = prefixForRefresh + id;
+                CommandTextRefreshFull = prefixForRefreshFull + id + ":"
+                     + string.Join(",", Array.ConvertAll(settings, i => string.Format("{0:N}-{1}-{2}", i.Key, i.Value.Priority, i.Value.Weight)));
+            }
+        }
+
 
         public void Refresh(int seconds)
         {
@@ -17,7 +49,7 @@ namespace SecretNest.RemoteHub
 
         public bool IsTimeValid => Timeout > DateTime.Now;
 
-        public Dictionary<Guid, VirtualHostSetting> ApplyVirtualHosts(Guid settingId, string value, out List<Guid> affectedVirtualHosts)
+        public Dictionary<Guid, VirtualHostSetting> ApplyVirtualHosts(Guid settingId, string value, out List<Guid> affectedVirtualHosts) //from redis
         {
             affectedVirtualHosts = new List<Guid>();
             var newHosts = new Dictionary<Guid, VirtualHostSetting>();

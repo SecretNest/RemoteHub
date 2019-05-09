@@ -16,7 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)PrivateMessageCallbackHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClientEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClientTable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ClientTable.VirtualEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PercentageDistributer.cs" />
   </ItemGroup>
 </Project>

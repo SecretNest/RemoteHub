@@ -21,7 +21,7 @@ namespace SecretNest.RemoteHub
         ConcurrentDictionary<RedisChannel, Guid> targets = new ConcurrentDictionary<RedisChannel, Guid>(); //listening channel and it's client id
         readonly string redisConfiguration, privateChannelNamePrefix;
         readonly int redisDb, clientTimeToLive, clientRefreshingInterval;
-        ClientTable hostTable;
+        ClientTable clientTable;
         bool needRefreshFull = false;
         CancellationTokenSource updatingRedisCancellation, updatingRedisWaitingCancellation;
         CancellationToken updatingToken;
@@ -120,7 +120,7 @@ namespace SecretNest.RemoteHub
             mainChannel = new RedisChannel(mainChannelName, RedisChannel.PatternMode.Literal);
             this.clientTimeToLive = clientTimeToLive;
             this.clientRefreshingInterval = clientRefreshingInterval;
-            hostTable = new ClientTable(privateChannelNamePrefix);
+            clientTable = new ClientTable(privateChannelNamePrefix);
         }
 
         RedisChannel BuildRedisChannel(Guid id)
@@ -198,9 +198,7 @@ namespace SecretNest.RemoteHub
 
                 if (RemoteClientRemoved != null)
                 {
-                    Guid[] remoteClientIds;
-                    Guid[] localClientIds = clients.Keys.ToArray();
-                    remoteClientIds = hostTable.GetAllRemoteClientsId(localClientIds).ToArray();
+                    Guid[] remoteClientIds = GetAllRemoteClients().ToArray();
 
                     if (remoteClientIds.Length > 0)
                     {
@@ -208,7 +206,7 @@ namespace SecretNest.RemoteHub
                     }
                 }
 
-                hostTable = new ClientTable(privateChannelNamePrefix);
+                clientTable = new ClientTable(privateChannelNamePrefix);
                 clients = new ConcurrentDictionary<Guid, ClientEntity>();
                 targets = new ConcurrentDictionary<RedisChannel, Guid>();
                 AdapterStopped?.Invoke(this, EventArgs.Empty);
@@ -243,7 +241,7 @@ namespace SecretNest.RemoteHub
                 {
                     var clientId = Guid.Parse(texts[2]);
                     var seconds = int.Parse(texts[3]);
-                    hostTable.AddOrRefresh(clientId, seconds, out var currentVirtualHostSettingId, out bool isNewCreated);
+                    clientTable.AddOrRefresh(clientId, seconds, out var currentVirtualHostSettingId, out bool isNewCreated);
                     if (texts[4] != "")
                     {
                         Guid virtualHostId = Guid.Parse(texts[4]);
@@ -259,7 +257,7 @@ namespace SecretNest.RemoteHub
                         if (currentVirtualHostSettingId != Guid.Empty)
                         {
                             //From having-virtual-host state to no-virtual-host state
-                            hostTable.ClearVirtualHosts(clientId);
+                            clientTable.ClearVirtualHosts(clientId);
                             if (RemoteClientUpdated != null)
                             {
                                 CallRemoteClientUpdated(clientId, Guid.Empty, null);
@@ -279,14 +277,14 @@ namespace SecretNest.RemoteHub
                 {
                     var clientId = Guid.Parse(texts[2]);
                     var seconds = int.Parse(texts[3]);
-                    hostTable.AddOrRefresh(clientId, seconds, out var currentVirtualHostSettingId, out bool isNewCreated);
+                    clientTable.AddOrRefresh(clientId, seconds, out var currentVirtualHostSettingId, out bool isNewCreated);
                     if (texts[4] != "")
                     {
                         Guid virtualHostId = Guid.Parse(texts[4]);
                         if (currentVirtualHostSettingId != virtualHostId)
                         {
                             //From no-virtual-host state to having-virtual-host state, or change virtual host setting
-                            var setting = hostTable.ApplyVirtualHosts(clientId, virtualHostId, texts[5]);
+                            var setting = clientTable.ApplyVirtualHosts(clientId, virtualHostId, texts[5]);
                             if (RemoteClientUpdated != null)
                             {
                                 CallRemoteClientUpdated(clientId, virtualHostId, setting.ToArray());
@@ -297,7 +295,7 @@ namespace SecretNest.RemoteHub
                     {
                         if (currentVirtualHostSettingId != Guid.Empty)
                         {
-                            hostTable.ClearVirtualHosts(clientId);
+                            clientTable.ClearVirtualHosts(clientId);
                             //From having-virtual-host state to no-virtual-host state
                             if (RemoteClientUpdated != null)
                             {
@@ -341,7 +339,7 @@ namespace SecretNest.RemoteHub
                 else if (texts[1] == "Shutdown")
                 {
                     var clientId = Guid.Parse(texts[2]);
-                    if (hostTable.Remove(clientId) && RemoteClientRemoved != null)
+                    if (clientTable.Remove(clientId) && RemoteClientRemoved != null)
                     {
                         CallRemoteClientRemoved(clientId);
                     }
@@ -387,7 +385,7 @@ namespace SecretNest.RemoteHub
                         }
                     }
 
-                    hostTable.ClearAllExpired(out var expired);
+                    clientTable.ClearAllExpired(out var expired);
                     if (RemoteClientRemoved != null)
                         foreach (var id in expired)
                         {
@@ -805,9 +803,19 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public IEnumerable<Guid> GetAllRemoteClients()
         {
-            Guid[] localClients = clients.Keys.ToArray();
-            Guid[] result = hostTable.GetAllRemoteClientsId(localClients).ToArray();
-            return result;
+            HashSet<Guid> localClients = new HashSet<Guid>();
+            foreach(var id in clients.Keys.ToArray())
+            {
+                localClients.Add(id);
+            }
+            Guid[] result = clientTable.GetAllRemoteClientsId().ToArray();
+            foreach(var id in result)
+            {
+                if (localClients.Contains(id))
+                    continue;
+                else
+                    yield return id;
+            }
         }
 
         /// <inheritdoc/>
@@ -833,7 +841,7 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public bool TryResolve(Guid clientId, out RedisChannel channel)
         {
-            var result = hostTable.TryGet(clientId, out channel, out var isTimedOut);
+            var result = clientTable.TryGet(clientId, out channel, out var isTimedOut);
             if (isTimedOut && RemoteClientRemoved != null)
             {
                 CallRemoteClientRemoved(clientId);
@@ -852,7 +860,30 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public bool TryResolveVirtualHost(Guid virtualHostId, out Guid clientId)
         {
-            return hostTable.TryResolveVirtualHost(virtualHostId, out clientId);
+            return clientTable.TryResolveVirtualHost(virtualHostId, out clientId);
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetVirtualHosts(Guid clientId, out KeyValuePair<Guid, VirtualHostSetting>[] settings)
+        {
+            var entity = clientTable.Get(clientId);
+            if (entity == null)
+            {
+                settings = default;
+                return false;
+            }
+            else
+            {
+                if (entity.IsVirtualHostsDisabled)
+                {
+                    settings = default;
+                }
+                else
+                {
+                    settings = entity.GetVirtualHosts();
+                }
+                return true;
+            }
         }
     }
 }

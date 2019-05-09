@@ -213,6 +213,12 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
+        public bool TryGetVirtualHosts(Guid clientId, out KeyValuePair<Guid, VirtualHostSetting>[] settings)
+        {
+            return redisAdapter.TryGetVirtualHosts(clientId, out settings);
+        }
+
+        /// <inheritdoc/>
         public bool IsStarted => redisAdapter.IsStarted;
     }
 }

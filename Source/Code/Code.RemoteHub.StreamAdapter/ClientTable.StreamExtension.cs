@@ -9,39 +9,6 @@ namespace SecretNest.RemoteHub
 {
     partial class ClientTable
     {
-        public IEnumerable<Guid> GetAllRemoteClientsId()
-        {
-            lock (clients)
-            {
-                foreach(var client in clients)
-                {
-                    if (!client.Value.IsLocal)
-                        yield return client.Key;
-                }
-            }
-        }
-
-        public void AddOrUpdate(Guid clientId, bool isLocal)
-        {
-            lock (clients)
-            {
-                if (clients.TryGetValue(clientId, out var entity))
-                {
-                    entity.IsLocal = isLocal;
-                    if (entity.VirtualHostSettingId != Guid.Empty)
-                    {
-                        entity.ClearVirtualHosts(out var affectedVirtualHosts);
-                        RefreshVirtualHost(affectedVirtualHosts);
-                    }
-                }
-                else
-                {
-                    entity = new ClientEntity(isLocal);
-                    clients.Add(clientId, entity);
-                }
-            }
-        }
-
         //for adding or updating remote clients
         public ClientEntity AddOrUpdate(Guid remoteClientId, BinaryReader inputStreamReader)
         {
@@ -50,7 +17,6 @@ namespace SecretNest.RemoteHub
             {
                 if (clients.TryGetValue(remoteClientId, out var entity))
                 {
-                    entity.IsLocal = false;
                     if (entity.VirtualHostSettingId != settingId)
                     {
                         var affectedVirtualHosts = entity.ApplyVirtualHosts(settingId, inputStreamReader);
@@ -63,33 +29,12 @@ namespace SecretNest.RemoteHub
                 }
                 else
                 {
-                    entity = new ClientEntity(false);
+                    entity = new ClientEntity();
                     var affectedVirtualHosts = entity.ApplyVirtualHosts(settingId, inputStreamReader);
                     clients.Add(remoteClientId, entity);
                     RefreshVirtualHost(affectedVirtualHosts);
                 }
                 return entity;
-            }
-        }
-
-        //for adding or updating local clients
-        public void AddOrUpdate(Guid localClientId, KeyValuePair<Guid, VirtualHostSetting>[] virtualHostSettings)
-        {
-            lock (clients)
-            {
-                if (clients.TryGetValue(localClientId, out var entity))
-                {
-                    entity.IsLocal = true;
-                    var affectedVirtualHosts = entity.ApplyVirtualHosts(virtualHostSettings);
-                    RefreshVirtualHost(affectedVirtualHosts);
-                }
-                else
-                {
-                    entity = new ClientEntity(true);
-                    var affectedVirtualHosts = entity.ApplyVirtualHosts(virtualHostSettings);
-                    clients.Add(localClientId, entity);
-                    RefreshVirtualHost(affectedVirtualHosts);
-                }
             }
         }
     }

@@ -16,19 +16,19 @@
     <PackageIconUrl>https://scegg.github.io/RemoteHub/icons/Help.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/scegg/RemoteHub</RepositoryUrl>
     <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
-    <Version>1.0.0</Version>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\VSProjects\RemoteHub\Source\Nuget\Nuget.RemoteHub.Switch\SecretNest.RemoteHub.Switch.xml</DocumentationFile>
+    <DocumentationFile>SecretNest.RemoteHub.Switch.xml</DocumentationFile>
   </PropertyGroup>
 
   <Import Project="..\..\Code\Code.RemoteHub.Switch\Code.RemoteHub.Switch.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="SecretNest.IRemoteHub" Version="1.0.3" />
+    <PackageReference Include="SecretNest.IRemoteHub" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

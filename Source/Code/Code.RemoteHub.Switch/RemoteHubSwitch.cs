@@ -33,7 +33,7 @@ namespace SecretNest.RemoteHub
         /// </summary>
         /// <remarks>For avoiding client status mismatched, introduced by adding and removing the same client within a tiny timespan, this event should be processed synchronously only.</remarks>
         public event EventHandler<RemoteClientChangedEventArgs> RemoteClientAdded;
-        void OnAdapterRemoteClientUpdated(object sender, ClientIdEventArgs e)
+        void OnAdapterRemoteClientUpdated(object sender, ClientWithVirtualHostSettingEventArgs e)
         {
             var adapter = (IRemoteHubAdapter<byte[]>)sender;
             var remoteClientId = e.ClientId;
@@ -44,7 +44,7 @@ namespace SecretNest.RemoteHub
                 {
                     idList[remoteClientId] = DateTime.Now;
 
-                    AddAdapterToAdapterOfClients(remoteClientId, adapter);
+                    AddAdapterToAdapterOfClients(remoteClientId, adapter, e.VirtuaHostSetting);
                 }
             }
         }
@@ -244,7 +244,7 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        void AddAdapterToAdapterOfClients(Guid remoteClientId, IRemoteHubAdapter<byte[]> adapter)
+        void AddAdapterToAdapterOfClients(Guid remoteClientId, IRemoteHubAdapter<byte[]> adapter, KeyValuePair<Guid, VirtualHostSetting>[] virtuaHostSetting)
         {
             lock (adapterOfClients) //lock while changing
             {
@@ -275,7 +275,10 @@ namespace SecretNest.RemoteHub
             foreach (var target in allAdapters)
             {
                 if (target != adapter)
+                {
                     target.AddClient(remoteClientId);
+                    target.ApplyVirtualHosts(remoteClientId, virtuaHostSetting);
+                }
             }
         }
 
@@ -321,8 +324,10 @@ namespace SecretNest.RemoteHub
 
                 foreach (var remoteClientId in adapter.GetAllRemoteClients())
                 {
-                    AddAdapterToAdapterOfClients(remoteClientId, adapter);
+                    adapter.TryGetVirtualHosts(remoteClientId, out var settings);
+                    AddAdapterToAdapterOfClients(remoteClientId, adapter, settings);
                     idList[remoteClientId] = DateTime.Now;
+
                 }
             }
             else

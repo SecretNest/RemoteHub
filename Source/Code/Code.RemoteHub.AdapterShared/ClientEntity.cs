@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace SecretNest.RemoteHub
@@ -21,5 +22,23 @@ namespace SecretNest.RemoteHub
         }
 
 
+        public bool IsVirtualHostsDisabled
+        {
+            get
+            {
+                lock (virtualHostLock)
+                {
+                    return VirtualHosts.Count == 0;
+                }
+            }
+        }
+
+        public KeyValuePair<Guid, VirtualHostSetting>[] GetVirtualHosts()
+        {
+            lock (virtualHostLock)
+            {
+                return VirtualHosts.ToArray();
+            }
+        }
     }
 }

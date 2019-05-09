@@ -16,19 +16,19 @@
     <PackageIconUrl>https://scegg.github.io/RemoteHub/icons/Help.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/scegg/RemoteHub</RepositoryUrl>
     <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
-    <Version>1.0.2</Version>
-    <AssemblyVersion>1.0.2.0</AssemblyVersion>
-    <FileVersion>1.0.2.0</FileVersion>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\VSProjects\RemoteHub\Source\Nuget\Nuget.RemoteHub.Stream\SecretNest.RemoteHub.Stream.xml</DocumentationFile>
+    <DocumentationFile>SecretNest.RemoteHub.Stream.xml</DocumentationFile>
   </PropertyGroup>
 
   <Import Project="..\..\Code\Code.RemoteHub.Stream\Code.RemoteHub.Stream.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="SecretNest.RemoteHub.StreamAdapter" Version="1.0.2" />
+    <PackageReference Include="SecretNest.RemoteHub.StreamAdapter" Version="1.1.0" />
   </ItemGroup>
 
 </Project>

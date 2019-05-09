@@ -96,8 +96,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuget.RemoteHub.SwitchDirec
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.ValueConverter", "Code\Code.RemoteHub.ValueConverter\Code.RemoteHub.ValueConverter.shproj", "{7469067C-C600-46FA-A4FB-5746152E47E9}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Code.RemoteHub.AdapterSharedForActiveProcessing", "Code\Code.RemoteHub.AdapterSharedForActiveProcessing\Code.RemoteHub.AdapterSharedForActiveProcessing.shproj", "{3A9C4135-872B-4374-868E-4327A97D3236}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Code\Code.RemoteHub.AdapterSharedForActiveProcessing\Code.RemoteHub.AdapterSharedForActiveProcessing.projitems*{3a9c4135-872b-4374-868e-4327a97d3236}*SharedItemsImports = 13
 		Code\Code.RemoteHub.RedisAdapter\Code.RemoteHub.RedisAdapter.projitems*{51769908-de8d-4517-8677-f43224590851}*SharedItemsImports = 13
 		Code\Code.RemoteHub.ValueConverter\Code.RemoteHub.ValueConverter.projitems*{7469067c-c600-46fa-a4fb-5746152e47e9}*SharedItemsImports = 13
 		Code\Code.RemoteHub.AdapterShared\Code.RemoteHub.AdapterShared.projitems*{851ee1d3-a2b8-4da6-829f-b8a118cc4bb4}*SharedItemsImports = 13
@@ -294,6 +297,7 @@ Global
 		{6A6DDBC9-EA43-43C4-B671-F66C3FC26954} = {189A414D-B434-442A-AD84-E6CA16C00C30}
 		{B9702807-C8D3-43FD-91EC-D0828E49A922} = {9A28507E-865F-4584-A418-17299B6419A2}
 		{7469067C-C600-46FA-A4FB-5746152E47E9} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
+		{3A9C4135-872B-4374-868E-4327A97D3236} = {36EF9018-D6CA-4887-BCB3-0CBE6FDD29CF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7E700BB2-4439-4C11-8DCD-41829F557945}

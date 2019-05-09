@@ -8,13 +8,6 @@ namespace SecretNest.RemoteHub
 {
     partial class ClientEntity
     {
-        public bool IsLocal { get; set; }
-
-        public ClientEntity(bool isLocal)
-        {
-            IsLocal = isLocal;
-        }
-
         public List<Guid> ApplyVirtualHosts(Guid settingId, BinaryReader inputStreamReader) //Return affected virtual hosts
         {
             var count = (int)inputStreamReader.ReadUInt16LittleEndian();
@@ -66,41 +59,6 @@ namespace SecretNest.RemoteHub
             if (count == 0)
                 throw new InvalidDataException();
             inputStreamReader.Skip24Bytes(count);
-        }
-
-        //for local client
-        public List<Guid> ApplyVirtualHosts(KeyValuePair<Guid, VirtualHostSetting>[] virtualHostSettings)
-        {
-            var affectedVirtualHosts = new List<Guid>();
-
-            var newHosts = new Dictionary<Guid, VirtualHostSetting>();
-            lock (virtualHostLock)
-            {
-                //VirtualHostSettingId = Guid.Empty;
-                foreach (var virtualHostSetting in virtualHostSettings)
-                {
-                    var virtualHostId = virtualHostSetting.Key;
-                    var virtualHost = virtualHostSetting.Value;
-
-                    newHosts.Add(virtualHostId, virtualHost);
-
-                    if (VirtualHosts.TryGetValue(virtualHostId, out var oldVirtualHost))
-                    {
-                        if (oldVirtualHost != virtualHost)
-                        {
-                            affectedVirtualHosts.Add(virtualHostId);//changed
-                        }
-                        VirtualHosts.Remove(virtualHostId);
-                    }
-                    else
-                    {
-                        affectedVirtualHosts.Add(virtualHostId);//added
-                    }
-                }
-                affectedVirtualHosts.AddRange(VirtualHosts.Keys);//removed
-                VirtualHosts = newHosts;
-            }
-            return affectedVirtualHosts;
         }
     }
 }

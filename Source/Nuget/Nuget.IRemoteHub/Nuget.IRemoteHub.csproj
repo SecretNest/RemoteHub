@@ -15,14 +15,14 @@
     <PackageProjectUrl>https://scegg.github.io/RemoteHub</PackageProjectUrl>
     <PackageIconUrl>https://scegg.github.io/RemoteHub/icons/Help.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/scegg/RemoteHub</RepositoryUrl>
-    <PackageReleaseNotes>Initial release. Add xml documentation.</PackageReleaseNotes>
-    <Version>1.0.3</Version>
-    <AssemblyVersion>1.0.3.0</AssemblyVersion>
-    <FileVersion>1.0.3.0</FileVersion>
+    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>D:\VSProjects\RemoteHub\Source\Nuget\Nuget.IRemoteHub\SecretNest.IRemoteHub.xml</DocumentationFile>
+    <DocumentationFile>SecretNest.IRemoteHub.xml</DocumentationFile>
   </PropertyGroup>
 
   <Import Project="..\..\Code\Code.IRemoteHub\Code.IRemoteHub.projitems" Label="Shared" />

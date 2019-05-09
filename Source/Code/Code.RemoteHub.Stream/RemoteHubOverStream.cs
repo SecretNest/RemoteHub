@@ -162,6 +162,13 @@ namespace SecretNest.RemoteHub
             return streamAdapter.TryResolveVirtualHost(virtualHostId, out clientId);
         }
 
+
+        /// <inheritdoc/>
+        public bool TryGetVirtualHosts(Guid clientId, out KeyValuePair<Guid, VirtualHostSetting>[] settings)
+        {
+            return streamAdapter.TryGetVirtualHosts(clientId, out settings);
+        }
+
         /// <inheritdoc/>
         public void Start()
         {

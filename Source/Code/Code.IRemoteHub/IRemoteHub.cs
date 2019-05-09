@@ -47,6 +47,14 @@ namespace SecretNest.RemoteHub
         void ApplyVirtualHosts(params KeyValuePair<Guid, VirtualHostSetting>[] settings);
 
         /// <summary>
+        /// Gets the virtual host settings of the client specified by id.
+        /// </summary>
+        /// <param name="clientId">Client to be queried.</param>
+        /// <param name="settings">Virtual host settings of the client specified. <see langword="null"/> if no setting applied on this client.</param>
+        /// <returns>Whether the client is found.</returns>
+        bool TryGetVirtualHosts(Guid clientId, out KeyValuePair<Guid, VirtualHostSetting>[] settings);
+
+        /// <summary>
         /// Tries to resolve virtual host by id to host id.
         /// </summary>
         /// <param name="virtualHostId">Virtual host id.</param>

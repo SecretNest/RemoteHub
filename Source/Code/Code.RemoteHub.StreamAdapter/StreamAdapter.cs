@@ -18,7 +18,7 @@ namespace SecretNest.RemoteHub
         Stream outputStream;
         readonly int streamRefreshingIntervalInSeconds;
         readonly ConcurrentDictionary<Guid, byte[]> clients = new ConcurrentDictionary<Guid, byte[]>(); //value is null if no virtual host; or value is virtual host setting id + count + setting data.
-        readonly ClientTable hostTable = new ClientTable();
+        readonly ClientTable clientTable = new ClientTable();
         Task readingJob, writingJob, keepingJob;
         bool sendingNormal = false;
         bool isStopping = false;
@@ -160,7 +160,7 @@ namespace SecretNest.RemoteHub
                 outputStream.Close();
 
                 if (RemoteClientRemoved != null)
-                    foreach (var remoteClientId in hostTable.GetAllRemoteClientsId())
+                    foreach (var remoteClientId in GetAllRemoteClients().ToArray())
                     {
                         RemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId));
                     }
@@ -354,7 +354,7 @@ namespace SecretNest.RemoteHub
 
         void OnAddOrUpdateClientReceived(Guid senderClientId)
         {
-            hostTable.AddOrUpdate(senderClientId, false);
+            clientTable.AddOrUpdate(senderClientId);
             if (RemoteClientUpdated != null)
             {
                 ClientWithVirtualHostSettingEventArgs e = new ClientWithVirtualHostSettingEventArgs(senderClientId, Guid.Empty, null);
@@ -364,7 +364,7 @@ namespace SecretNest.RemoteHub
 
         void OnAddOrUpdateClientReceived(Guid senderClientId, BinaryReader inputStreamReader)
         {
-            var entity = hostTable.AddOrUpdate(senderClientId, inputStreamReader);
+            var entity = clientTable.AddOrUpdate(senderClientId, inputStreamReader);
             if (RemoteClientUpdated != null)
             {
                 ClientWithVirtualHostSettingEventArgs e = new ClientWithVirtualHostSettingEventArgs(senderClientId, entity.VirtualHostSettingId, entity.VirtualHosts.ToArray());
@@ -374,7 +374,7 @@ namespace SecretNest.RemoteHub
 
         void OnRemoveClientReceived(Guid senderClientId)
         {
-            if (hostTable.Remove(senderClientId) && RemoteClientRemoved != null)
+            if (clientTable.Remove(senderClientId) && RemoteClientRemoved != null)
             {
                 ClientIdEventArgs e = new ClientIdEventArgs(senderClientId);
                 RemoteClientRemoved(this, e);
@@ -489,7 +489,7 @@ namespace SecretNest.RemoteHub
                 {
                     if (clients.TryAdd(client, null))
                     {
-                        hostTable.AddOrUpdate(client, true);
+                        clientTable.AddOrUpdate(client);
                         if (IsStarted)
                         {
                             SendingRefreshClient(client, null);
@@ -508,7 +508,7 @@ namespace SecretNest.RemoteHub
                 {
                     if (clients.TryRemove(client, out _))
                     {
-                        if (hostTable.Remove(client) && IsStarted)
+                        if (clientTable.Remove(client) && IsStarted)
                         {
                             SendingRemoveClient(client);
                         }
@@ -536,7 +536,22 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public IEnumerable<Guid> GetAllRemoteClients() => hostTable.GetAllRemoteClientsId().ToArray();
+        public IEnumerable<Guid> GetAllRemoteClients()
+        {
+            HashSet<Guid> localClients = new HashSet<Guid>();
+            foreach (var id in clients.Keys.ToArray())
+            {
+                localClients.Add(id);
+            }
+            Guid[] result = clientTable.GetAllRemoteClientsId().ToArray();
+            foreach (var id in result)
+            {
+                if (localClients.Contains(id))
+                    continue;
+                else
+                    yield return id;
+            }
+        }
 
         /// <inheritdoc/>
         public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)
@@ -562,7 +577,7 @@ namespace SecretNest.RemoteHub
                             SendingRefreshClient(clientId, null);
                         }
 
-                        hostTable.ClearVirtualHosts(clientId);
+                        clientTable.ClearVirtualHosts(clientId);
                     }
                 }
                 else
@@ -613,7 +628,7 @@ namespace SecretNest.RemoteHub
                         SendingRefreshClient(clientId, newSetting);
                     }
 
-                    hostTable.AddOrUpdate(clientId, settings);
+                    clientTable.AddOrUpdate(clientId, settings);
                 }
             }
         }
@@ -634,7 +649,30 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public bool TryResolveVirtualHost(Guid virtualHostId, out Guid clientId)
         {
-            return hostTable.TryResolveVirtualHost(virtualHostId, out clientId);
+            return clientTable.TryResolveVirtualHost(virtualHostId, out clientId);
+        }
+
+        /// <inheritdoc/>
+        public bool TryGetVirtualHosts(Guid clientId, out KeyValuePair<Guid, VirtualHostSetting>[] settings)
+        {
+            var entity = clientTable.Get(clientId);
+            if (entity == null)
+            {
+                settings = default;
+                return false;
+            }
+            else
+            {
+                if (entity.IsVirtualHostsDisabled)
+                {
+                    settings = default;
+                }
+                else
+                {
+                    settings = entity.GetVirtualHosts();
+                }
+                return true;
+            }
         }
 
         /// <summary>
@@ -646,5 +684,7 @@ namespace SecretNest.RemoteHub
         {
             return clients.ContainsKey(clientId);
         }
+
+
     }
 }

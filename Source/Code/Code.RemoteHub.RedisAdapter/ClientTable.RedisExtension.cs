@@ -9,18 +9,6 @@ namespace SecretNest.RemoteHub
     {
         readonly string channelPrefix;
 
-        public IEnumerable<Guid> GetAllRemoteClientsId(ICollection<Guid> localClientsToExclude)
-        {
-            lock (clients)
-            {
-                foreach(var id in clients.Keys)
-                {
-                    if (!localClientsToExclude.Contains(id))
-                        yield return id;
-                }
-            }
-        }
-
         internal ClientTable(string channelPrefix)
         {
             this.channelPrefix = channelPrefix;

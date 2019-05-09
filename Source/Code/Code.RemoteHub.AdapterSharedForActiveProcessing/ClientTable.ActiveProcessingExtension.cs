@@ -6,18 +6,6 @@ namespace SecretNest.RemoteHub
 {
     partial class ClientTable
     {
-        public IEnumerable<Guid> GetAllRemoteClientsId(Guid localClientToExclude)
-        {
-            lock (clients)
-            {
-                foreach (var client in clients.Keys)
-                {
-                    if (client != localClientToExclude)
-                        yield return client;
-                }
-            }
-        }
-
         public void AddOrUpdate(Guid clientId)
         {
             lock (clients)
@@ -53,21 +41,6 @@ namespace SecretNest.RemoteHub
                     var affectedVirtualHosts = entity.ApplyVirtualHosts(virtualHostSettings);
                     clients.Add(localClientId, entity);
                     RefreshVirtualHost(affectedVirtualHosts);
-                }
-            }
-        }
-
-        public ClientEntity Get(Guid clientId)
-        {
-            lock (clients)
-            {
-                if (clients.TryGetValue(clientId, out var entity))
-                {
-                    return entity;
-                }
-                else
-                {
-                    return null;
                 }
             }
         }

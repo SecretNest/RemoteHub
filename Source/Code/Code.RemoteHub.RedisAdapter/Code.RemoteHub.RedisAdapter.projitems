@@ -9,7 +9,6 @@
     <Import_RootNamespace>SecretNest.RemoteHub</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)ClientEntity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClientEntity.RedisExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ClientTable.RedisExtension.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)RedisAdapter.cs" />

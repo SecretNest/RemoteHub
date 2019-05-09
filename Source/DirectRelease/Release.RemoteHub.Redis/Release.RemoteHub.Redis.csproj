@@ -7,12 +7,8 @@
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
-    <DocumentationFile>D:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.Redis\SecretNest.RemoteHub.Redis.xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
-    <DocumentationFile>D:\VSProjects\RemoteHub\Source\DirectRelease\Release.RemoteHub.Redis\SecretNest.RemoteHub.Redis.xml</DocumentationFile>
+  <PropertyGroup Condition="'$(TargetFramework)|$(Platform)'=='netstandard2.0|AnyCPU'">
+    <DocumentationFile>SecretNest.RemoteHub.Redis.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

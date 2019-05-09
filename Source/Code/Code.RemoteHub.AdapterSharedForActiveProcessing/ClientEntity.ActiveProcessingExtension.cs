@@ -39,16 +39,5 @@ namespace SecretNest.RemoteHub
             }
             return affectedVirtualHosts;
         }
-
-        public bool IsVirtualHostsDisabled
-        {
-            get
-            {
-                lock (virtualHostLock)
-                {
-                    return VirtualHosts.Count == 0;
-                }
-            }
-        }
     }
 }
