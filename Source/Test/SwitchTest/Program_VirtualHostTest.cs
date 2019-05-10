@@ -9,6 +9,8 @@ namespace SwitchTest
     {
         static void VirtualHostTest(RemoteHubSwitch remoteHubSwitch1, StreamAdapter<byte[]> streamAdaptersOnSwitch1, IRemoteHub<string> sender)
         {
+            sender.RemoteClientUpdated += Sender_RemoteClientUpdated;
+
             //reg
             Console.WriteLine("Please wait for several seconds and press any key to reg virtual hosts...");
             Console.ReadKey(true);
@@ -98,5 +100,9 @@ namespace SwitchTest
             }
         }
 
+        private static void Sender_RemoteClientUpdated(object sender, ClientWithVirtualHostSettingEventArgs e)
+        {
+            Console.WriteLine("Sender found RemoteClientUpdated: {0}, {1}", clientNames[e.ClientId], e.VirtualHostSettingId);
+        }
     }
 }

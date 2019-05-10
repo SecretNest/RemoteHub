@@ -102,7 +102,30 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public void ApplyVirtualHosts(params KeyValuePair<Guid, VirtualHostSetting>[] settings)
         {
-            ApplyVirtualHosts(clientId, settings);
+            var currentSetting = clientTable.Get(clientId);
+
+            if (settings == null || settings.Length == 0)
+            {
+                if (currentSetting.IsVirtualHostsDisabled)
+                    return;
+                else
+                {
+                    clientTable.ClearVirtualHosts(clientId);
+                    if (isStarted && ToSwitch_RemoteClientUpdated != null)
+                    {
+                        ToSwitch_RemoteClientUpdated(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
+                    }
+                }
+            }
+            else
+            {
+                var newSettingId = Guid.NewGuid();
+                clientTable.AddOrUpdate(clientId, newSettingId, settings);
+                if (isStarted && ToSwitch_RemoteClientUpdated != null)
+                {
+                    ToSwitch_RemoteClientUpdated(this, new ClientWithVirtualHostSettingEventArgs(clientId, newSettingId, settings));
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -425,7 +448,7 @@ namespace SecretNest.RemoteHub
         }
 
         /// <inheritdoc/>
-        public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)
+        void IRemoteHubAdapter.ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)
         {
             var currentSetting = clientTable.Get(clientId);
 

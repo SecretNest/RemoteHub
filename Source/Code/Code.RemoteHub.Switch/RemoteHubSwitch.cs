@@ -355,16 +355,11 @@ namespace SecretNest.RemoteHub
             {
                 if (client.Value.TryGetVirtualHosts(client.Key, out var settings))
                 {
-                    if (settings != default)
-                    {
-                        adapter.ApplyVirtualHosts(client.Key, settings); //will add client if not existed.
-                    }
+                    adapter.ApplyVirtualHosts(client.Key, settings); //will add client if not existed.
                 }
             }
 
             adapter.Start();
-
-
 
             AdapterAdded?.Invoke(this, new AdapterEventArgs(adapter));
         }

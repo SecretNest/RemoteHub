@@ -16,6 +16,7 @@ Documentation: https://scegg.github.io/RemoteHub/
 |[SecretNest.RemoteHub.Redis](https://www.nuget.org/packages/SecretNest.RemoteHub.Redis)|Remote Hub based on Redis database.|
 |[SecretNest.RemoteHub.StreamAdapter](https://www.nuget.org/packages/SecretNest.RemoteHub.StreamAdapter)|Adapter of Remote Hub based on streams.|
 |[SecretNest.RemoteHub.Stream](https://www.nuget.org/packages/SecretNest.RemoteHub.Stream)|Remote Hub based on streams.|
+|[SecretNest.RemoteHub.SwitchDirect](https://www.nuget.org/packages/SecretNest.RemoteHub.SwitchDirect)|Remote Hub for attaching to local switch instance directly.|
 |[SecretNest.RemoteHub.Switch](https://www.nuget.org/packages/SecretNest.RemoteHub.Switch)|A switch for connecting adapters and routing messages.|
 
 # Remote Agency
