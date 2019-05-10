@@ -6,14 +6,14 @@ namespace SecretNest.RemoteHub
 {
     partial class ClientEntity
     {
-        public List<Guid> ApplyVirtualHosts(KeyValuePair<Guid, VirtualHostSetting>[] virtualHostSettings)
+        public List<Guid> ApplyVirtualHosts(Guid settingId, KeyValuePair<Guid, VirtualHostSetting>[] virtualHostSettings)
         {
             var affectedVirtualHosts = new List<Guid>();
 
             var newHosts = new Dictionary<Guid, VirtualHostSetting>();
             lock (virtualHostLock)
             {
-                //VirtualHostSettingId = Guid.Empty;
+                VirtualHostSettingId = settingId;
                 foreach (var virtualHostSetting in virtualHostSettings)
                 {
                     var virtualHostId = virtualHostSetting.Key;

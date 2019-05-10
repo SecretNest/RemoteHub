@@ -260,7 +260,6 @@ namespace SecretNest.RemoteHub
                         }
                         RemoteClientChanged?.Invoke(this, new RemoteClientChangedEventArgs(remoteClientId, adapter));
                     }
-                    return;
                 }
                 else
                 {
@@ -276,8 +275,8 @@ namespace SecretNest.RemoteHub
             {
                 if (target != adapter)
                 {
-                    target.AddClient(remoteClientId);
-                    target.ApplyVirtualHosts(remoteClientId, virtuaHostSetting);
+                    //target.AddClient(remoteClientId); 
+                    target.ApplyVirtualHosts(remoteClientId, virtuaHostSetting); //will add client if not exists.
                 }
             }
         }
@@ -303,7 +302,6 @@ namespace SecretNest.RemoteHub
             foreach (var target in allAdapters)
             {
                 if (target != adapter)
-
                     target.RemoveClient(remoteClientId);
             }
         }
@@ -327,7 +325,6 @@ namespace SecretNest.RemoteHub
                     adapter.TryGetVirtualHosts(remoteClientId, out var settings);
                     AddAdapterToAdapterOfClients(remoteClientId, adapter, settings);
                     idList[remoteClientId] = DateTime.Now;
-
                 }
             }
             else
@@ -349,14 +346,25 @@ namespace SecretNest.RemoteHub
             }
 
             //get clients id
-            Guid[] allClientId;
+            KeyValuePair<Guid, IRemoteHubAdapter<byte[]>>[] allClients;
             lock (adapterOfClients)
             {
-                allClientId = adapterOfClients.Where(i => i.Value != adapter).Select(i => i.Key).ToArray();
+                allClients = adapterOfClients.Where(i => i.Value != adapter).ToArray();
             }
-            adapter.AddClient(allClientId);
+            foreach (var client in allClients)
+            {
+                if (client.Value.TryGetVirtualHosts(client.Key, out var settings))
+                {
+                    if (settings != default)
+                    {
+                        adapter.ApplyVirtualHosts(client.Key, settings); //will add client if not existed.
+                    }
+                }
+            }
 
             adapter.Start();
+
+
 
             AdapterAdded?.Invoke(this, new AdapterEventArgs(adapter));
         }

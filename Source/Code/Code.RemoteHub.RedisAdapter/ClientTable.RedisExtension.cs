@@ -50,7 +50,7 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        public bool TryGet(Guid clientId, out RedisChannel channel, out bool isTimedOut)
+        public bool TryGet(Guid clientId, out RedisChannel channel, out bool isTimedOutAndRemoved)
         {
             lock (clients)
             {
@@ -59,7 +59,7 @@ namespace SecretNest.RemoteHub
                     if (record.IsTimeValid)
                     {
                         channel = record.Channel;
-                        isTimedOut = false;
+                        isTimedOutAndRemoved = false;
                         return true;
                     }
                     else
@@ -67,14 +67,14 @@ namespace SecretNest.RemoteHub
                         clients.Remove(clientId);
                         RefreshVirtualHost(record.VirtualHosts.Keys);
                         channel = default(RedisChannel);
-                        isTimedOut = true;
+                        isTimedOutAndRemoved = true;
                         return false;
                     }
                 }
                 else
                 {
                     channel = default(RedisChannel);
-                    isTimedOut = false;
+                    isTimedOutAndRemoved = false;
                     return false;
                 }
             }

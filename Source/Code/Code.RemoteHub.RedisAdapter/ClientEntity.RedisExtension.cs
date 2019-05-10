@@ -13,16 +13,18 @@ namespace SecretNest.RemoteHub
 
         string prefixForRefresh, prefixForRefreshFull;
 
+        bool TimerEnabled;
         public DateTime Timeout { get; private set; }
         public RedisChannel Channel { get; }
 
 
-        public ClientEntity(string prefixForRefresh, string prefixForRefreshFull)
+        public ClientEntity(string prefixForRefresh, string prefixForRefreshFull) //for local clients
         {
             this.prefixForRefresh = prefixForRefresh;
             this.prefixForRefreshFull = prefixForRefreshFull;
             CommandTextRefresh = prefixForRefresh;
             CommandTextRefreshFull = prefixForRefreshFull;
+            TimerEnabled = false;
         }
 
         public void ApplyVirtualHostSetting(params KeyValuePair<Guid, VirtualHostSetting>[] settings) //from client command. dont need to apply to VirtualHosts coz it will be done in processing the loopback message from redis.
@@ -44,10 +46,11 @@ namespace SecretNest.RemoteHub
 
         public void Refresh(int seconds)
         {
-            Timeout = DateTime.Now.AddSeconds(seconds);
+            if (TimerEnabled)
+                Timeout = DateTime.Now.AddSeconds(seconds);
         }
 
-        public bool IsTimeValid => Timeout > DateTime.Now;
+        public bool IsTimeValid => !TimerEnabled || Timeout > DateTime.Now;
 
         public Dictionary<Guid, VirtualHostSetting> ApplyVirtualHosts(Guid settingId, string value, out List<Guid> affectedVirtualHosts) //from redis
         {
@@ -91,10 +94,11 @@ namespace SecretNest.RemoteHub
         }
 
 
-        public ClientEntity(int seconds, string channel)
+        public ClientEntity(int seconds, string channel) //for remote clients
         {
             Channel = new RedisChannel(channel, RedisChannel.PatternMode.Literal);
             Refresh(seconds);
+            TimerEnabled = true;
         }
     }
 }

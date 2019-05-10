@@ -45,7 +45,9 @@ namespace SecretNest.RemoteHub
         /// Occurs while an connection related exception is thrown.
         /// </summary>
         /// <remarks>This event will never be raised due to no breakable connection will be used in this class.</remarks>
+#pragma warning disable CS0067 
         public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred; //will never happen
+#pragma warning restore CS0067
         /// <inheritdoc/>
         public event EventHandler<ClientWithVirtualHostSettingEventArgs> RemoteClientUpdated;
         /// <inheritdoc/>
@@ -168,6 +170,7 @@ namespace SecretNest.RemoteHub
         public void Stop() //remotehub and adapter shared
         {
             if (!isStarted) return;
+            Guid[] allRemoteClients;
             lock (isStartedChangingLock)
             {
                 if (!isStarted) return;
@@ -175,8 +178,20 @@ namespace SecretNest.RemoteHub
 
                 ToSwitch_RemoteClientRemoved?.Invoke(this, new ClientIdEventArgs(clientId));
 
+                allRemoteClients = FromAdapter_GetAllRemoteClients().ToArray();
+                foreach (var remoteClientId in allRemoteClients)
+                {
+                    clientTable.Remove(remoteClientId);
+                }
+
                 Stopped?.Invoke(this, EventArgs.Empty);
             }
+
+            if (RemoteClientRemoved != null)
+                foreach (var remoteClientId in allRemoteClients)
+                {
+                    RemoteClientRemoved(this, new ClientIdEventArgs(remoteClientId));
+                }
         }
 
         #endregion
@@ -346,17 +361,14 @@ namespace SecretNest.RemoteHub
 
         void FromAdapter_AddClient(Guid[] clientId)
         {
-            lock (isStartedChangingLock)
+            foreach (var client in clientId)
             {
-                foreach (var client in clientId)
+                if (client != this.clientId && clientTable.Get(client) == null)
                 {
-                    if (client != this.clientId && clientTable.Get(client) == null)
+                    clientTable.AddOrUpdate(client);
+                    if (isStarted)
                     {
-                        clientTable.AddOrUpdate(client, null);
-                        if (isStarted)
-                        {
-                            RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(client, Guid.Empty, null));
-                        }
+                        RemoteClientUpdated?.Invoke(this, new ClientWithVirtualHostSettingEventArgs(client, Guid.Empty, null));
                     }
                 }
             }
@@ -369,17 +381,11 @@ namespace SecretNest.RemoteHub
 
         void FromAdapter_RemoveClient(Guid[] clientId)
         {
-            lock (isStartedChangingLock)
+            foreach (var client in clientId)
             {
-                foreach (var client in clientId)
+                if (client != this.clientId && clientTable.Remove(client) && isStarted)
                 {
-                    if (client != this.clientId && clientTable.Remove(client))
-                    {
-                        if (isStarted)
-                        {
-                            RemoteClientRemoved?.Invoke(this, new ClientIdEventArgs(client));
-                        }
-                    }
+                    RemoteClientRemoved?.Invoke(this, new ClientIdEventArgs(client));
                 }
             }
         }
@@ -421,20 +427,30 @@ namespace SecretNest.RemoteHub
         /// <inheritdoc/>
         public void ApplyVirtualHosts(Guid clientId, params KeyValuePair<Guid, VirtualHostSetting>[] settings)
         {
-            lock (isStartedChangingLock)
+            var currentSetting = clientTable.Get(clientId);
+
+            var existed = currentSetting != null;
+
+            if (existed && (settings == null || settings.Length == 0))
             {
-                if (settings == null || settings.Length == 0)
+                if (currentSetting.IsVirtualHostsDisabled)
+                    return;
+                else
                 {
-                    var localClientEntity = clientTable.Get(clientId);
-                    if (localClientEntity.IsVirtualHostsDisabled)
-                        return; //nothing changed.
-
                     clientTable.ClearVirtualHosts(clientId);
-
-                    if (isStarted && ToSwitch_RemoteClientUpdated != null)
+                    if (isStarted && RemoteClientUpdated != null)
                     {
-                        ToSwitch_RemoteClientUpdated(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
+                        RemoteClientUpdated(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
                     }
+                }
+            }
+            else
+            {
+                var newSettingId = Guid.NewGuid();
+                clientTable.AddOrUpdate(clientId, newSettingId, settings);
+                if (isStarted && RemoteClientUpdated != null)
+                {
+                    RemoteClientUpdated(this, new ClientWithVirtualHostSettingEventArgs(clientId, newSettingId, settings));
                 }
             }
         }

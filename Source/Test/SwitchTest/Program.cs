@@ -117,7 +117,8 @@ namespace SwitchTest
 
             //SimpleMessageTest();
             //AddRemoveClientTest(remoteHubSwitch2);
-            ConnectAndDisconnectSwitchTest(remoteHubSwitch1, streamAdaptersOnSwitch1[2]);
+            //ConnectAndDisconnectSwitchTest(remoteHubSwitch1, streamAdaptersOnSwitch1[2]);
+            VirtualHostTest(remoteHubSwitch1, streamAdaptersOnSwitch1[2], clients[2]);
 
             Console.WriteLine("Press any key to quit...");
             Console.ReadKey(true);

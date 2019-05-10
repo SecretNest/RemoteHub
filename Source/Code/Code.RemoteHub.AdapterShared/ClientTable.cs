@@ -120,7 +120,14 @@ namespace SecretNest.RemoteHub
                                 }
                             }
 
-                            virtuals[virtualHost] = new PercentageDistributer(realHosts);
+                            if (realHosts == null)
+                            {
+                                virtuals.Remove(virtualHost);
+                            }
+                            else
+                            {
+                                virtuals[virtualHost] = new PercentageDistributer(realHosts);
+                            }
                         }
                     }
                 }

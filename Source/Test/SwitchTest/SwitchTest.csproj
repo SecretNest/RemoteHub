@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\DirectRelease\Release.RemoteHub.Redis\Release.RemoteHub.Redis.csproj" />
     <ProjectReference Include="..\..\DirectRelease\Release.RemoteHub.StreamAdapter\Release.RemoteHub.StreamAdapter.csproj" />
     <ProjectReference Include="..\..\DirectRelease\Release.RemoteHub.Stream\Release.RemoteHub.Stream.csproj" />
+    <ProjectReference Include="..\..\DirectRelease\Release.RemoteHub.SwitchDirect\Release.RemoteHub.SwitchDirect.csproj" />
     <ProjectReference Include="..\..\DirectRelease\Release.RemoteHub.Switch\Release.RemoteHub.Switch.csproj" />
   </ItemGroup>
 

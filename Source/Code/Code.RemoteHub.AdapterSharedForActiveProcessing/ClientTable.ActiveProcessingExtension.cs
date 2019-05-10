@@ -26,19 +26,19 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        public void AddOrUpdate(Guid localClientId, KeyValuePair<Guid, VirtualHostSetting>[] virtualHostSettings)
+        public void AddOrUpdate(Guid localClientId, Guid settingId, KeyValuePair<Guid, VirtualHostSetting>[] virtualHostSettings)
         {
             lock (clients)
             {
                 if (clients.TryGetValue(localClientId, out var entity))
                 {
-                    var affectedVirtualHosts = entity.ApplyVirtualHosts(virtualHostSettings);
+                    var affectedVirtualHosts = entity.ApplyVirtualHosts(settingId, virtualHostSettings);
                     RefreshVirtualHost(affectedVirtualHosts);
                 }
                 else
                 {
                     entity = new ClientEntity();
-                    var affectedVirtualHosts = entity.ApplyVirtualHosts(virtualHostSettings);
+                    var affectedVirtualHosts = entity.ApplyVirtualHosts(settingId, virtualHostSettings);
                     clients.Add(localClientId, entity);
                     RefreshVirtualHost(affectedVirtualHosts);
                 }
