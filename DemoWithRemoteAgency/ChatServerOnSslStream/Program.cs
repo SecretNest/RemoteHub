@@ -24,9 +24,7 @@ namespace ChatServerOnSslStream
         static TcpListener tcpListener;
 
         static RemoteHubSwitch remoteHubSwitch;
-        static TcpClient localClientTcpClient;
-        static SslStream localClientSslStream;
-        static RemoteHubOverStream<string> localClient;
+        static RemoteHubSwitchDirect<string> localClient;
         static RemoteAgencyManagerEncapsulated remoteAgency;
 
         static List<ClientEntity> clients = new List<ClientEntity>();
@@ -48,16 +46,17 @@ namespace ChatServerOnSslStream
             var accepting = Task.Run(() => TcpServerAcceptLinks(shutdownSignal.Token));
 
             //Local client on RemoteHub
-            localClient = BuildLocalClient();
+            var siteId = ServerId.SiteId;
+            localClient = new RemoteHubSwitchDirect<string>(siteId, OnMessageReceivedFromRemoteHub);
             localClient.RemoteClientRemoved += RemoteHubClient_RemoteClientRemoved;
+            remoteHubSwitch.AddAdapter(localClient);
 
             //Remote Agency
-            var siteId = ServerId.SiteId;
             remoteAgency = new RemoteAgencyManagerEncapsulated(false, true, siteId);
             remoteAgency.MessageForSendingPrepared += OnMessageForSendingPrepared;
             remoteAgency.AddServiceWrapper<IChatServer>(chatServer, ServerId.ServiceId);
 
-            localClient.Start();
+            //localClient.Start(); //started already. when SwitchDirect is added to switch, it will be started automatically.
             remoteAgency.Connect();
 
             Console.WriteLine("Chat server is started. Press any key to quit.");
@@ -70,6 +69,11 @@ namespace ChatServerOnSslStream
             localClient.Stop();
             localClient.Dispose();
             remoteHubSwitch.RemoveAllAdapters();
+            foreach (var client in clients)
+            {
+                client.Dispose();
+            }
+            clients.Clear();
         }
 
         private static void RemoteHubSwitch_AdapterRemoved(object sender, AdapterEventArgs e)
@@ -87,6 +91,7 @@ namespace ChatServerOnSslStream
 
         private static void RemoteHubSwitch_ConnectionErrorOccurred(object sender, ConnectionExceptionWithAdapterEventArgs e)
         {
+            Console.WriteLine("Connection Error: " + e.Exception.ToString());
             if (e.IsFatal)
             {
                 var adapter = e.Adapter;
@@ -103,7 +108,7 @@ namespace ChatServerOnSslStream
                 {
                     tcpClient = tcpListener.AcceptTcpClient();
                     ClientEntity entity = new ClientEntity(tcpClient);
-                    remoteHubSwitch.AddAdapter(entity.Adapter);
+                    remoteHubSwitch.AddAdapter((StreamAdapter<byte[]>)entity.Adapter);
                     Console.WriteLine("Hub: Add Client: " + entity.EndPoint);
                     lock (clients)
                     {
@@ -114,40 +119,6 @@ namespace ChatServerOnSslStream
                 {
                     continue;
                 }
-            }
-        }
-
-        static RemoteHubOverStream<string> BuildLocalClient()
-        {
-            localClientTcpClient = new TcpClient();
-            localClientTcpClient.Connect(serverIP, serverPort);
-            localClientSslStream = new SslStream(localClientTcpClient.GetStream(), false,
-                (sender, certificate, chain, sslPolicyErrors) => true /*always return true in certificate test in this demo*/);
-            var clientCertificate = BuildSelfSignedClientCertificate(Guid.Empty.ToString());
-            var clientCertificateCollection = new X509CertificateCollection(new X509Certificate[] { clientCertificate });
-            localClientSslStream.AuthenticateAsClient(serverIP.ToString(), clientCertificateCollection, false);
-            return new RemoteHubOverStream<string>(ServerId.SiteId, localClientSslStream, localClientSslStream, OnMessageReceivedFromRemoteHub);
-        }
-
-        static X509Certificate2 BuildSelfSignedClientCertificate(string certificateName)
-        {
-            X500DistinguishedName distinguishedName = new X500DistinguishedName($"CN={certificateName}");
-
-            using (RSA rsa = RSA.Create(2048))
-            {
-                var request = new CertificateRequest(distinguishedName, rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-
-                request.CertificateExtensions.Add(
-                    new X509KeyUsageExtension(X509KeyUsageFlags.DataEncipherment | X509KeyUsageFlags.KeyEncipherment | X509KeyUsageFlags.DigitalSignature, false));
-
-                request.CertificateExtensions.Add(
-                   new X509EnhancedKeyUsageExtension(
-                       new OidCollection { new Oid("1.3.6.1.5.5.7.3.2") }, false));
-
-                var certificate = request.CreateSelfSigned(new DateTimeOffset(DateTime.UtcNow.AddDays(-1)), new DateTimeOffset(DateTime.UtcNow.AddDays(3650)));
-                certificate.FriendlyName = certificateName;
-
-                return new X509Certificate2(certificate.Export(X509ContentType.Pfx, "SomePassword"), "SomePassword", X509KeyStorageFlags.MachineKeySet);
             }
         }
 

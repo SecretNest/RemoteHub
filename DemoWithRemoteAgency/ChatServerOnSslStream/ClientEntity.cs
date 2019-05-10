@@ -14,9 +14,17 @@ namespace ChatServerOnSslStream
     {
         public TcpClient TcpClient { get; }
         public SslStream Stream { get; }
-        public StreamAdapter<byte[]> Adapter { get; }
+        public IRemoteHubAdapter Adapter { get; }
 
         public string EndPoint { get; }
+
+        //public ClientEntity(IRemoteHubAdapter adapter)
+        //{
+        //    Adapter = adapter;
+        //    Stream = null;
+        //    TcpClient = null;
+        //    EndPoint = "DIRECT";
+        //}
 
         public ClientEntity(TcpClient tcpClient)
         {
@@ -51,11 +59,17 @@ namespace ChatServerOnSslStream
         public void Dispose()
         {
             Adapter.Stop();
-            Adapter.Dispose();
+            ((IDisposable)Adapter).Dispose();
+            //if (Stream != null)
+            //{
             Stream.Close();
             Stream.Dispose();
+            //}
+            //if (TcpClient != null)
+            //{
             TcpClient.Close();
             TcpClient.Dispose();
+            //}
         }
 
         public static void InitializeServerCertificate(IPAddress ipAddress, string certificateName)

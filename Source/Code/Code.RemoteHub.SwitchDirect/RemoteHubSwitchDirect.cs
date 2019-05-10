@@ -473,6 +473,14 @@ namespace SecretNest.RemoteHub
                     }
                 }
             }
+            else if (settings == null || settings.Length == 0)
+            {
+                clientTable.AddOrUpdate(clientId);
+                if (isStarted && RemoteClientUpdated != null)
+                {
+                    RemoteClientUpdated(this, new ClientWithVirtualHostSettingEventArgs(clientId, Guid.Empty, null));
+                }
+            }
             else
             {
                 var newSettingId = Guid.NewGuid();
