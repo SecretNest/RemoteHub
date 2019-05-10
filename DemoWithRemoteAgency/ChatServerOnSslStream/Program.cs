@@ -91,7 +91,7 @@ namespace ChatServerOnSslStream
 
         private static void RemoteHubSwitch_ConnectionErrorOccurred(object sender, ConnectionExceptionWithAdapterEventArgs e)
         {
-            Console.WriteLine("Connection Error: " + e.Exception.ToString());
+            Console.WriteLine("Connection Error (or closed): " + e.Exception.Message);
             if (e.IsFatal)
             {
                 var adapter = e.Adapter;
