@@ -18,6 +18,14 @@ namespace RedisLocalTest
             RemoteHubOverRedis<string> client2 = new RemoteHubOverRedis<string>(client2Id, connectionString, Received);
             RemoteHubOverRedis<string> client3 = new RemoteHubOverRedis<string>(client3Id, connectionString, Received);
 
+            //client1.RemoteClientUpdated += RemoteClientUpdated;
+            //client2.RemoteClientUpdated += RemoteClientUpdated;
+            //client3.RemoteClientUpdated += RemoteClientUpdated;
+
+            //client1.RemoteClientRemoved += RemoteClientRemoved;
+            //client2.RemoteClientRemoved += RemoteClientRemoved;
+            //client3.RemoteClientRemoved += RemoteClientRemoved;
+
 
             //Console.WriteLine(string.Format("ClientId: {0} {1} {2}", client1Id, client2Id, client3Id));
             clientNames.Add(client1Id, "Client1");
@@ -100,9 +108,21 @@ Other: Shutdown.");
             Console.ReadKey(true);
         }
 
+        //private static void RemoteClientRemoved(object sender, ClientIdEventArgs e)
+        //{
+        //    var clientId = ((RemoteHubOverRedis<string>)sender).ClientId;
+        //    Console.WriteLine("RemoteClientRemoved: Source: {0}; Target: {1}", clientNames[clientId], clientNames[e.ClientId]);
+        //}
+
+        //private static void RemoteClientUpdated(object sender, ClientWithVirtualHostSettingEventArgs e)
+        //{
+        //    var clientId = ((RemoteHubOverRedis<string>)sender).ClientId;
+        //    Console.WriteLine("RemoteClientUpdated: Source: {0}; Target: {1}", clientNames[clientId], clientNames[e.ClientId]);
+        //}
+
         static void Received(Guid clientId, string text)
         {
-            Console.WriteLine(string.Format("Received: {0}: {1}", clientNames[clientId], text));
+            Console.WriteLine("Received: {0}: {1}", clientNames[clientId], text);
         }
     }
 }

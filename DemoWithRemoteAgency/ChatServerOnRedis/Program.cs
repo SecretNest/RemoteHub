@@ -41,10 +41,12 @@ namespace ChatServerOnRedis
         static void OnMessageForSendingPrepared(object sender, RemoteAgencyManagerMessageForSendingEventArgs<string> e)
         {
             remoteHub.SendMessage(e.TargetSiteId, e.Message);
+            Console.WriteLine("Sent");
         }
 
         static void OnMessageReceivedFromRemoteHub(Guid clientId, string text) //Note: clientId in the parameters is the target id of the message, not the source.
         {
+            Console.WriteLine("Receive");
             remoteAgency.ProcessPackagedMessage(text);
         }
 

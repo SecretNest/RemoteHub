@@ -57,13 +57,13 @@ namespace SecretNest.RemoteHub
         /// Occurs when this instance started.
         /// </summary>
         /// <remarks>The state of this instance is shared with adapter. The state of the adapter linked will always be the same as the state of this instance. No matter the cause of the state changed to started, this event will be raised always.</remarks>
-        public event EventHandler Started; //shared
+        public event EventHandler Started;
 
         /// <summary>
         /// Occurs when this instance stopped. Also will be raised if the instance is stopped by the request from underlying object and remote site.
         /// </summary>
         /// <remarks>The state of this instance is shared with adapter. The state of the adapter linked will always be the same as the state of this instance. No matter the cause of the state changed to stopped, this event will be raised always.</remarks>
-        public event EventHandler Stopped; //shared
+        public event EventHandler Stopped;
 
         /// <inheritdoc/>
         public void SendMessage(Guid clientId, T message)
@@ -183,6 +183,7 @@ namespace SecretNest.RemoteHub
                 }
 
                 Started?.Invoke(this, EventArgs.Empty);
+                ToSwitch_Started?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -208,6 +209,7 @@ namespace SecretNest.RemoteHub
                 }
 
                 Stopped?.Invoke(this, EventArgs.Empty);
+                ToSwitch_Stopped?.Invoke(this, EventArgs.Empty);
             }
 
             if (RemoteClientRemoved != null)
@@ -302,29 +304,33 @@ namespace SecretNest.RemoteHub
             }
         }
 
-        event EventHandler IRemoteHubAdapter.AdapterStarted //shared with Started
+        event EventHandler ToSwitch_Started;
+
+        event EventHandler IRemoteHubAdapter.AdapterStarted
         {
             add
             {
-                Started += value;
+                ToSwitch_Started += value;
             }
 
             remove
             {
-                Started -= value;
+                ToSwitch_Started -= value;
             }
         }
 
-        event EventHandler IRemoteHubAdapter.AdapterStopped //shared with Stopped
+        event EventHandler ToSwitch_Stopped;
+
+        event EventHandler IRemoteHubAdapter.AdapterStopped
         {
             add
             {
-                Stopped += value;
+                ToSwitch_Stopped += value;
             }
 
             remove
             {
-                Stopped -= value;
+                ToSwitch_Stopped -= value;
             }
         }
 

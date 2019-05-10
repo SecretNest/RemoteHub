@@ -97,8 +97,8 @@ namespace SecretNest.RemoteHub
         public ClientEntity(int seconds, string channel) //for remote clients
         {
             Channel = new RedisChannel(channel, RedisChannel.PatternMode.Literal);
-            Refresh(seconds);
             TimerEnabled = true;
+            Refresh(seconds);
         }
     }
 }

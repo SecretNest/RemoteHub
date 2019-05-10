@@ -41,65 +41,102 @@ namespace SecretNest.RemoteHub
         {
             add
             {
-                redisAdapter.RemoteClientUpdated += value;
+                FromAdapter_RemoteClientUpdated += value;
+                redisAdapter.RemoteClientUpdated += RedisAdapter_RemoteClientUpdated; ;
             }
             remove
             {
-                redisAdapter.RemoteClientUpdated -= value;
+                FromAdapter_RemoteClientUpdated -= value;
+                redisAdapter.RemoteClientUpdated -= RedisAdapter_RemoteClientUpdated;
             }
         }
+        private void RedisAdapter_RemoteClientUpdated(object sender, ClientWithVirtualHostSettingEventArgs e)
+        {
+            FromAdapter_RemoteClientUpdated?.Invoke(this, e);
+        }
+        event EventHandler<ClientWithVirtualHostSettingEventArgs> FromAdapter_RemoteClientUpdated;
+
 
         /// <inheritdoc/>
         public event EventHandler<ClientIdEventArgs> RemoteClientRemoved
         {
             add
             {
-                redisAdapter.RemoteClientRemoved += value;
+                FromAdapter_RemoteClientRemoved += value;
+                redisAdapter.RemoteClientRemoved += RedisAdapter_RemoteClientRemoved;
             }
             remove
             {
-                redisAdapter.RemoteClientRemoved -= value;
+                FromAdapter_RemoteClientRemoved -= value;
+                redisAdapter.RemoteClientRemoved -= RedisAdapter_RemoteClientRemoved;
             }
         }
+
+        private void RedisAdapter_RemoteClientRemoved(object sender, ClientIdEventArgs e)
+        {
+            FromAdapter_RemoteClientRemoved?.Invoke(this, e);
+        }
+        event EventHandler<ClientIdEventArgs> FromAdapter_RemoteClientRemoved;
 
         /// <inheritdoc/>
         public event EventHandler<ConnectionExceptionEventArgs> ConnectionErrorOccurred
         {
             add
             {
-                redisAdapter.ConnectionErrorOccurred += value;
+                FromAdapter_ConnectionErrorOccurred += value;
+                redisAdapter.ConnectionErrorOccurred += RedisAdapter_ConnectionErrorOccurred;
             }
             remove
             {
-                redisAdapter.ConnectionErrorOccurred -= value;
+                FromAdapter_ConnectionErrorOccurred -= value;
+                redisAdapter.ConnectionErrorOccurred -= RedisAdapter_ConnectionErrorOccurred;
             }
         }
+        private void RedisAdapter_ConnectionErrorOccurred(object sender, ConnectionExceptionEventArgs e)
+        {
+            FromAdapter_ConnectionErrorOccurred?.Invoke(this, e);
+        }
+        event EventHandler<ConnectionExceptionEventArgs> FromAdapter_ConnectionErrorOccurred;
 
         /// <inheritdoc/>
         public event EventHandler Started
         {
             add
             {
-                redisAdapter.AdapterStarted += value;
+                FromAdapter_Started += value;
+                redisAdapter.AdapterStarted += RedisAdapter_AdapterStarted;
             }
             remove
             {
-                redisAdapter.AdapterStarted -= value;
+                FromAdapter_Started -= value;
+                redisAdapter.AdapterStarted -= RedisAdapter_AdapterStarted;
             }
         }
+        private void RedisAdapter_AdapterStarted(object sender, EventArgs e)
+        {
+            FromAdapter_Started?.Invoke(this, e);
+        }
+        event EventHandler FromAdapter_Started;
 
         /// <inheritdoc/>
         public event EventHandler Stopped
         {
             add
             {
-                redisAdapter.AdapterStopped += value;
+                FromAdapter_Stopped += value;
+                redisAdapter.AdapterStopped += RedisAdapter_AdapterStopped;
             }
             remove
             {
-                redisAdapter.AdapterStopped -= value;
+                FromAdapter_Stopped -= value;
+                redisAdapter.AdapterStopped -= RedisAdapter_AdapterStopped;
             }
         }
+        private void RedisAdapter_AdapterStopped(object sender, EventArgs e)
+        {
+            FromAdapter_Stopped?.Invoke(this, e);
+        }
+        event EventHandler FromAdapter_Stopped;
 
         /// <inheritdoc/>
         public Guid ClientId => clientId;
