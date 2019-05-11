@@ -9,7 +9,7 @@
     <Import_RootNamespace>SecretNest.RemoteHub</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)StreamPackage.txt" />
+    <None Include="$(MSBuildThisFileDirectory)StreamPackage.txt" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)BinaryReaderReadingExtensions.cs" />

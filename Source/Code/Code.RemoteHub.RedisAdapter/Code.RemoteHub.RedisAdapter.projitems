@@ -16,6 +16,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)ValueConverter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)RedisPackage.txt" />
+    <None Include="$(MSBuildThisFileDirectory)RedisPackage.txt" />
   </ItemGroup>
 </Project>

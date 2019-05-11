@@ -7,7 +7,7 @@
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'|$(TargetFramework)|$(Platform)'=='netstandard2.0|AnyCPU'">
+  <PropertyGroup Condition="'$(TargetFramework)|$(Platform)'=='netstandard2.0|AnyCPU'">
     <DocumentationFile>SecretNest.RemoteHub.StreamAdapter.xml</DocumentationFile>
   </PropertyGroup>
 
