@@ -36,6 +36,15 @@
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.StreamAdapter\Release.RemoteHub.StreamAdapter.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Switch\Release.RemoteHub.Switch.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.SwitchDirect\Release.RemoteHub.SwitchDirect.csproj" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub\SecretNest.IRemoteHub.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Redis\SecretNest.IRemoteHub.Redis.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Stream\SecretNest.IRemoteHub.Stream.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Redis\SecretNest.RemoteHub.Redis.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.RedisAdapter\SecretNest.RemoteHub.RedisAdapter.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Stream\SecretNest.RemoteHub.Stream.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.StreamAdapter\SecretNest.RemoteHub.StreamAdapter.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Switch\SecretNest.RemoteHub.Switch.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.SwitchDirect\SecretNest.RemoteHub.SwitchDirect.xml" />
     </DocumentationSources>
     <HelpFileFormat>Website</HelpFileFormat>
     <SyntaxFilters>Standard</SyntaxFilters>
@@ -99,12 +108,29 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="Content" />
+    <Folder Include="Content\Components" />
+    <Folder Include="Content\Howto" />
+    <Folder Include="Content\WorkWIthRA" />
     <Folder Include="icons" />
     <Folder Include="media" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="C:\VSProjects\RemoteHub\Source\SHFB\Documentation\Content\Components\IRemoteHubRedis.aml" />
+    <None Include="Content\Components\IRemoteHub.aml" />
+    <None Include="Content\Components\IRemoteHubStream.aml" />
+    <None Include="Content\Components\RedisClient.aml" />
+    <None Include="Content\Components\RedisAdapter.aml" />
+    <None Include="Content\Components\StreamAdapter.aml" />
+    <None Include="Content\Components\StreamClient.aml" />
+    <None Include="Content\Components\Switch.aml" />
+    <None Include="Content\Components\SwitchDirect.aml" />
+    <None Include="Content\Howto\Redis.aml" />
+    <None Include="Content\Howto\Switch.aml" />
+    <None Include="Content\Howto\VirtualHost.aml" />
     <None Include="Content\VersionHistory.aml" />
     <None Include="Content\Welcome.aml" />
+    <None Include="Content\WorkWIthRA\Demo.aml" />
+    <None Include="Content\WorkWIthRA\VirtualHost.aml" />
   </ItemGroup>
   <ItemGroup>
     <ContentLayout Include="ContentLayout.content" />

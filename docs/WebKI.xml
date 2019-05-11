@@ -52,6 +52,7 @@
     <HelpKINode Title="RedisAdapter.ApplyVirtualHosts Method " Url="html/840905ba-deb0-d573-fa40-ea976a942ca6.htm" />
     <HelpKINode Title="RemoteHubOverRedis(T).ApplyVirtualHosts Method " Url="html/29c7861b-66ac-a9a8-f5b6-e7fcef40df73.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).ApplyVirtualHosts Method " Url="html/93db9ef4-7480-e518-5473-7604c7cab75a.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).ApplyVirtualHosts Method " Url="html/496fe4a2-5ccf-b2bd-3cef-ce6eec6a467f.htm" />
     <HelpKINode Title="StreamAdapter.ApplyVirtualHosts Method " Url="html/185a7ef1-4841-1102-4c8c-3a20a6e86b50.htm" />
   </HelpKINode>
   <HelpKINode Title="ChangeStream method">
@@ -65,6 +66,7 @@
     <HelpKINode Title="IRemoteHub.ClientId Property " Url="html/4829644a-65a5-833a-374e-1416af4ac1ab.htm" />
     <HelpKINode Title="RemoteHubOverRedis(T).ClientId Property " Url="html/d8434984-d9b9-5efe-2f9b-368ed35f3ec7.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).ClientId Property " Url="html/94b28d0b-c445-dcb8-b674-fc39b02d303c.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).ClientId Property " Url="html/8b1a8030-090f-bbae-b185-e4c6fdd8570e.htm" />
   </HelpKINode>
   <HelpKINode Title="ClientIdEventArgs class">
     <HelpKINode Title="ClientIdEventArgs Class" Url="html/126627e5-c30d-f65c-0b1f-17d145aa5a15.htm" />
@@ -90,6 +92,7 @@
     <HelpKINode Title="RemoteHubOverRedis(T).ConnectionErrorOccurred Event" Url="html/ebfc531a-056e-f59b-be1c-cd10e8747f0d.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).ConnectionErrorOccurred Event" Url="html/0dbdb31e-aba4-eb8b-14ca-dfffbbf02731.htm" />
     <HelpKINode Title="RemoteHubSwitch.ConnectionErrorOccurred Event" Url="html/3cd16f5b-a83c-6b5a-1045-0c22ca898e5c.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).ConnectionErrorOccurred Event" Url="html/95c02659-6d63-b8ce-b1eb-2d3728b7fbb4.htm" />
     <HelpKINode Title="StreamAdapter.ConnectionErrorOccurred Event" Url="html/aedc4b18-cc32-2a34-46d6-5091f96cc577.htm" />
   </HelpKINode>
   <HelpKINode Title="ConnectionExceptionEventArgs class">
@@ -114,6 +117,7 @@
     <HelpKINode Title="RedisAdapter.Dispose Method " Url="html/eabd6589-99b6-f2e1-1710-a8f60e72cbf9.htm" />
     <HelpKINode Title="RemoteHubOverRedis(T).Dispose Method " Url="html/05aac8d9-9205-92f6-0d57-6a039d2eaf90.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).Dispose Method " Url="html/42e682ca-97ba-d642-40c8-1162b6bb7aa4.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).Dispose Method " Url="html/983a08c2-3a49-c7a9-8012-9f6f6a35078b.htm" />
     <HelpKINode Title="StreamAdapter.Dispose Method " Url="html/9aae239f-f6b9-6e4d-7146-992a133608a6.htm" />
   </HelpKINode>
   <HelpKINode Title="Equals method" Url="html/5b327ba1-e727-c584-8086-b4c49fc66bfa.htm" />
@@ -161,6 +165,7 @@
   <HelpKINode Title="IRemoteHub.Started event" Url="html/301559a9-e822-dcf2-a629-01fde38e6c2c.htm" />
   <HelpKINode Title="IRemoteHub.Stop method" Url="html/f69ea6c2-216b-742a-323b-d3aaf5e95b3a.htm" />
   <HelpKINode Title="IRemoteHub.Stopped event" Url="html/9f47ba7f-317c-0773-8964-53cd9b7ce4f2.htm" />
+  <HelpKINode Title="IRemoteHub.TryGetVirtualHosts method" Url="html/6b2fd624-7db1-5cf6-78f6-6cd9ac8767e7.htm" />
   <HelpKINode Title="IRemoteHub.TryResolveVirtualHost method" Url="html/06f15295-2581-00eb-ebd7-03a39002bd3f.htm" />
   <HelpKINode Title="IRemoteHub&lt;T&gt; interface">
     <HelpKINode Title="IRemoteHub(T) Interface" Url="html/9c613255-5458-9436-5c7c-eada368b7537.htm" />
@@ -204,6 +209,7 @@
   <HelpKINode Title="IRemoteHubAdapter.RemoveClientAsync method" Url="html/008c105b-33f3-c127-929f-dc614a06391a.htm" />
   <HelpKINode Title="IRemoteHubAdapter.Start method" Url="html/73a366b5-e459-6161-cda1-e2c10bbe7f93.htm" />
   <HelpKINode Title="IRemoteHubAdapter.Stop method" Url="html/1cea34a3-a822-e6a8-e65a-51d1ca0bc4b5.htm" />
+  <HelpKINode Title="IRemoteHubAdapter.TryGetVirtualHosts method" Url="html/56a43540-b375-eb65-e3ba-360c030e012c.htm" />
   <HelpKINode Title="IRemoteHubAdapter.TryResolveVirtualHost method" Url="html/6f6092ba-0f59-0677-21db-86a69f9d9dd1.htm" />
   <HelpKINode Title="IRemoteHubAdapter&lt;T&gt; interface">
     <HelpKINode Title="IRemoteHubAdapter(T) Interface" Url="html/786a741c-9548-48b8-3f16-d9fedf4d432e.htm" />
@@ -288,6 +294,7 @@
     <HelpKINode Title="RedisAdapter.IsStarted Property " Url="html/f0d334af-d567-f15d-40c7-7bb5cba53b68.htm" />
     <HelpKINode Title="RemoteHubOverRedis(T).IsStarted Property " Url="html/6d1786a4-8fe6-b557-71c0-11a748ef30a2.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).IsStarted Property " Url="html/31839585-f5b2-4dda-dee0-125f2a634de0.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).IsStarted Property " Url="html/e3a71c9a-49d1-9b67-280e-c6f2cb99bc3e.htm" />
     <HelpKINode Title="StreamAdapter.IsStarted Property " Url="html/ef91cb39-a98f-940c-4faf-ab2b63983e7c.htm" />
   </HelpKINode>
   <HelpKINode Title="Message property">
@@ -362,6 +369,7 @@
   <HelpKINode Title="RedisAdapter.SendPrivateMessageAsync method" Url="html/ae5acf16-d682-2651-2779-1e3d11cd7b4a.htm" />
   <HelpKINode Title="RedisAdapter.Start method" Url="html/4f0767c1-ab6a-d9a8-5432-7bc85f72ce10.htm" />
   <HelpKINode Title="RedisAdapter.Stop method" Url="html/be6f3c2b-f8f0-3d43-c1d0-a6806c74a710.htm" />
+  <HelpKINode Title="RedisAdapter.TryGetVirtualHosts method" Url="html/ce62027c-8bd9-fa3f-d179-72c00c5bc988.htm" />
   <HelpKINode Title="RedisAdapter.TryResolve method" Url="html/ffda2f65-c189-c3f2-3d57-475dd0c2e80b.htm" />
   <HelpKINode Title="RedisAdapter.TryResolveVirtualHost method" Url="html/ef7c617e-e0b6-fd2d-2b30-e566e90f9594.htm" />
   <HelpKINode Title="RedisAdapter&lt;T&gt; class">
@@ -393,6 +401,7 @@
     <HelpKINode Title="RemoteHubOverRedis(T).RemoteClientRemoved Event" Url="html/37fb544d-2807-0f53-dfd9-ac00423d25db.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).RemoteClientRemoved Event" Url="html/203d6996-7a7e-eefc-29dd-78fdc539f308.htm" />
     <HelpKINode Title="RemoteHubSwitch.RemoteClientRemoved Event" Url="html/4e616167-2b49-386b-12d1-3279ac5aa396.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).RemoteClientRemoved Event" Url="html/2f8d91c7-2ad4-d365-41d7-fb3fb1d7bf9c.htm" />
     <HelpKINode Title="StreamAdapter.RemoteClientRemoved Event" Url="html/976a1a73-0466-5770-c90c-c4926b7fc5d5.htm" />
   </HelpKINode>
   <HelpKINode Title="RemoteClientUpdated event">
@@ -401,6 +410,7 @@
     <HelpKINode Title="RedisAdapter.RemoteClientUpdated Event" Url="html/62230831-8541-cf7e-6f20-a1a9f1a3d68d.htm" />
     <HelpKINode Title="RemoteHubOverRedis(T).RemoteClientUpdated Event" Url="html/d85c3a88-a248-0cfc-07ac-33a05a76fe65.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).RemoteClientUpdated Event" Url="html/5a8a0369-3baf-3cd4-1a01-0fa7fddc802c.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).RemoteClientUpdated Event" Url="html/4990ccfc-1afe-570a-c9fa-16e14c5250d6.htm" />
     <HelpKINode Title="StreamAdapter.RemoteClientUpdated Event" Url="html/c2bc4fd6-e702-61d2-588e-8151feacb50a.htm" />
   </HelpKINode>
   <HelpKINode Title="RemoteHubOverRedis(Of T) class">
@@ -424,6 +434,7 @@
   <HelpKINode Title="RemoteHubOverRedis(Of T).Started event" Url="html/b6511f70-8a49-756b-6bfc-a729abefda2d.htm" />
   <HelpKINode Title="RemoteHubOverRedis(Of T).Stop method" Url="html/4cb5a063-dfd7-712c-8854-963d2a1599c7.htm" />
   <HelpKINode Title="RemoteHubOverRedis(Of T).Stopped event" Url="html/71b531a8-73d4-5b35-d592-9ea2d8ccc7e3.htm" />
+  <HelpKINode Title="RemoteHubOverRedis(Of T).TryGetVirtualHosts method" Url="html/812b25ec-b2ed-ddb7-ec46-a79cb587acd6.htm" />
   <HelpKINode Title="RemoteHubOverRedis(Of T).TryResolve method" Url="html/cfc6f4c5-94f1-26a7-b22b-ca92650bb801.htm" />
   <HelpKINode Title="RemoteHubOverRedis(Of T).TryResolveVirtualHost method" Url="html/8d208e34-98e3-386d-31a0-54e873c40f54.htm" />
   <HelpKINode Title="RemoteHubOverRedis&lt;T&gt; class">
@@ -447,6 +458,7 @@
   <HelpKINode Title="RemoteHubOverRedis&lt;T&gt;.Started event" Url="html/b6511f70-8a49-756b-6bfc-a729abefda2d.htm" />
   <HelpKINode Title="RemoteHubOverRedis&lt;T&gt;.Stop method" Url="html/4cb5a063-dfd7-712c-8854-963d2a1599c7.htm" />
   <HelpKINode Title="RemoteHubOverRedis&lt;T&gt;.Stopped event" Url="html/71b531a8-73d4-5b35-d592-9ea2d8ccc7e3.htm" />
+  <HelpKINode Title="RemoteHubOverRedis&lt;T&gt;.TryGetVirtualHosts method" Url="html/812b25ec-b2ed-ddb7-ec46-a79cb587acd6.htm" />
   <HelpKINode Title="RemoteHubOverRedis&lt;T&gt;.TryResolve method" Url="html/cfc6f4c5-94f1-26a7-b22b-ca92650bb801.htm" />
   <HelpKINode Title="RemoteHubOverRedis&lt;T&gt;.TryResolveVirtualHost method" Url="html/8d208e34-98e3-386d-31a0-54e873c40f54.htm" />
   <HelpKINode Title="RemoteHubOverStream(Of T) class">
@@ -471,6 +483,7 @@
   <HelpKINode Title="RemoteHubOverStream(Of T).Started event" Url="html/c5b68833-6f39-570b-3041-2ec0ed37da40.htm" />
   <HelpKINode Title="RemoteHubOverStream(Of T).Stop method" Url="html/1c35aff8-782a-7a6b-7d4e-3867a0c5fe27.htm" />
   <HelpKINode Title="RemoteHubOverStream(Of T).Stopped event" Url="html/66ae7f0d-d358-843c-6afa-99fef9d23a4e.htm" />
+  <HelpKINode Title="RemoteHubOverStream(Of T).TryGetVirtualHosts method" Url="html/3e19d8d8-1c22-2b03-06a0-8bce82512e3a.htm" />
   <HelpKINode Title="RemoteHubOverStream(Of T).TryResolveVirtualHost method" Url="html/eba501a3-fadc-08eb-1dac-7093b0bcc10f.htm" />
   <HelpKINode Title="RemoteHubOverStream&lt;T&gt; class">
     <HelpKINode Title="RemoteHubOverStream(T) Class" Url="html/8eda50a9-5a22-8361-b3c8-345dda484b1b.htm" />
@@ -494,6 +507,7 @@
   <HelpKINode Title="RemoteHubOverStream&lt;T&gt;.Started event" Url="html/c5b68833-6f39-570b-3041-2ec0ed37da40.htm" />
   <HelpKINode Title="RemoteHubOverStream&lt;T&gt;.Stop method" Url="html/1c35aff8-782a-7a6b-7d4e-3867a0c5fe27.htm" />
   <HelpKINode Title="RemoteHubOverStream&lt;T&gt;.Stopped event" Url="html/66ae7f0d-d358-843c-6afa-99fef9d23a4e.htm" />
+  <HelpKINode Title="RemoteHubOverStream&lt;T&gt;.TryGetVirtualHosts method" Url="html/3e19d8d8-1c22-2b03-06a0-8bce82512e3a.htm" />
   <HelpKINode Title="RemoteHubOverStream&lt;T&gt;.TryResolveVirtualHost method" Url="html/eba501a3-fadc-08eb-1dac-7093b0bcc10f.htm" />
   <HelpKINode Title="RemoteHubSwitch class">
     <HelpKINode Title="RemoteHubSwitch Class" Url="html/b74a906d-0711-a77c-9828-7f1af129aa03.htm" />
@@ -520,6 +534,52 @@
   <HelpKINode Title="RemoteHubSwitch.RemoveAdapter method" Url="html/4cca833c-bb2a-9291-ab1f-a6a9b67d5317.htm" />
   <HelpKINode Title="RemoteHubSwitch.RemoveAdapters method" Url="html/b4eab79c-57b5-08f4-ac01-e2692e93f012.htm" />
   <HelpKINode Title="RemoteHubSwitch.RemoveAllAdapters method" Url="html/74a15b40-0e1c-0127-571b-c8892ff86c62.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T) class">
+    <HelpKINode Title="RemoteHubSwitchDirect(T) Class" Url="html/12cfdf5d-a870-508a-8b2f-8347d90d6378.htm" />
+    <HelpKINode Title="constructor" Url="html/aaa5c9ea-0973-7be6-6ce2-f7cb70d7231f.htm" />
+    <HelpKINode Title="events" Url="html/24c62acf-cec9-b4bb-d439-a8f854f82d89.htm" />
+    <HelpKINode Title="methods" Url="html/0316ae89-27de-980b-b7b2-e1175a337357.htm" />
+    <HelpKINode Title="properties" Url="html/5d0fdab5-f3b8-15c7-dbd1-d83477f701e3.htm" />
+  </HelpKINode>
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).ApplyVirtualHosts method" Url="html/496fe4a2-5ccf-b2bd-3cef-ce6eec6a467f.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).ClientId property" Url="html/8b1a8030-090f-bbae-b185-e4c6fdd8570e.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).ConnectionErrorOccurred event" Url="html/95c02659-6d63-b8ce-b1eb-2d3728b7fbb4.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).Dispose method" Url="html/983a08c2-3a49-c7a9-8012-9f6f6a35078b.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).IsStarted property" Url="html/e3a71c9a-49d1-9b67-280e-c6f2cb99bc3e.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).RemoteClientRemoved event" Url="html/2f8d91c7-2ad4-d365-41d7-fb3fb1d7bf9c.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).RemoteClientUpdated event" Url="html/4990ccfc-1afe-570a-c9fa-16e14c5250d6.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).RemoteHubSwitchDirect constructor" Url="html/aaa5c9ea-0973-7be6-6ce2-f7cb70d7231f.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).SendMessage method" Url="html/e7146fe3-8357-8926-f50e-0d0e38061dff.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).SendMessageAsync method" Url="html/aa501596-edce-1bab-0a67-2a1191e3bdd0.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).Start method" Url="html/0e004f8b-1f6e-3d28-cfda-f2c571f7306a.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).Started event" Url="html/5806ae6b-6557-e432-6c7f-75beedc22161.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).Stop method" Url="html/87d17101-b408-7623-9812-c2f5f8917ad8.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).Stopped event" Url="html/d1287e26-bc46-0d04-beec-aeecbcab3cec.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).TryGetVirtualHosts method" Url="html/f1cf6006-55a9-8669-98b0-3d76b9aac80f.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect(Of T).TryResolveVirtualHost method" Url="html/a2c2082e-2a3b-41a2-b859-c3d24c79f13a.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt; class">
+    <HelpKINode Title="RemoteHubSwitchDirect(T) Class" Url="html/12cfdf5d-a870-508a-8b2f-8347d90d6378.htm" />
+    <HelpKINode Title="constructor" Url="html/aaa5c9ea-0973-7be6-6ce2-f7cb70d7231f.htm" />
+    <HelpKINode Title="events" Url="html/24c62acf-cec9-b4bb-d439-a8f854f82d89.htm" />
+    <HelpKINode Title="methods" Url="html/0316ae89-27de-980b-b7b2-e1175a337357.htm" />
+    <HelpKINode Title="properties" Url="html/5d0fdab5-f3b8-15c7-dbd1-d83477f701e3.htm" />
+  </HelpKINode>
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.ApplyVirtualHosts method" Url="html/496fe4a2-5ccf-b2bd-3cef-ce6eec6a467f.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.ClientId property" Url="html/8b1a8030-090f-bbae-b185-e4c6fdd8570e.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.ConnectionErrorOccurred event" Url="html/95c02659-6d63-b8ce-b1eb-2d3728b7fbb4.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.Dispose method" Url="html/983a08c2-3a49-c7a9-8012-9f6f6a35078b.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.IsStarted property" Url="html/e3a71c9a-49d1-9b67-280e-c6f2cb99bc3e.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.RemoteClientRemoved event" Url="html/2f8d91c7-2ad4-d365-41d7-fb3fb1d7bf9c.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.RemoteClientUpdated event" Url="html/4990ccfc-1afe-570a-c9fa-16e14c5250d6.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.RemoteHubSwitchDirect constructor" Url="html/aaa5c9ea-0973-7be6-6ce2-f7cb70d7231f.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.SendMessage method" Url="html/e7146fe3-8357-8926-f50e-0d0e38061dff.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.SendMessageAsync method" Url="html/aa501596-edce-1bab-0a67-2a1191e3bdd0.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.Start method" Url="html/0e004f8b-1f6e-3d28-cfda-f2c571f7306a.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.Started event" Url="html/5806ae6b-6557-e432-6c7f-75beedc22161.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.Stop method" Url="html/87d17101-b408-7623-9812-c2f5f8917ad8.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.Stopped event" Url="html/d1287e26-bc46-0d04-beec-aeecbcab3cec.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.TryGetVirtualHosts method" Url="html/f1cf6006-55a9-8669-98b0-3d76b9aac80f.htm" />
+  <HelpKINode Title="RemoteHubSwitchDirect&lt;T&gt;.TryResolveVirtualHost method" Url="html/a2c2082e-2a3b-41a2-b859-c3d24c79f13a.htm" />
   <HelpKINode Title="RemoveAdapter method" Url="html/4cca833c-bb2a-9291-ab1f-a6a9b67d5317.htm" />
   <HelpKINode Title="RemoveAdapters method" Url="html/b4eab79c-57b5-08f4-ac01-e2692e93f012.htm" />
   <HelpKINode Title="RemoveAllAdapters method" Url="html/74a15b40-0e1c-0127-571b-c8892ff86c62.htm" />
@@ -587,6 +647,8 @@
   <HelpKINode Title="SecretNest.RemoteHub.RemoteHubOverStream(Of T) class" Url="html/8eda50a9-5a22-8361-b3c8-345dda484b1b.htm" />
   <HelpKINode Title="SecretNest.RemoteHub.RemoteHubOverStream&lt;T&gt; class" Url="html/8eda50a9-5a22-8361-b3c8-345dda484b1b.htm" />
   <HelpKINode Title="SecretNest.RemoteHub.RemoteHubSwitch class" Url="html/b74a906d-0711-a77c-9828-7f1af129aa03.htm" />
+  <HelpKINode Title="SecretNest.RemoteHub.RemoteHubSwitchDirect(Of T) class" Url="html/12cfdf5d-a870-508a-8b2f-8347d90d6378.htm" />
+  <HelpKINode Title="SecretNest.RemoteHub.RemoteHubSwitchDirect&lt;T&gt; class" Url="html/12cfdf5d-a870-508a-8b2f-8347d90d6378.htm" />
   <HelpKINode Title="SecretNest.RemoteHub.StreamAdapter class" Url="html/32377ac3-9d92-e8e9-a675-0c9271d43856.htm" />
   <HelpKINode Title="SecretNest.RemoteHub.StreamAdapter(Of T) class" Url="html/8b88bacc-723f-055a-4b53-173bdb35bafd.htm" />
   <HelpKINode Title="SecretNest.RemoteHub.StreamAdapter&lt;T&gt; class" Url="html/8b88bacc-723f-055a-4b53-173bdb35bafd.htm" />
@@ -597,12 +659,14 @@
     <HelpKINode Title="IRemoteHubOverRedis(T).SendMessage Method " Url="html/7e37d864-e699-e7d3-a438-93b6926a03bb.htm" />
     <HelpKINode Title="RemoteHubOverRedis(T).SendMessage Method " Url="html/398a9bde-b27a-bdaa-a2c9-04048528ee70.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).SendMessage Method " Url="html/b1189487-1e8e-172c-40bc-b29e7793c4ad.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).SendMessage Method " Url="html/e7146fe3-8357-8926-f50e-0d0e38061dff.htm" />
   </HelpKINode>
   <HelpKINode Title="SendMessageAsync method">
     <HelpKINode Title="IRemoteHub(T).SendMessageAsync Method " Url="html/f1c25b54-901f-b67a-85b3-1de8c43e9004.htm" />
     <HelpKINode Title="IRemoteHubOverRedis(T).SendMessageAsync Method " Url="html/5f836107-0a1d-df46-73db-0fbbd858d924.htm" />
     <HelpKINode Title="RemoteHubOverRedis(T).SendMessageAsync Method " Url="html/cc6784eb-9ecb-9aac-e89f-65d13ca5b309.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).SendMessageAsync Method " Url="html/9660eacf-979e-7406-6be7-b97728b623d2.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).SendMessageAsync Method " Url="html/aa501596-edce-1bab-0a67-2a1191e3bdd0.htm" />
   </HelpKINode>
   <HelpKINode Title="SendPrivateMessage method">
     <HelpKINode Title="IRemoteHubAdapter(T).SendPrivateMessage Method " Url="html/faf40a73-081a-8373-a03d-978043434952.htm" />
@@ -624,12 +688,14 @@
     <HelpKINode Title="RedisAdapter.Start Method " Url="html/4f0767c1-ab6a-d9a8-5432-7bc85f72ce10.htm" />
     <HelpKINode Title="RemoteHubOverRedis(T).Start Method " Url="html/2d43773a-7618-e750-716b-47af8620f621.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).Start Method " Url="html/32cb361b-d323-e03e-f452-e2e7379c3adf.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).Start Method " Url="html/0e004f8b-1f6e-3d28-cfda-f2c571f7306a.htm" />
     <HelpKINode Title="StreamAdapter.Start Method " Url="html/ddd95213-3211-8ef5-4a1c-d4ba82c0ef5d.htm" />
   </HelpKINode>
   <HelpKINode Title="Started event">
     <HelpKINode Title="IRemoteHub.Started Event" Url="html/301559a9-e822-dcf2-a629-01fde38e6c2c.htm" />
     <HelpKINode Title="RemoteHubOverRedis(T).Started Event" Url="html/b6511f70-8a49-756b-6bfc-a729abefda2d.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).Started Event" Url="html/c5b68833-6f39-570b-3041-2ec0ed37da40.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).Started Event" Url="html/5806ae6b-6557-e432-6c7f-75beedc22161.htm" />
   </HelpKINode>
   <HelpKINode Title="Stop method">
     <HelpKINode Title="IRemoteHub.Stop Method " Url="html/f69ea6c2-216b-742a-323b-d3aaf5e95b3a.htm" />
@@ -637,12 +703,14 @@
     <HelpKINode Title="RedisAdapter.Stop Method " Url="html/be6f3c2b-f8f0-3d43-c1d0-a6806c74a710.htm" />
     <HelpKINode Title="RemoteHubOverRedis(T).Stop Method " Url="html/4cb5a063-dfd7-712c-8854-963d2a1599c7.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).Stop Method " Url="html/1c35aff8-782a-7a6b-7d4e-3867a0c5fe27.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).Stop Method " Url="html/87d17101-b408-7623-9812-c2f5f8917ad8.htm" />
     <HelpKINode Title="StreamAdapter.Stop Method " Url="html/693fdbd0-1e62-afcb-9b1d-31a15c7e5df1.htm" />
   </HelpKINode>
   <HelpKINode Title="Stopped event">
     <HelpKINode Title="IRemoteHub.Stopped Event" Url="html/9f47ba7f-317c-0773-8964-53cd9b7ce4f2.htm" />
     <HelpKINode Title="RemoteHubOverRedis(T).Stopped Event" Url="html/71b531a8-73d4-5b35-d592-9ea2d8ccc7e3.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).Stopped Event" Url="html/66ae7f0d-d358-843c-6afa-99fef9d23a4e.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).Stopped Event" Url="html/d1287e26-bc46-0d04-beec-aeecbcab3cec.htm" />
   </HelpKINode>
   <HelpKINode Title="StreamAdapter class">
     <HelpKINode Title="StreamAdapter Class" Url="html/32377ac3-9d92-e8e9-a675-0c9271d43856.htm" />
@@ -688,6 +756,7 @@
   <HelpKINode Title="StreamAdapter.Start method" Url="html/ddd95213-3211-8ef5-4a1c-d4ba82c0ef5d.htm" />
   <HelpKINode Title="StreamAdapter.Stop method" Url="html/693fdbd0-1e62-afcb-9b1d-31a15c7e5df1.htm" />
   <HelpKINode Title="StreamAdapter.StreamAdapter constructor" Url="html/532ae563-2836-aa78-e817-9af5d2d1a067.htm" />
+  <HelpKINode Title="StreamAdapter.TryGetVirtualHosts method" Url="html/ab9766fa-eeb3-add3-76fe-a2911b649fce.htm" />
   <HelpKINode Title="StreamAdapter.TryResolveVirtualHost method" Url="html/0e03ccd5-bf9d-3a77-c4c9-1b9c5dde0a66.htm" />
   <HelpKINode Title="StreamAdapter&lt;T&gt; class">
     <HelpKINode Title="StreamAdapter(T) Class" Url="html/8b88bacc-723f-055a-4b53-173bdb35bafd.htm" />
@@ -703,6 +772,15 @@
   <HelpKINode Title="StreamAdapter&lt;T&gt;.SendPrivateMessage method" Url="html/97f5c512-f9e3-3389-9c9b-b168728201eb.htm" />
   <HelpKINode Title="StreamAdapter&lt;T&gt;.SendPrivateMessageAsync method" Url="html/00f4a7c7-8b07-4d23-90c5-e3eada427508.htm" />
   <HelpKINode Title="StreamAdapter&lt;T&gt;.StreamAdapter constructor" Url="html/ff2ec233-18a1-8eb3-611c-d7dc2376c39e.htm" />
+  <HelpKINode Title="TryGetVirtualHosts method">
+    <HelpKINode Title="IRemoteHub.TryGetVirtualHosts Method " Url="html/6b2fd624-7db1-5cf6-78f6-6cd9ac8767e7.htm" />
+    <HelpKINode Title="IRemoteHubAdapter.TryGetVirtualHosts Method " Url="html/56a43540-b375-eb65-e3ba-360c030e012c.htm" />
+    <HelpKINode Title="RedisAdapter.TryGetVirtualHosts Method " Url="html/ce62027c-8bd9-fa3f-d179-72c00c5bc988.htm" />
+    <HelpKINode Title="RemoteHubOverRedis(T).TryGetVirtualHosts Method " Url="html/812b25ec-b2ed-ddb7-ec46-a79cb587acd6.htm" />
+    <HelpKINode Title="RemoteHubOverStream(T).TryGetVirtualHosts Method " Url="html/3e19d8d8-1c22-2b03-06a0-8bce82512e3a.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).TryGetVirtualHosts Method " Url="html/f1cf6006-55a9-8669-98b0-3d76b9aac80f.htm" />
+    <HelpKINode Title="StreamAdapter.TryGetVirtualHosts Method " Url="html/ab9766fa-eeb3-add3-76fe-a2911b649fce.htm" />
+  </HelpKINode>
   <HelpKINode Title="TryResolve method">
     <HelpKINode Title="IRemoteHubOverRedis.TryResolve Method " Url="html/7ce031bd-5ef4-3d44-befa-f4ad6c3b5675.htm" />
     <HelpKINode Title="IRemoteHubRedisAdapter.TryResolve Method " Url="html/64a2d5e2-d318-dced-0460-851096b4bb87.htm" />
@@ -715,6 +793,7 @@
     <HelpKINode Title="RedisAdapter.TryResolveVirtualHost Method " Url="html/ef7c617e-e0b6-fd2d-2b30-e566e90f9594.htm" />
     <HelpKINode Title="RemoteHubOverRedis(T).TryResolveVirtualHost Method " Url="html/8d208e34-98e3-386d-31a0-54e873c40f54.htm" />
     <HelpKINode Title="RemoteHubOverStream(T).TryResolveVirtualHost Method " Url="html/eba501a3-fadc-08eb-1dac-7093b0bcc10f.htm" />
+    <HelpKINode Title="RemoteHubSwitchDirect(T).TryResolveVirtualHost Method " Url="html/a2c2082e-2a3b-41a2-b859-c3d24c79f13a.htm" />
     <HelpKINode Title="StreamAdapter.TryResolveVirtualHost Method " Url="html/0e03ccd5-bf9d-3a77-c4c9-1b9c5dde0a66.htm" />
   </HelpKINode>
   <HelpKINode Title="version">

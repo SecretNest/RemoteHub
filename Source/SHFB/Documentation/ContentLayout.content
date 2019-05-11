@@ -5,7 +5,27 @@
       <HelpKeyword index="K" term="Welcome" />
     </HelpKeywords>
   </Topic>
-  <Topic id="2792f28b-4304-4e0e-b46e-85fb4fcf44d3" visible="True" isSelected="true" title="Version History">
+  <Topic id="2305ecf2-5650-438c-9557-396ad52a2ee9" visible="True" noFile="true" isExpanded="true" title="Components">
+    <Topic id="3d44d1cd-5d0c-4c89-bedd-49830a60baec" visible="True" title="Interfaces of Remote Hub" />
+    <Topic id="7b9f6faa-8de5-4097-bad0-76e9295ccce0" visible="True" title="Interfaces of Remote Hub on Redis database" />
+    <Topic id="ed44485b-adff-46f1-9be9-d5731e1d4ff4" visible="True" title="Interfaces of Remote Hub on streams" />
+    <Topic id="faeafdf3-1c3a-4aa6-a045-24e0df018aa6" visible="True" title="Redis Adapter" />
+    <Topic id="40f09325-9850-497d-afb6-0b8b90d8360a" visible="True" title="Redis Client" />
+    <Topic id="a635f111-aa6b-4609-bec8-d954ac988f47" visible="True" title="Stream Adapter" />
+    <Topic id="91b09d21-87ae-4bc8-9efe-4f446b05cd3e" visible="True" title="Stream Client" />
+    <Topic id="0241d550-bee5-4690-b22b-3399ba7a7bf1" visible="True" isSelected="true" title="Switch Direct Client" />
+    <Topic id="754f0327-c190-40b4-b091-93e104cc78be" visible="True" title="Switch" />
+  </Topic>
+  <Topic id="d66a3999-b7fb-4065-82c9-35e815d3b290" visible="True" noFile="true" isExpanded="true" title="How to">
+    <Topic id="e84b359f-4609-429c-8b3f-d040a75ceae6" visible="True" title="Using Redis database" />
+    <Topic id="fb014e2d-05c2-4da2-9ed3-0032564a7ae0" visible="True" title="Using streams" />
+    <Topic id="a4d42f22-c78d-4f4c-8fe4-d9568ea2f5ca" visible="True" title="Virtual host" />
+  </Topic>
+  <Topic id="52218592-d056-4cbf-858b-01e47ce26bd3" visible="True" noFile="true" isExpanded="true" title="Working with Remote Agency">
+    <Topic id="e3da64af-88e0-49f9-b8ed-e26bc13f7cc9" visible="True" title="Demo: Chat room" />
+    <Topic id="d8f5d54c-994c-4cdc-8de9-a270cc00cf48" visible="True" title="Virtual host support" />
+  </Topic>
+  <Topic id="2792f28b-4304-4e0e-b46e-85fb4fcf44d3" visible="True" apiParentMode="InsertBefore" title="Version History">
     <HelpKeywords>
       <HelpKeyword index="K" term="version, history" />
     </HelpKeywords>
