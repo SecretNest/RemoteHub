@@ -8,7 +8,15 @@
       <para>Switch, SecretNest.RemoteHub.Switch, is a library contains a component for connecting adapters and routing messages.</para>
     </introduction>
     
-    
+    <section>
+      <title>Use this library</title>
+      <content>
+        <para>This library defines the Switch, named as <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.RemoteHubSwitch</codeEntityReference>.</para>
+        <para>Switch is designed to connecting clients and routing messages.</para>
+        <para>Adapters can be attached to switch.</para>
+        <para>Switches can be cascaded. When using cascading, be careful not to build a shortcut or ring networking, which will fail the switch from working.</para>
+      </content>
+    </section>
 
     <relatedTopics>
       <link xlink:href="3d44d1cd-5d0c-4c89-bedd-49830a60baec" /> <!--IRemoteHub-->
