@@ -17,10 +17,21 @@
         <para>Switches can be cascaded. When using cascading, be careful not to build a shortcut or ring networking, which will fail the switch from working.</para>
       </content>
     </section>
+    
+    <section>
+      <title>Type parameter of Adapters</title>
+      <content>
+        <para>Switch supports the adapter with byte array (byte[] in C#.Net / Byte() in VB.Net) as the type parameter only.</para>
+        <para>Switch will not try to decode the user messages, thus it's no harm to leave the message as it is from low level transportation. By using byte array, all user messages will be routed to the target with no change.</para>
+        <para>Redis Adapter and Stream Adapter can accept the mismatch in type parameter if no user message need to be dealt. When they are connected to the medium which connecting adapters in other kind of type parameter, these adapters should be nothing wrong while creating with byte array as the type parameter for attaching to a switch instance.</para>
+        <para>Switch Direct can handle the string encoding and decoding automatically. No matter the type parameter chosen, it can always be attached to a switch instance.</para>
+      </content>
+    </section>
 
     <relatedTopics>
       <link xlink:href="3d44d1cd-5d0c-4c89-bedd-49830a60baec" /> <!--IRemoteHub-->
       <link xlink:href="fb014e2d-05c2-4da2-9ed3-0032564a7ae0" /> <!--HowToSwitch-->
+      <link xlink:href="faeafdf3-1c3a-4aa6-a045-24e0df018aa6" /> <!--RedisAdapter-->
       <link xlink:href="a635f111-aa6b-4609-bec8-d954ac988f47" /> <!--StreamAdapter-->
       <link xlink:href="0241d550-bee5-4690-b22b-3399ba7a7bf1" /> <!--SwitchDirect-->
     </relatedTopics>

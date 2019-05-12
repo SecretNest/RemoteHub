@@ -23,7 +23,7 @@
         <para>Type parameter of Redis Client will be passed to Redis Adapter for sending and receiving user messages.</para>
         <para>Currently, only byte array (byte[] in C#.Net / Byte() in VB.Net) and string are acceptable. Passing other type while creating while cause an exception thrown.</para>
         <para>Using different type parameters or encoders on clients created on the same Redis database is acceptable. For example, if one side is set as string with one other is using byte array, the text sent from the 1st one will be received by the 2nd as the encoded output. The encoding format is specified by Redis.</para>
-        <para>The type only apply on the user messages. System messages, like those for client discovering, will not be affected.</para>
+        <para>The type is applied on the user messages only. System messages, like those for client discovering, will not be affected.</para>
       </content>
     </section>
 

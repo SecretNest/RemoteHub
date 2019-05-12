@@ -24,7 +24,7 @@
         <para>Currently, only byte array (byte[] in C#.Net / Byte() in VB.Net) and string are acceptable. Passing other type while creating while cause an exception thrown.</para>
         <para>Due to transportation on switch is based on byte array, when string is chosen while constructing adapter, an encoder could be provided. If not, Encoding.Default will be used.</para>
         <para>When string is used, the messages sent will be encoded before putting on switch, and the received messages will be decoded before calling the callback.</para>
-        <para>The type only apply on the user messages. System messages, like those for client discovering, will not be affected.</para>
+        <para>The type is applied on the user messages only. System messages, like those for client discovering, will not be affected.</para>
       </content>
     </section>
 
