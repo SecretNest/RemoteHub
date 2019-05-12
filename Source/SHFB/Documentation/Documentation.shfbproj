@@ -121,7 +121,7 @@
     <None Include="Content\VersionHistory.aml" />
     <None Include="Content\Welcome.aml" />
     <None Include="Content\WorkWIthRA\Demo.aml" />
-    <None Include="Content\WorkWIthRA\VirtualHost.aml" />
+    <None Include="Content\WorkWIthRA\Event.aml" />
   </ItemGroup>
   <ItemGroup>
     <ContentLayout Include="ContentLayout.content" />

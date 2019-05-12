@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SecretNest.RemoteHub
 {
     /// <summary>
-    /// Represents the base, non-generic version of the generic <see cref="IRemoteHubOverRedis"/>.
+    /// Represents the base, non-generic version of the generic <see cref="IRemoteHubOverRedis{T}"/>.
     /// </summary>
     public interface IRemoteHubOverRedis : IRemoteHub
     {

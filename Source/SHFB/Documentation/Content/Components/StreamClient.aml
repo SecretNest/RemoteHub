@@ -4,103 +4,42 @@
     xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
-    <!--
-    <summary>
-      <para>Optional summary abstract</para>
-    </summary>
-    -->
-
     <introduction>
-      <!-- Uncomment this to generate an outline of the section and sub-section
-           titles.  Specify a numeric value as the inner text to limit it to
-           a specific number of sub-topics when creating the outline.  Specify
-           zero (0) to limit it to top-level sections only.  -->
-      <!-- <autoOutline /> -->
-
-      <para>Required introduction</para>
+      <para>Stream Client, SecretNest.RemoteHub.Stream, is a library contains the Remote Hub client based on streams.</para>
     </introduction>
 
-    <!-- <prerequisites><content>Optional prerequisites info</content></prerequisites> -->
-
-    <!-- One or more procedure or section with procedure -->
-    <procedure>
-      <title>Procedure title</title>
-      <steps class="ordered">
-        <step>
-          <content>
-            <para>First step</para>
-          </content>
-        </step>
-        <step>
-          <content>
-            <para>Second step</para>
-          </content>
-        </step>
-      </steps>
-      <!-- <conclusion>Optional conclusion</conclusion> -->
-    </procedure>
-
-    <!-- Optional additional procedure or section with procedure -->
-    <section address="Section1">
-      <title>Optional section title</title>
+    <section>
+      <title>Use this library</title>
       <content>
-        <procedure>
-          <title>Procedure #2</title>
-          <steps class="ordered">
-            <step>
-              <content>
-                <para>First step</para>
-              </content>
-            </step>
-            <step>
-              <content>
-                <para>Second step</para>
-              </content>
-            </step>
-          </steps>
-          <!-- <conclusion>Optional conclusion</conclusion> -->
-        </procedure>
+        <para>This library defines the Remote Hub client works in pairs connected by streams, named as <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.RemoteHubStream`1</codeEntityReference>, which implemented <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.IRemoteHubOverStream</codeEntityReference> and <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.IRemoteHub`1</codeEntityReference>.</para>
+        <para>In this client, a Stream Adapter will be created to handle the operations on streams.</para>
       </content>
     </section>
 
-    <!-- Optional next steps info
-    <nextSteps>
-      <content><para>Next steps info goes here</para></content>
-    </nextSteps>
-    -->
+    <section>
+      <title>Type parameter</title>
+      <content>
+        <para>Type parameter of Stream Client will be passed to Stream Adapter for sending and receiving user messages.</para>
+        <para>Currently, only byte array (byte[] in C#.Net / Byte() in VB.Net) and string are acceptable. Passing other type while creating while cause an exception thrown.</para>
+        <para>Due to transportation on streams is based on byte array, when string is chosen while constructing adapter, an encoder could be provided. If not, Encoding.Default will be used.</para>
+        <para>Using different type parameters or encoders on the both sides of the clients created on the same streams is acceptable. For example, if one side is set as string with Encoding.Default and another is using byte array, the text sent from the 1st one will be received by the 2nd as the encoded output of Encoding.Default.</para>
+        <para>The type only apply on the user messages. System messages, like those for client discovering, will not be affected.</para>
+      </content>
+    </section>
+
+    <section>
+      <title>Callback</title>
+      <content>
+        <para>A instance of <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.OnMessageReceivedCallback`1</codeEntityReference> need to be prepared for receiving user messages. Type of the delegate is the same as the type parameter passed into the Stream Client.</para>
+        <para>The callback instance need to be passed as an argument of the constructor of Stream Client.</para>
+      </content>
+    </section>
 
     <relatedTopics>
-      <!-- One or more of the following:
-           - A local link
-           - An external link
-           - A code entity reference
-
-      <link xlink:href="Other Topic's ID">Link text</link>
-      <externalLink>
-          <linkText>Link text</linkText>
-          <linkAlternateText>Optional alternate link text</linkAlternateText>
-          <linkUri>URI</linkUri>
-      </externalLink>
-      <codeEntityReference>API member ID</codeEntityReference>
-
-      Examples:
-
-      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
-
-      <externalLink>
-          <linkText>SHFB on GitHub</linkText>
-          <linkAlternateText>Go to GitHub</linkAlternateText>
-          <linkUri>https://GitHub.com/EWSoftware/SHFB</linkUri>
-      </externalLink>
-
-      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
-      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
-      -->
+      <link xlink:href="3d44d1cd-5d0c-4c89-bedd-49830a60baec" /> <!--IRemoteHub-->
+      <link xlink:href="ed44485b-adff-46f1-9be9-d5731e1d4ff4" /> <!--IRemoteHubStream-->
+      <link xlink:href="fb014e2d-05c2-4da2-9ed3-0032564a7ae0" /> <!--HowToSwitch-->
+      <link xlink:href="a635f111-aa6b-4609-bec8-d954ac988f47" /> <!--StreamAdapter-->
     </relatedTopics>
   </developerWalkthroughDocument>
 </topic>

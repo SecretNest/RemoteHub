@@ -13,10 +13,10 @@ life of the project.</para>
 					<listItem>
 						<para>Initial release.</para>
 						<para>IRemoteHub: 1.1.0</para>
-						<para>IRemoteHub.Redis: 1.1.0</para>
+						<para>IRemoteHub.Redis: 1.1.1</para>
 						<para>IRemoteHub.Stream: 1.1.0</para>
-						<para>RemoteHub.RedisAdapter: 1.1.3</para>
-						<para>RemoteHub.Redis: 1.1.3</para>
+						<para>RemoteHub.RedisAdapter: 1.1.4</para>
+						<para>RemoteHub.Redis: 1.1.4</para>
 						<para>RemoteHub.StreamAdapter: 1.1.2</para>
 						<para>RemoteHub.Stream: 1.1.3</para>
 						<para>RemoteHub.Switch: 1.1.0</para>

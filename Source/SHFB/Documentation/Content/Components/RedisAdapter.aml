@@ -4,103 +4,70 @@
     xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
-    <!--
-    <summary>
-      <para>Optional summary abstract</para>
-    </summary>
-    -->
-
     <introduction>
-      <!-- Uncomment this to generate an outline of the section and sub-section
-           titles.  Specify a numeric value as the inner text to limit it to
-           a specific number of sub-topics when creating the outline.  Specify
-           zero (0) to limit it to top-level sections only.  -->
-      <!-- <autoOutline /> -->
-
-      <para>Required introduction</para>
+      <para>Redis Adapter, SecretNest.RemoteHub.RedisAdapter, is a library contains adapter of Remote Hub based on Redis database.</para>
     </introduction>
 
-    <!-- <prerequisites><content>Optional prerequisites info</content></prerequisites> -->
-
-    <!-- One or more procedure or section with procedure -->
-    <procedure>
-      <title>Procedure title</title>
-      <steps class="ordered">
-        <step>
-          <content>
-            <para>First step</para>
-          </content>
-        </step>
-        <step>
-          <content>
-            <para>Second step</para>
-          </content>
-        </step>
-      </steps>
-      <!-- <conclusion>Optional conclusion</conclusion> -->
-    </procedure>
-
-    <!-- Optional additional procedure or section with procedure -->
-    <section address="Section1">
-      <title>Optional section title</title>
+    <section>
+      <title>Use this library</title>
       <content>
-        <procedure>
-          <title>Procedure #2</title>
-          <steps class="ordered">
-            <step>
-              <content>
-                <para>First step</para>
-              </content>
-            </step>
-            <step>
-              <content>
-                <para>Second step</para>
-              </content>
-            </step>
-          </steps>
-          <!-- <conclusion>Optional conclusion</conclusion> -->
-        </procedure>
+        <para>This library defines the adapter for connecting to Redis database, named as <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.RedisAdapter`1</codeEntityReference>, which implemented <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.IRemoteHubRedisAdapter`1</codeEntityReference>.</para>
+        <para>Publish-subscribe service is used on the Redis database specified while constructing an instance of this adapter. No data in this database will be queried or changed.</para>
+        <para>Creating an instance of this adapter and attaching it to one switch will link the target Redis database to the switch. This will allow all clients from the Redis database and the switch to discover each others and transport message among them.</para>
+        <para>Redis Client, SecretNest.RemoteHub.Redis, will contains an instance of this adapter. But the adapter is constructed and controlled by client. It's not necessary for user to create the instance of adapter for the client.</para>
       </content>
     </section>
 
-    <!-- Optional next steps info
-    <nextSteps>
-      <content><para>Next steps info goes here</para></content>
-    </nextSteps>
-    -->
+    <section>
+      <title>Type parameter</title>
+      <content>
+        <para>Type parameter of Redis Adapter is used for sending and receiving user messages.</para>
+        <para>Currently, only byte array (byte[] in C#.Net / Byte() in VB.Net) and string are acceptable. Passing other type while creating while cause an exception thrown.</para>
+        <para>Using different type parameters or encoders on adapters created on the same Redis database is acceptable. For example, if one side is set as string and one other is using byte array, the text sent from the 1st one will be received by the 2nd as the encoded output. The encoding format is specified by Redis.</para>
+        <para>The type only apply on the user messages. System messages, like those for client discovering, will not be affected.</para>
+      </content>
+    </section>
+
+    <section>
+      <title>Callback</title>
+      <content>
+        <para>One or more instance of <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.OnMessageReceivedCallback`1</codeEntityReference> need to be prepared for receiving user messages. Type of the delegate is the same as the type parameter passed into the Redis Adapter.</para>
+        <para>The callback instance can to be passed as an argument of the constructor of Redis Adapter, or set it as null for leaving it not initialized.</para>
+        <para>Use method <codeEntityReference qualifyHint="false" autoUpgrade="true">M:SecretNest.RemoteHub.IRemoteHubAdapter`1.AddOnMessageReceivedCallback(SecretNest.RemoteHub.OnMessageReceivedCallback{`0})</codeEntityReference> and <codeEntityReference qualifyHint="false" autoUpgrade="true">M:SecretNest.RemoteHub.IRemoteHubAdapter`1.RemoveOnMessageReceivedCallback(SecretNest.RemoteHub.OnMessageReceivedCallback{`0})</codeEntityReference> to add or remove the callback instance after the adapter constructed.</para>
+      </content>
+    </section>
+    
+    <section>
+      <title>Adapter</title>
+      <content>
+        <para>Adapter is a component for Remote Hub which handle the communication on the particular medium.</para>
+        <para>Adapter instance will: </para>
+        <list class="bullet">
+          <listItem>
+            <para>Announce the local client to the medium;</para>
+          </listItem>
+          <listItem>
+            <para>Listen to the changes of the remote clients from the medium;</para>
+          </listItem>
+          <listItem>
+            <para>Send message to the medium;</para>
+          </listItem>
+          <listItem>
+            <para>Receive message, which the target is one of the registered local clients, from the medium; and,</para>
+          </listItem>
+          <listItem>
+            <para>Maintain virtual host table.</para>
+          </listItem>
+        </list>
+        <para>As Redis Adapter, the medium is a Redis database. All functions are based on the publish-subscribe service provided from the Redis database specified while instance constructing.</para>
+      </content>
+    </section>
 
     <relatedTopics>
-      <!-- One or more of the following:
-           - A local link
-           - An external link
-           - A code entity reference
-
-      <link xlink:href="Other Topic's ID">Link text</link>
-      <externalLink>
-          <linkText>Link text</linkText>
-          <linkAlternateText>Optional alternate link text</linkAlternateText>
-          <linkUri>URI</linkUri>
-      </externalLink>
-      <codeEntityReference>API member ID</codeEntityReference>
-
-      Examples:
-
-      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
-
-      <externalLink>
-          <linkText>SHFB on GitHub</linkText>
-          <linkAlternateText>Go to GitHub</linkAlternateText>
-          <linkUri>https://GitHub.com/EWSoftware/SHFB</linkUri>
-      </externalLink>
-
-      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
-      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
-      -->
+      <link xlink:href="3d44d1cd-5d0c-4c89-bedd-49830a60baec" /> <!--IRemoteHub-->
+      <link xlink:href="7b9f6faa-8de5-4097-bad0-76e9295ccce0" /> <!--IRemoteHubRedis-->
+      <link xlink:href="e84b359f-4609-429c-8b3f-d040a75ceae6" /> <!--HowToRedis-->
+      <link xlink:href="40f09325-9850-497d-afb6-0b8b90d8360a" /> <!--RedisClient-->
     </relatedTopics>
   </developerWalkthroughDocument>
 </topic>
