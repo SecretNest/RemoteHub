@@ -2,7 +2,7 @@
 <HelpTOC>
 
   <HelpTOCNode Title="Welcome to the Remote Hub" Url="html/bd0fe8b6-fbbe-46a6-a55a-9de5c0d0cff9.htm" />
-  <HelpTOCNode Id="528a205c-32cd-46dd-945c-49cbcb253a59" Title="Components">
+  <HelpTOCNode Id="a4713fa9-dad1-4fa6-bc55-ac50724a6b7b" Title="Components">
     <HelpTOCNode Title="Interfaces of Remote Hub" Url="html/3d44d1cd-5d0c-4c89-bedd-49830a60baec.htm" />
     <HelpTOCNode Title="Interfaces of Remote Hub on Redis database" Url="html/7b9f6faa-8de5-4097-bad0-76e9295ccce0.htm" />
     <HelpTOCNode Title="Interfaces of Remote Hub on streams" Url="html/ed44485b-adff-46f1-9be9-d5731e1d4ff4.htm" />
@@ -13,72 +13,72 @@
     <HelpTOCNode Title="Switch Direct Client" Url="html/0241d550-bee5-4690-b22b-3399ba7a7bf1.htm" />
     <HelpTOCNode Title="Switch" Url="html/754f0327-c190-40b4-b091-93e104cc78be.htm" />
   </HelpTOCNode>
-  <HelpTOCNode Id="6151069e-016e-4c0d-85e5-57277ec0a42f" Title="How to">
+  <HelpTOCNode Id="c7ab95c8-a402-4c27-9c17-a9e8d8543ff0" Title="How to">
     <HelpTOCNode Title="Using Redis database" Url="html/e84b359f-4609-429c-8b3f-d040a75ceae6.htm" />
     <HelpTOCNode Title="Using streams" Url="html/fb014e2d-05c2-4da2-9ed3-0032564a7ae0.htm" />
     <HelpTOCNode Title="Virtual host" Url="html/a4d42f22-c78d-4f4c-8fe4-d9568ea2f5ca.htm" />
   </HelpTOCNode>
-  <HelpTOCNode Id="d7b83504-b32c-43b0-951a-48196e5f924b" Title="Working with Remote Agency">
+  <HelpTOCNode Id="8fc9dca2-5851-4821-ae8d-c09e3abfe160" Title="Working with Remote Agency">
     <HelpTOCNode Title="Demo: Chat room" Url="html/e3da64af-88e0-49f9-b8ed-e26bc13f7cc9.htm" />
     <HelpTOCNode Title="Event support" Url="html/d8f5d54c-994c-4cdc-8de9-a270cc00cf48.htm" />
   </HelpTOCNode>
-  <HelpTOCNode Id="e9ec91e9-a2f3-4d05-bb11-b80472dd54d4" Title="SecretNest.RemoteHub" Url="html/75a1e33f-ad9b-ad54-ccd8-5f6d08976c7b.htm">
-    <HelpTOCNode Id="f1a09987-e41c-4afa-9b72-e1e66d132d46" Title="AdapterEventArgs Class" Url="html/fa2ca103-b199-259c-e202-1fb3ee0674cf.htm">
+  <HelpTOCNode Id="bd4c57a7-f67d-4732-bda6-88ec12682e00" Title="SecretNest.RemoteHub" Url="html/75a1e33f-ad9b-ad54-ccd8-5f6d08976c7b.htm">
+    <HelpTOCNode Id="8b0ec4e3-14b1-4ad2-acf3-709594a64d90" Title="AdapterEventArgs Class" Url="html/fa2ca103-b199-259c-e202-1fb3ee0674cf.htm">
       <HelpTOCNode Title="AdapterEventArgs Constructor " Url="html/0909be86-c446-ff96-e4f0-72b2c6ea55ce.htm" />
-      <HelpTOCNode Id="c315ba8e-85e6-4f26-8459-459671cd779c" Title="AdapterEventArgs Properties" Url="html/928d0088-c92f-5bb6-64c7-41f265dc71be.htm">
+      <HelpTOCNode Id="fee6df58-b5ac-403f-957a-2ac9c7fc5634" Title="AdapterEventArgs Properties" Url="html/928d0088-c92f-5bb6-64c7-41f265dc71be.htm">
         <HelpTOCNode Title="Adapter Property " Url="html/f332730a-7688-af07-5550-519884554357.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="AdapterEventArgs Methods" Url="html/be4d4fd4-bd9d-7f72-2219-53a62052af28.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="790c0262-4fe6-455a-87e8-1813c634bd67" Title="ClientIdEventArgs Class" Url="html/126627e5-c30d-f65c-0b1f-17d145aa5a15.htm">
+    <HelpTOCNode Id="149bd6ed-19ee-48fc-b53e-948564a29ad0" Title="ClientIdEventArgs Class" Url="html/126627e5-c30d-f65c-0b1f-17d145aa5a15.htm">
       <HelpTOCNode Title="ClientIdEventArgs Constructor " Url="html/ff453c9e-8f89-e3a0-72db-94738ee3428d.htm" />
-      <HelpTOCNode Id="67b28cd7-cbc3-4d46-8d96-7eea22d82e52" Title="ClientIdEventArgs Properties" Url="html/fa0db804-a61b-d72a-1388-79e2d5c1d381.htm">
+      <HelpTOCNode Id="375b76e3-f57c-4457-a11e-0db608c083fd" Title="ClientIdEventArgs Properties" Url="html/fa0db804-a61b-d72a-1388-79e2d5c1d381.htm">
         <HelpTOCNode Title="ClientId Property " Url="html/0935ab14-746f-3f81-66a1-517c37146625.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="ClientIdEventArgs Methods" Url="html/066b0439-cf42-1b7d-6cde-a2324501335a.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="f8c24369-5e84-4cd2-bd6f-e523461951bb" Title="ClientWithVirtualHostSettingEventArgs Class" Url="html/209ca4b4-6836-9426-4149-939ee1039b68.htm">
+    <HelpTOCNode Id="3e4b391c-fe3a-48f0-9ac7-6dd9e4fc130d" Title="ClientWithVirtualHostSettingEventArgs Class" Url="html/209ca4b4-6836-9426-4149-939ee1039b68.htm">
       <HelpTOCNode Title="ClientWithVirtualHostSettingEventArgs Constructor " Url="html/215b0fa3-c901-bf4c-a2a1-6b2d00dd9a7c.htm" />
-      <HelpTOCNode Id="a9051f15-3d3c-4454-9fe0-6d05b9b5bf42" Title="ClientWithVirtualHostSettingEventArgs Properties" Url="html/fbd4376f-bdc6-5b2e-c9a9-8961302c70cd.htm">
+      <HelpTOCNode Id="ef947137-6ca9-4d46-9952-382181c5c7d1" Title="ClientWithVirtualHostSettingEventArgs Properties" Url="html/fbd4376f-bdc6-5b2e-c9a9-8961302c70cd.htm">
         <HelpTOCNode Title="VirtuaHostSetting Property " Url="html/0272a86a-f43e-0828-1184-efd4c5403d77.htm" />
         <HelpTOCNode Title="VirtualHostSettingId Property " Url="html/47149f21-38ef-c968-5766-25a49877df5d.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="ClientWithVirtualHostSettingEventArgs Methods" Url="html/51484d41-c07b-f14e-7c14-7f0c2d2b3758.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="8a8599a0-5798-49a3-b451-f5c9cfd499dd" Title="ConnectionExceptionEventArgs Class" Url="html/c640e1ae-51f7-3f3a-c7d4-4e184dfaa63e.htm">
+    <HelpTOCNode Id="d737318a-f781-46f0-8146-689c5088ada1" Title="ConnectionExceptionEventArgs Class" Url="html/c640e1ae-51f7-3f3a-c7d4-4e184dfaa63e.htm">
       <HelpTOCNode Title="ConnectionExceptionEventArgs Constructor " Url="html/f15dfbaf-dc94-8d14-2869-55884c32c439.htm" />
-      <HelpTOCNode Id="86e629da-1643-4e47-a15b-554ea9076479" Title="ConnectionExceptionEventArgs Properties" Url="html/cd246322-6fb7-b9c9-ee67-3088d535a509.htm">
+      <HelpTOCNode Id="79b56dd3-146b-43bf-8294-df08c33ff6bf" Title="ConnectionExceptionEventArgs Properties" Url="html/cd246322-6fb7-b9c9-ee67-3088d535a509.htm">
         <HelpTOCNode Title="Exception Property " Url="html/ed184fea-ae90-3736-87be-1771cc685480.htm" />
         <HelpTOCNode Title="IsFatal Property " Url="html/40ec38d7-d26a-6340-2ded-e8879c0c596b.htm" />
         <HelpTOCNode Title="IsRetried Property " Url="html/86654b04-9669-a70f-1c0c-e55eb657abcf.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="ConnectionExceptionEventArgs Methods" Url="html/fe27b527-44f2-650f-eb95-de53905db754.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="8f5fc6e8-ebed-400c-a39b-d78f090b5115" Title="ConnectionExceptionWithAdapterEventArgs Class" Url="html/60ca8294-5c2f-c5a6-d445-f86d99c86353.htm">
+    <HelpTOCNode Id="33f092b4-3c84-4422-a4b9-f0a55da2cb58" Title="ConnectionExceptionWithAdapterEventArgs Class" Url="html/60ca8294-5c2f-c5a6-d445-f86d99c86353.htm">
       <HelpTOCNode Title="ConnectionExceptionWithAdapterEventArgs Constructor " Url="html/bb680559-ccde-193e-8cc6-275bef5f5be2.htm" />
-      <HelpTOCNode Id="d7e9a274-24e4-4701-a464-686a4be503a8" Title="ConnectionExceptionWithAdapterEventArgs Properties" Url="html/e8b9b248-119d-9ba1-a665-6338b4d98339.htm">
+      <HelpTOCNode Id="f53533fc-20a3-4dcb-8a31-6882d0929145" Title="ConnectionExceptionWithAdapterEventArgs Properties" Url="html/e8b9b248-119d-9ba1-a665-6338b4d98339.htm">
         <HelpTOCNode Title="Adapter Property " Url="html/eb3a23b5-e402-1568-d2ac-954194ef765a.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="ConnectionExceptionWithAdapterEventArgs Methods" Url="html/fcfbe90a-186c-414e-e904-ed8e2dacafa3.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="fa8a56a7-302d-4d09-85c2-e2d73f7cf2fc" Title="IGetRelatedRemoteHubAdapterInstance Interface" Url="html/ff5ba890-8c38-9dc1-1145-ea4e56578934.htm">
-      <HelpTOCNode Id="f1df1586-7905-459f-bec4-e341408ffcec" Title="IGetRelatedRemoteHubAdapterInstance Properties" Url="html/22dda6af-d2c1-3fac-5210-145e39b1a214.htm">
+    <HelpTOCNode Id="728b2344-b32b-4e90-b816-d5b1da4ec52f" Title="IGetRelatedRemoteHubAdapterInstance Interface" Url="html/ff5ba890-8c38-9dc1-1145-ea4e56578934.htm">
+      <HelpTOCNode Id="294a6832-ad8a-493a-a9a6-558cf1c0d9e3" Title="IGetRelatedRemoteHubAdapterInstance Properties" Url="html/22dda6af-d2c1-3fac-5210-145e39b1a214.htm">
         <HelpTOCNode Title="Adapter Property " Url="html/2b8ca51e-ee19-f63d-51eb-28c649c7f225.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="03cabf78-9969-4186-830d-b77aa99eadf4" Title="IRemoteHub Interface" Url="html/b9c4d9dd-6c47-8f11-7851-dba25dfc2b3c.htm">
-      <HelpTOCNode Id="d6a87876-dc36-45b6-8a6d-af8bbb84bb2c" Title="IRemoteHub Properties" Url="html/251f3955-3c11-3ec3-de44-9d66ee5bab0d.htm">
+    <HelpTOCNode Id="f7e257c7-6b02-4ee1-bf16-8e2c93d15986" Title="IRemoteHub Interface" Url="html/b9c4d9dd-6c47-8f11-7851-dba25dfc2b3c.htm">
+      <HelpTOCNode Id="0e8c6af1-869b-40f0-83c4-408e7e530640" Title="IRemoteHub Properties" Url="html/251f3955-3c11-3ec3-de44-9d66ee5bab0d.htm">
         <HelpTOCNode Title="ClientId Property " Url="html/4829644a-65a5-833a-374e-1416af4ac1ab.htm" />
         <HelpTOCNode Title="IsStarted Property " Url="html/e3e6e312-3546-5dc5-6875-ba29a8926aad.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="79ce5f90-09cf-4237-a40e-969ee30e7fdb" Title="IRemoteHub Methods" Url="html/b9e503e9-e8fb-99a0-22c7-3ed959d922ab.htm">
+      <HelpTOCNode Id="c46c968f-bce2-439a-854b-b3d8982d59d3" Title="IRemoteHub Methods" Url="html/b9e503e9-e8fb-99a0-22c7-3ed959d922ab.htm">
         <HelpTOCNode Title="ApplyVirtualHosts Method " Url="html/ea2f6b93-41c0-ec4e-6fdd-e1b80a2e9fc5.htm" />
         <HelpTOCNode Title="Start Method " Url="html/d2436300-0d6b-1a80-f104-cfbf73da551c.htm" />
         <HelpTOCNode Title="Stop Method " Url="html/f69ea6c2-216b-742a-323b-d3aaf5e95b3a.htm" />
         <HelpTOCNode Title="TryGetVirtualHosts Method " Url="html/6b2fd624-7db1-5cf6-78f6-6cd9ac8767e7.htm" />
         <HelpTOCNode Title="TryResolveVirtualHost Method " Url="html/06f15295-2581-00eb-ebd7-03a39002bd3f.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="1b9e9439-1315-4342-beb8-14ac7d5a27b0" Title="IRemoteHub Events" Url="html/3207ac7d-61a3-5797-93e0-492140027503.htm">
+      <HelpTOCNode Id="c1cbcf6a-ca38-4afa-97c0-d0a9b81edbaa" Title="IRemoteHub Events" Url="html/3207ac7d-61a3-5797-93e0-492140027503.htm">
         <HelpTOCNode Title="ConnectionErrorOccurred Event" Url="html/d87eb2a7-0bbb-d525-e665-60c50bbf4fa7.htm" />
         <HelpTOCNode Title="RemoteClientRemoved Event" Url="html/db6ac07b-ffdc-e19b-e12c-a3e3a0c59fe2.htm" />
         <HelpTOCNode Title="RemoteClientUpdated Event" Url="html/9a30d84b-6d99-7c9d-c592-f9607f9149ed.htm" />
@@ -86,19 +86,19 @@
         <HelpTOCNode Title="Stopped Event" Url="html/9f47ba7f-317c-0773-8964-53cd9b7ce4f2.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="205e68ca-431d-4e4a-a3e1-27bcfe52e6b4" Title="IRemoteHub(T) Interface" Url="html/9c613255-5458-9436-5c7c-eada368b7537.htm">
+    <HelpTOCNode Id="3de17164-a884-42eb-8c44-de3919818614" Title="IRemoteHub(T) Interface" Url="html/9c613255-5458-9436-5c7c-eada368b7537.htm">
       <HelpTOCNode Title="IRemoteHub(T) Properties" Url="html/7ad49cf7-13fb-740d-c203-ec01f7a60dc5.htm" />
-      <HelpTOCNode Id="5cdb6ab1-94cb-4150-9c2a-d4872139ab84" Title="IRemoteHub(T) Methods" Url="html/7cb1c85b-444d-5fe5-18e8-613d6838c7a7.htm">
+      <HelpTOCNode Id="f11871d6-490e-442a-ba91-dd882ff5e87c" Title="IRemoteHub(T) Methods" Url="html/7cb1c85b-444d-5fe5-18e8-613d6838c7a7.htm">
         <HelpTOCNode Title="SendMessage Method " Url="html/4fdfe404-f971-1928-26e6-efe2e60a485a.htm" />
         <HelpTOCNode Title="SendMessageAsync Method " Url="html/f1c25b54-901f-b67a-85b3-1de8c43e9004.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="IRemoteHub(T) Events" Url="html/480b60a1-b23f-83dc-b4ed-07fe00135acc.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="0d8d1dc1-aed0-40ea-9913-d6a1e3a8ae33" Title="IRemoteHubAdapter Interface" Url="html/11dbc58c-c532-3ec9-9bd3-69c394d2f9cd.htm">
-      <HelpTOCNode Id="fa16d474-ce35-4889-b55f-e4730b58b940" Title="IRemoteHubAdapter Properties" Url="html/f842e708-537e-5628-9e09-11b5c204c8ee.htm">
+    <HelpTOCNode Id="2836c935-5b43-452f-bc06-d61826538e09" Title="IRemoteHubAdapter Interface" Url="html/11dbc58c-c532-3ec9-9bd3-69c394d2f9cd.htm">
+      <HelpTOCNode Id="70c2911f-7af6-4a40-ac24-73f300ad49a5" Title="IRemoteHubAdapter Properties" Url="html/f842e708-537e-5628-9e09-11b5c204c8ee.htm">
         <HelpTOCNode Title="IsStarted Property " Url="html/c762c28f-a6f0-f27f-bcd5-bfc540376796.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="dbaa8edf-eee3-412d-87b1-d06566e3932c" Title="IRemoteHubAdapter Methods" Url="html/bfbb4325-5583-977c-20b5-dfe9ccfd518f.htm">
+      <HelpTOCNode Id="d10273d3-5762-47f2-a9ea-71f7ae2f44dc" Title="IRemoteHubAdapter Methods" Url="html/bfbb4325-5583-977c-20b5-dfe9ccfd518f.htm">
         <HelpTOCNode Title="AddClient Method " Url="html/ea32c80e-bbeb-34dd-07db-5c5441352a08.htm" />
         <HelpTOCNode Title="AddClientAsync Method " Url="html/b011a209-f609-e59a-55a3-6ad9d67cb75d.htm" />
         <HelpTOCNode Title="ApplyVirtualHosts Method " Url="html/c985ec77-629d-dacc-ca0d-ce88cf93e246.htm" />
@@ -113,7 +113,7 @@
         <HelpTOCNode Title="TryGetVirtualHosts Method " Url="html/56a43540-b375-eb65-e3ba-360c030e012c.htm" />
         <HelpTOCNode Title="TryResolveVirtualHost Method " Url="html/6f6092ba-0f59-0677-21db-86a69f9d9dd1.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="ff330d2d-5f96-4997-bf73-b8ff75d46e1c" Title="IRemoteHubAdapter Events" Url="html/dc48f1a7-bfdc-ebeb-fd13-a5d87c270dda.htm">
+      <HelpTOCNode Id="cb69af89-f7ad-4bfe-a85a-d1fe5021979b" Title="IRemoteHubAdapter Events" Url="html/dc48f1a7-bfdc-ebeb-fd13-a5d87c270dda.htm">
         <HelpTOCNode Title="AdapterStarted Event" Url="html/61047df1-b134-dbb1-6714-20eeee08f790.htm" />
         <HelpTOCNode Title="AdapterStopped Event" Url="html/2a1e66b3-d184-d7d2-20a1-fcdb15cbce74.htm" />
         <HelpTOCNode Title="ConnectionErrorOccurred Event" Url="html/81243015-7ce8-d38a-c7dd-a4cce102103b.htm" />
@@ -121,9 +121,9 @@
         <HelpTOCNode Title="RemoteClientUpdated Event" Url="html/87cf7790-d3d1-9277-6c0a-8a5b1a81630c.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="b043592e-dc2c-41f2-a121-d07541c9b2d2" Title="IRemoteHubAdapter(T) Interface" Url="html/786a741c-9548-48b8-3f16-d9fedf4d432e.htm">
+    <HelpTOCNode Id="1bd03e4b-a835-43e5-bc4d-61aad145ef78" Title="IRemoteHubAdapter(T) Interface" Url="html/786a741c-9548-48b8-3f16-d9fedf4d432e.htm">
       <HelpTOCNode Title="IRemoteHubAdapter(T) Properties" Url="html/825c3681-c5d4-4baf-c252-a12d79a4743c.htm" />
-      <HelpTOCNode Id="b9b3b87b-655d-4be6-be60-ccb8a300dbe9" Title="IRemoteHubAdapter(T) Methods" Url="html/b520c37b-f01c-7802-f7c6-34f8c9c39de7.htm">
+      <HelpTOCNode Id="9821eb45-c446-432e-827d-b4a35ba41367" Title="IRemoteHubAdapter(T) Methods" Url="html/b520c37b-f01c-7802-f7c6-34f8c9c39de7.htm">
         <HelpTOCNode Title="AddOnMessageReceivedCallback Method " Url="html/c72077de-6209-4f82-f4a1-bc6ea3e8d01b.htm" />
         <HelpTOCNode Title="RemoveAllOnMessageReceivedCallbacks Method " Url="html/f30611e0-cd76-918b-a90f-99631251b45c.htm" />
         <HelpTOCNode Title="RemoveOnMessageReceivedCallback Method " Url="html/a94500cc-a474-b04a-87c5-8dc225a7669b.htm" />
@@ -132,88 +132,88 @@
       </HelpTOCNode>
       <HelpTOCNode Title="IRemoteHubAdapter(T) Events" Url="html/51d3966c-31d6-fad6-49a0-baace1661da1.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="6538686e-7324-4ec0-9e4e-b7954ee09d5b" Title="IRemoteHubOverRedis Interface" Url="html/818b1456-10fd-ebff-7460-5c4ad02629fc.htm">
+    <HelpTOCNode Id="89d737f0-5c80-4ef3-8bbc-5c8a330b86fa" Title="IRemoteHubOverRedis Interface" Url="html/818b1456-10fd-ebff-7460-5c4ad02629fc.htm">
       <HelpTOCNode Title="IRemoteHubOverRedis Properties" Url="html/4b9833f3-ad3c-2780-b9ac-12f775d8cb69.htm" />
-      <HelpTOCNode Id="ae84a487-b982-4863-ac32-dd0a400cf28b" Title="IRemoteHubOverRedis Methods" Url="html/3360beda-3c64-03f8-f694-494fea4eef81.htm">
+      <HelpTOCNode Id="f916faa6-1385-4845-8e89-5ed763b03177" Title="IRemoteHubOverRedis Methods" Url="html/3360beda-3c64-03f8-f694-494fea4eef81.htm">
         <HelpTOCNode Title="TryResolve Method " Url="html/7ce031bd-5ef4-3d44-befa-f4ad6c3b5675.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="IRemoteHubOverRedis Events" Url="html/606f79c0-6c3e-e4c0-8772-bccc4395f01d.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="b674f6ca-3b64-4648-93ab-f0dd9c236110" Title="IRemoteHubOverRedis(T) Interface" Url="html/ec7ba31f-80e7-e3c7-e6dd-c2659e4d21df.htm">
+    <HelpTOCNode Id="61bf21ab-a761-49e3-92ed-cfb674f382ad" Title="IRemoteHubOverRedis(T) Interface" Url="html/ec7ba31f-80e7-e3c7-e6dd-c2659e4d21df.htm">
       <HelpTOCNode Title="IRemoteHubOverRedis(T) Properties" Url="html/ae3e28ee-15d6-c7b0-531a-e73b429a7195.htm" />
-      <HelpTOCNode Id="63b3e443-cb24-4840-8ae5-68058852755f" Title="IRemoteHubOverRedis(T) Methods" Url="html/b64fe364-02de-ffab-0358-cb1d29921bc3.htm">
-        <HelpTOCNode Id="b7bae3b8-2df4-4526-9517-c0da64c4a82c" Title="SendMessage Method " Url="html/7e37d864-e699-e7d3-a438-93b6926a03bb.htm">
+      <HelpTOCNode Id="032163ec-b18f-4b27-aab8-0c1fa8ccb5e9" Title="IRemoteHubOverRedis(T) Methods" Url="html/b64fe364-02de-ffab-0358-cb1d29921bc3.htm">
+        <HelpTOCNode Id="da47a28c-2c53-43f3-8d38-c61c24ed6d33" Title="SendMessage Method " Url="html/7e37d864-e699-e7d3-a438-93b6926a03bb.htm">
           <HelpTOCNode Title="SendMessage Method (RedisChannel, T)" Url="html/7b8f1b63-07a3-90a3-e65b-4b429c936b50.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="cbbed5d7-5c33-4063-ba84-d9b9a70f4de6" Title="SendMessageAsync Method " Url="html/5f836107-0a1d-df46-73db-0fbbd858d924.htm">
+        <HelpTOCNode Id="366c6cdd-1a86-4327-8de0-be073cfcd60c" Title="SendMessageAsync Method " Url="html/5f836107-0a1d-df46-73db-0fbbd858d924.htm">
           <HelpTOCNode Title="SendMessageAsync Method (RedisChannel, T)" Url="html/29227636-4507-1439-334d-4860cccb3db8.htm" />
         </HelpTOCNode>
       </HelpTOCNode>
       <HelpTOCNode Title="IRemoteHubOverRedis(T) Events" Url="html/93b2fcc3-dc27-c1e1-2bab-4fd9ac1ae9cc.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="ddc58159-40ed-4d68-ba8b-796ac61a6bdc" Title="IRemoteHubOverStream Interface" Url="html/cd286fda-20c0-4aa1-6d20-3b2b12692446.htm">
+    <HelpTOCNode Id="ac40b790-695b-45da-adbd-d8b0f355c503" Title="IRemoteHubOverStream Interface" Url="html/cd286fda-20c0-4aa1-6d20-3b2b12692446.htm">
       <HelpTOCNode Title="IRemoteHubOverStream Properties" Url="html/f513db02-2d23-cf11-db91-9e647925852d.htm" />
-      <HelpTOCNode Id="fecc01da-8c8f-4a1e-81ae-9d2e948000e4" Title="IRemoteHubOverStream Methods" Url="html/593ec2cb-05a9-19b1-f105-1e0d3289d6d6.htm">
+      <HelpTOCNode Id="2464035e-dfb6-4396-b47c-a8c1a10b4daa" Title="IRemoteHubOverStream Methods" Url="html/593ec2cb-05a9-19b1-f105-1e0d3289d6d6.htm">
         <HelpTOCNode Title="ChangeStream Method " Url="html/8a395051-c719-8934-e0ed-c25fb3c92a52.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="IRemoteHubOverStream Events" Url="html/baf69f7e-22b8-2e2f-9444-91437bc44934.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="d05fb2f5-8bdc-4401-8e80-d75fb6e3300f" Title="IRemoteHubRedisAdapter Interface" Url="html/e9cbf803-a2a5-945d-2b6d-b8a477f09cd6.htm">
+    <HelpTOCNode Id="ab1df104-4fe5-4f26-8d16-0612e164f25f" Title="IRemoteHubRedisAdapter Interface" Url="html/e9cbf803-a2a5-945d-2b6d-b8a477f09cd6.htm">
       <HelpTOCNode Title="IRemoteHubRedisAdapter Properties" Url="html/84f0d99b-5820-592e-72f3-dae8086ffc75.htm" />
-      <HelpTOCNode Id="f074b738-5878-40aa-8992-84d9f6f32068" Title="IRemoteHubRedisAdapter Methods" Url="html/b9e96a71-49f2-dcd0-775b-2f3e879a9c59.htm">
+      <HelpTOCNode Id="d29752e3-0106-4ca4-bbff-3aa92502fdbe" Title="IRemoteHubRedisAdapter Methods" Url="html/b9e96a71-49f2-dcd0-775b-2f3e879a9c59.htm">
         <HelpTOCNode Title="TryResolve Method " Url="html/64a2d5e2-d318-dced-0460-851096b4bb87.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="IRemoteHubRedisAdapter Events" Url="html/974c6829-ca22-30f3-9eb3-3709f32c8ecb.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="9d15c24d-67f6-4a22-982c-6f40adb4ce72" Title="IRemoteHubRedisAdapter(T) Interface" Url="html/a15b69cb-99f4-bf37-b706-b84514586881.htm">
+    <HelpTOCNode Id="b444aed4-0d55-4fdf-9456-f14d27acd52e" Title="IRemoteHubRedisAdapter(T) Interface" Url="html/a15b69cb-99f4-bf37-b706-b84514586881.htm">
       <HelpTOCNode Title="IRemoteHubRedisAdapter(T) Properties" Url="html/31a7f6cc-1e01-7d12-2d5d-a9371cf9aa41.htm" />
-      <HelpTOCNode Id="a63664d2-9789-4d4b-9765-8bc5166177df" Title="IRemoteHubRedisAdapter(T) Methods" Url="html/5ec1b74f-c69f-7595-848b-202b06fae5f7.htm">
-        <HelpTOCNode Id="e50df67a-80b2-4b83-9309-b304a127da16" Title="SendPrivateMessage Method " Url="html/137cea14-aefe-c558-b504-c02d0aff5654.htm">
+      <HelpTOCNode Id="90275d68-64ac-432d-acdd-011dc2e5328e" Title="IRemoteHubRedisAdapter(T) Methods" Url="html/5ec1b74f-c69f-7595-848b-202b06fae5f7.htm">
+        <HelpTOCNode Id="7ee1ee0c-6b28-4538-9cc1-1aaaed3be04a" Title="SendPrivateMessage Method " Url="html/137cea14-aefe-c558-b504-c02d0aff5654.htm">
           <HelpTOCNode Title="SendPrivateMessage Method (RedisChannel, T)" Url="html/a3adbcf8-0fdd-216e-c748-ac3efcda0b63.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="2e549475-4d03-47a8-880f-f739e1d77794" Title="SendPrivateMessageAsync Method " Url="html/56bce97c-8121-4bd5-cd49-d1c532529832.htm">
+        <HelpTOCNode Id="ba315c49-6944-4476-acf3-ad2bd2027cb0" Title="SendPrivateMessageAsync Method " Url="html/56bce97c-8121-4bd5-cd49-d1c532529832.htm">
           <HelpTOCNode Title="SendPrivateMessageAsync Method (RedisChannel, T)" Url="html/eeb8f7b7-4f66-aba8-4afa-c25d602cb244.htm" />
         </HelpTOCNode>
       </HelpTOCNode>
       <HelpTOCNode Title="IRemoteHubRedisAdapter(T) Events" Url="html/6a7e3a48-e468-43c9-96d2-58a1518ead9f.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="9840269c-18cd-4c51-b3bc-6f61f852d703" Title="IRemoteHubStreamAdapter Interface" Url="html/69a6770c-b95f-d5e9-14d6-1120bbfddfce.htm">
+    <HelpTOCNode Id="1cfbf42e-0015-4d41-bae9-89e303622c92" Title="IRemoteHubStreamAdapter Interface" Url="html/69a6770c-b95f-d5e9-14d6-1120bbfddfce.htm">
       <HelpTOCNode Title="IRemoteHubStreamAdapter Properties" Url="html/64c691df-dca2-b7b6-d195-3508af537e96.htm" />
-      <HelpTOCNode Id="c408ab80-4dc2-4d3d-af3f-cd2609a0f911" Title="IRemoteHubStreamAdapter Methods" Url="html/cefa55a8-9c1f-84ae-d11e-0e7ac37d729d.htm">
+      <HelpTOCNode Id="f5d023fe-ca58-4717-a09f-f460e776c99b" Title="IRemoteHubStreamAdapter Methods" Url="html/cefa55a8-9c1f-84ae-d11e-0e7ac37d729d.htm">
         <HelpTOCNode Title="ChangeStream Method " Url="html/c25048de-dfa8-d739-492b-131454a8ab87.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="IRemoteHubStreamAdapter Events" Url="html/a168ad11-c2a9-6db4-201d-639138365a68.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="ba985e97-70f4-46c8-b8bc-0d7fc8bfedd2" Title="MessageRoutedEventArgs Class" Url="html/66ee8624-38e6-c0ef-2fc6-aea6fcd69586.htm">
-      <HelpTOCNode Id="78766752-6d83-4100-955f-e205ec83d845" Title="MessageRoutedEventArgs Properties" Url="html/550afb92-2a31-e284-809e-e83a3a3e3d76.htm">
+    <HelpTOCNode Id="5ea2dcb7-262e-4fdd-a9d3-f271e8a7db15" Title="MessageRoutedEventArgs Class" Url="html/66ee8624-38e6-c0ef-2fc6-aea6fcd69586.htm">
+      <HelpTOCNode Id="216755fc-6c0c-43d0-a995-8fe60c528958" Title="MessageRoutedEventArgs Properties" Url="html/550afb92-2a31-e284-809e-e83a3a3e3d76.htm">
         <HelpTOCNode Title="Adapter Property " Url="html/07febdf1-5d81-bda1-a8f7-ed54bc9ead79.htm" />
         <HelpTOCNode Title="Message Property " Url="html/022667e5-7045-8073-4217-af4b141fb648.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="MessageRoutedEventArgs Methods" Url="html/bfd3a06b-ecf1-b35f-8dcc-ecfd495e5e56.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="de890506-e867-4f20-a9ef-14eebc46d380" Title="MessageRoutingFailedEventArgs Class" Url="html/aed06129-f97f-d75a-492e-dfd3188ba5b1.htm">
-      <HelpTOCNode Id="63be5c8f-2d04-403f-b16b-78549a2d7527" Title="MessageRoutingFailedEventArgs Properties" Url="html/aa001012-8655-a849-bb3e-5f50870ec15d.htm">
+    <HelpTOCNode Id="ff9f8d3f-8043-466e-b7a2-e1686b6b9337" Title="MessageRoutingFailedEventArgs Class" Url="html/aed06129-f97f-d75a-492e-dfd3188ba5b1.htm">
+      <HelpTOCNode Id="ec903644-264f-4558-b8a8-0655048a18dd" Title="MessageRoutingFailedEventArgs Properties" Url="html/aa001012-8655-a849-bb3e-5f50870ec15d.htm">
         <HelpTOCNode Title="Message Property " Url="html/502e4b5c-1566-88d6-a8fb-f8f0f5ae1ba7.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="MessageRoutingFailedEventArgs Methods" Url="html/2ebd85a9-8a8f-c807-7883-b5735e5f840e.htm" />
     </HelpTOCNode>
     <HelpTOCNode Title="OnMessageReceivedCallback(T) Delegate" Url="html/34bcb308-4b25-bdde-70cf-02bf8a1625b8.htm" />
-    <HelpTOCNode Id="478044f3-7bf9-4250-8648-1e8ba1645ce2" Title="RedisAdapter Class" Url="html/c258d855-e800-5013-02ef-50de36c2d1a0.htm">
+    <HelpTOCNode Id="974276c1-fbed-4453-863a-4c1595b86e4d" Title="RedisAdapter Class" Url="html/c258d855-e800-5013-02ef-50de36c2d1a0.htm">
       <HelpTOCNode Title="RedisAdapter Constructor " Url="html/f2d8e731-85a6-d8a2-5424-cef075e88979.htm" />
-      <HelpTOCNode Id="3ba6748b-7c78-4399-9c4a-ec99ea610c2f" Title="RedisAdapter Properties" Url="html/1ca7a34f-985c-e36b-3c37-5c1bd89e163f.htm">
+      <HelpTOCNode Id="b6b39945-9d50-49ba-b3cc-94223cdcdbce" Title="RedisAdapter Properties" Url="html/1ca7a34f-985c-e36b-3c37-5c1bd89e163f.htm">
         <HelpTOCNode Title="IsStarted Property " Url="html/f0d334af-d567-f15d-40c7-7bb5cba53b68.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="d2268320-cf37-4799-81cd-de37a48f5fef" Title="RedisAdapter Methods" Url="html/03c67031-2b1f-2484-372a-600bf7bbfa24.htm">
+      <HelpTOCNode Id="fbaf0c75-b1c2-4c41-9fd4-82ee1037bc98" Title="RedisAdapter Methods" Url="html/03c67031-2b1f-2484-372a-600bf7bbfa24.htm">
         <HelpTOCNode Title="AddClient Method " Url="html/cd8b9b8f-8a14-9e27-f13f-37b8f0f5faba.htm" />
         <HelpTOCNode Title="AddClientAsync Method " Url="html/8be01ebf-60dc-bd30-a42d-7fd52079d11e.htm" />
         <HelpTOCNode Title="ApplyVirtualHosts Method " Url="html/840905ba-deb0-d573-fa40-ea976a942ca6.htm" />
-        <HelpTOCNode Id="6386c484-2a7f-44c8-bb77-55eeffab49ed" Title="Dispose Method " Url="html/eabd6589-99b6-f2e1-1710-a8f60e72cbf9.htm">
+        <HelpTOCNode Id="9c5367d0-eb41-4395-996a-f2ebd2660010" Title="Dispose Method " Url="html/eabd6589-99b6-f2e1-1710-a8f60e72cbf9.htm">
           <HelpTOCNode Title="Dispose Method " Url="html/7912ec46-3c3c-2262-3cec-3aba92f5a11b.htm" />
           <HelpTOCNode Title="Dispose Method (Boolean)" Url="html/88ec2652-96d3-f0f8-f024-ede924f530a6.htm" />
         </HelpTOCNode>
         <HelpTOCNode Title="GetAllClients Method " Url="html/a53fe77e-5a30-830f-43c6-9b95b059337c.htm" />
         <HelpTOCNode Title="GetAllRemoteClients Method " Url="html/6be43bdb-6911-4e33-4bd0-6e86d8a29987.htm" />
-        <HelpTOCNode Id="d1ebc504-5953-497b-8324-484fdab41409" Title="IsSelf Method " Url="html/abc06803-64ad-30cb-c47f-e16b718f6966.htm">
+        <HelpTOCNode Id="f5906d34-835a-471b-90f6-04615253eca1" Title="IsSelf Method " Url="html/abc06803-64ad-30cb-c47f-e16b718f6966.htm">
           <HelpTOCNode Title="IsSelf Method (Guid)" Url="html/531f3ba1-630c-1ca8-d449-80f30b9e0988.htm" />
           <HelpTOCNode Title="IsSelf Method (RedisChannel, Guid)" Url="html/3f669a36-2452-88b9-a16f-8813f2d24f72.htm" />
         </HelpTOCNode>
@@ -222,11 +222,11 @@
         <HelpTOCNode Title="RemoveAllClientsAsync Method " Url="html/fd9bdfa4-98dc-3dd2-14d1-b04650b2b2e5.htm" />
         <HelpTOCNode Title="RemoveClient Method " Url="html/4ed592e5-7955-f951-ed66-c52b2463dcba.htm" />
         <HelpTOCNode Title="RemoveClientAsync Method " Url="html/ebda9f5c-abee-1106-d891-830e2669e26c.htm" />
-        <HelpTOCNode Id="a3068e28-3883-47b5-b5d7-c9622cfa033c" Title="SendPrivateMessage Method " Url="html/91488418-1304-2e9e-b8db-4ec825f06d26.htm">
+        <HelpTOCNode Id="521abbc8-8746-4e97-8fc4-b899d5c0f16d" Title="SendPrivateMessage Method " Url="html/91488418-1304-2e9e-b8db-4ec825f06d26.htm">
           <HelpTOCNode Title="SendPrivateMessage Method (RedisChannel, RedisValue)" Url="html/dbaff113-28ca-2756-ef82-eb1a0ea6dd5a.htm" />
           <HelpTOCNode Title="SendPrivateMessage Method (Guid, RedisValue)" Url="html/b1bee245-7bc1-7ed9-61fd-a241474e1d7a.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="f446db0f-25bc-4049-8422-a6b133b61904" Title="SendPrivateMessageAsync Method " Url="html/ae5acf16-d682-2651-2779-1e3d11cd7b4a.htm">
+        <HelpTOCNode Id="b617a1fd-cf40-4836-bb4e-f9d5c0f45cda" Title="SendPrivateMessageAsync Method " Url="html/ae5acf16-d682-2651-2779-1e3d11cd7b4a.htm">
           <HelpTOCNode Title="SendPrivateMessageAsync Method (RedisChannel, RedisValue)" Url="html/5f1c9c07-156f-7589-4ae2-29658026015d.htm" />
           <HelpTOCNode Title="SendPrivateMessageAsync Method (Guid, RedisValue)" Url="html/ac70f2c2-a458-6f6f-8465-9a85912a6729.htm" />
         </HelpTOCNode>
@@ -236,7 +236,7 @@
         <HelpTOCNode Title="TryResolve Method " Url="html/ffda2f65-c189-c3f2-3d57-475dd0c2e80b.htm" />
         <HelpTOCNode Title="TryResolveVirtualHost Method " Url="html/ef7c617e-e0b6-fd2d-2b30-e566e90f9594.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="e8fcd793-d566-4fa3-9153-f12e1cdaca3e" Title="RedisAdapter Events" Url="html/280f1bca-b0dd-2f4a-f45e-af9cae9a1163.htm">
+      <HelpTOCNode Id="c8d6f5fa-a911-42be-9e54-88d170db7164" Title="RedisAdapter Events" Url="html/280f1bca-b0dd-2f4a-f45e-af9cae9a1163.htm">
         <HelpTOCNode Title="AdapterStarted Event" Url="html/2efcd0b2-4e20-8a4d-7d94-289853640821.htm" />
         <HelpTOCNode Title="AdapterStopped Event" Url="html/22057d14-76b3-90f7-bcf6-1997e972bf7a.htm" />
         <HelpTOCNode Title="ConnectionErrorOccurred Event" Url="html/bbaa27cf-b067-0f4f-a051-09a66763b380.htm" />
@@ -244,48 +244,48 @@
         <HelpTOCNode Title="RemoteClientUpdated Event" Url="html/62230831-8541-cf7e-6f20-a1a9f1a3d68d.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="534d6fb0-50f5-4b46-9d3d-2cf508bce6cb" Title="RedisAdapter(T) Class" Url="html/8333780b-98bd-a2a0-dc70-269bf12eebf5.htm">
+    <HelpTOCNode Id="f7b341b1-11cf-4e01-a24e-b0e351718490" Title="RedisAdapter(T) Class" Url="html/8333780b-98bd-a2a0-dc70-269bf12eebf5.htm">
       <HelpTOCNode Title="RedisAdapter(T) Constructor " Url="html/8f80c571-f28f-539c-63dd-bfc1baba8a62.htm" />
       <HelpTOCNode Title="RedisAdapter(T) Properties" Url="html/99f9d7ae-cbc8-2495-e375-be12dc8ff235.htm" />
-      <HelpTOCNode Id="b021e428-e793-4c4d-982a-7157c67a0a88" Title="RedisAdapter(T) Methods" Url="html/3114b524-a39e-d798-d2ff-3574cd821180.htm">
+      <HelpTOCNode Id="f7199e2d-4965-4588-9599-fa821c810da6" Title="RedisAdapter(T) Methods" Url="html/3114b524-a39e-d798-d2ff-3574cd821180.htm">
         <HelpTOCNode Title="AddOnMessageReceivedCallback Method " Url="html/24365281-cae2-f412-9f32-f725d69373a0.htm" />
         <HelpTOCNode Title="OnPrivateMessageReceived Method " Url="html/5936c20a-9b1f-3099-71c5-d2d9e553ffc7.htm" />
         <HelpTOCNode Title="RemoveAllOnMessageReceivedCallbacks Method " Url="html/97f0604f-1212-96f2-925f-fe5b4a0988e3.htm" />
         <HelpTOCNode Title="RemoveOnMessageReceivedCallback Method " Url="html/4c6fbb0a-9d5a-8b17-9171-1d3a8221065e.htm" />
-        <HelpTOCNode Id="22f935e6-ae59-4d49-a765-712edd27c0fd" Title="SendPrivateMessage Method " Url="html/92b5ed20-24f4-c476-24ef-296f545fe2df.htm">
+        <HelpTOCNode Id="8ea7f2bd-c574-473a-8888-efc3ce20a042" Title="SendPrivateMessage Method " Url="html/92b5ed20-24f4-c476-24ef-296f545fe2df.htm">
           <HelpTOCNode Title="SendPrivateMessage Method (RedisChannel, T)" Url="html/0534e12c-4f5a-4fa0-8fd8-67c74fcf6ae2.htm" />
           <HelpTOCNode Title="SendPrivateMessage Method (Guid, T)" Url="html/20c22fe9-f93d-02fe-d297-fce2174fe2d5.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="ba3e8e46-9d22-409c-803f-565d526f65a2" Title="SendPrivateMessageAsync Method " Url="html/7e575a0c-0a03-3f4b-182f-ebaecb73a74e.htm">
+        <HelpTOCNode Id="ecf47ca3-2be7-468e-9cb7-94c8d3ce0d4e" Title="SendPrivateMessageAsync Method " Url="html/7e575a0c-0a03-3f4b-182f-ebaecb73a74e.htm">
           <HelpTOCNode Title="SendPrivateMessageAsync Method (RedisChannel, T)" Url="html/c786eed9-e865-61dd-1ecc-633bb8d6ad03.htm" />
           <HelpTOCNode Title="SendPrivateMessageAsync Method (Guid, T)" Url="html/9e38bda2-e419-2c1a-eb72-00e59d0dc2ef.htm" />
         </HelpTOCNode>
       </HelpTOCNode>
       <HelpTOCNode Title="RedisAdapter(T) Events" Url="html/269931ac-4502-8094-d423-7cadc4b2f6fa.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="29d4cf6b-a4aa-4ec1-b737-0b94c48c9b46" Title="RemoteClientChangedEventArgs Class" Url="html/4ba9da36-22cf-9144-befc-ab934810f33a.htm">
-      <HelpTOCNode Id="506cec33-c714-4abc-8f41-9c0606661fed" Title="RemoteClientChangedEventArgs Properties" Url="html/fee34afb-d543-b95c-9f31-24e24b982b75.htm">
+    <HelpTOCNode Id="5bdf3e12-e0b4-4993-8b28-db71601cf4bd" Title="RemoteClientChangedEventArgs Class" Url="html/4ba9da36-22cf-9144-befc-ab934810f33a.htm">
+      <HelpTOCNode Id="d254fc32-82e8-4723-8ce6-51d5ad28e38a" Title="RemoteClientChangedEventArgs Properties" Url="html/fee34afb-d543-b95c-9f31-24e24b982b75.htm">
         <HelpTOCNode Title="Adapter Property " Url="html/40dbf130-e7f2-4367-c99b-fa82450f96a1.htm" />
       </HelpTOCNode>
       <HelpTOCNode Title="RemoteClientChangedEventArgs Methods" Url="html/23bf7191-73b1-28a3-949c-b30119431193.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="1ce504be-8a2e-4af1-9f18-713b69ff5b14" Title="RemoteHubOverRedis(T) Class" Url="html/be02941e-dd98-4319-d366-2ec3ba673e34.htm">
+    <HelpTOCNode Id="adb035d4-a425-4208-a52b-20a4e6a15a99" Title="RemoteHubOverRedis(T) Class" Url="html/be02941e-dd98-4319-d366-2ec3ba673e34.htm">
       <HelpTOCNode Title="RemoteHubOverRedis(T) Constructor " Url="html/4cd9d035-67dd-ab1e-7b43-5cf3579b33e1.htm" />
-      <HelpTOCNode Id="2780be97-f41e-4349-a489-e3e1d439d5fe" Title="RemoteHubOverRedis(T) Properties" Url="html/30b14c44-ca65-890b-f7b0-a9cc74b8d307.htm">
+      <HelpTOCNode Id="566e7858-02cd-476a-a1db-d5be7f23f85b" Title="RemoteHubOverRedis(T) Properties" Url="html/30b14c44-ca65-890b-f7b0-a9cc74b8d307.htm">
         <HelpTOCNode Title="ClientId Property " Url="html/d8434984-d9b9-5efe-2f9b-368ed35f3ec7.htm" />
         <HelpTOCNode Title="IsStarted Property " Url="html/6d1786a4-8fe6-b557-71c0-11a748ef30a2.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="f83e2a2d-0f07-4e37-b75d-df737daefdb7" Title="RemoteHubOverRedis(T) Methods" Url="html/5396a097-1495-505d-7d5e-19ab005b2468.htm">
+      <HelpTOCNode Id="943650d7-2de9-4008-8ff4-00bfec25c299" Title="RemoteHubOverRedis(T) Methods" Url="html/5396a097-1495-505d-7d5e-19ab005b2468.htm">
         <HelpTOCNode Title="ApplyVirtualHosts Method " Url="html/29c7861b-66ac-a9a8-f5b6-e7fcef40df73.htm" />
-        <HelpTOCNode Id="3f9973af-33d0-44be-b4af-71bd0b047c39" Title="Dispose Method " Url="html/05aac8d9-9205-92f6-0d57-6a039d2eaf90.htm">
+        <HelpTOCNode Id="cabd53dc-49a1-4f3b-a417-7d88ef7f66b0" Title="Dispose Method " Url="html/05aac8d9-9205-92f6-0d57-6a039d2eaf90.htm">
           <HelpTOCNode Title="Dispose Method " Url="html/1c329732-1287-349a-2635-772b1a2bb281.htm" />
           <HelpTOCNode Title="Dispose Method (Boolean)" Url="html/0f1776d3-7f3f-f904-9a01-d7092bc7d9a3.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="61da45c1-5b47-42f4-8e1a-d045c21c2028" Title="SendMessage Method " Url="html/398a9bde-b27a-bdaa-a2c9-04048528ee70.htm">
+        <HelpTOCNode Id="06716af1-0dae-4f57-93fe-8e803d263194" Title="SendMessage Method " Url="html/398a9bde-b27a-bdaa-a2c9-04048528ee70.htm">
           <HelpTOCNode Title="SendMessage Method (RedisChannel, T)" Url="html/23d9e4a1-dee2-78e4-d550-278954e8e340.htm" />
           <HelpTOCNode Title="SendMessage Method (Guid, T)" Url="html/31b2974a-83bc-1ab0-4097-e5b5cab051d3.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="12514ae2-c8b5-494e-8a9a-d9f4b220d628" Title="SendMessageAsync Method " Url="html/cc6784eb-9ecb-9aac-e89f-65d13ca5b309.htm">
+        <HelpTOCNode Id="847e809c-d24d-4228-b140-262f519cbd8b" Title="SendMessageAsync Method " Url="html/cc6784eb-9ecb-9aac-e89f-65d13ca5b309.htm">
           <HelpTOCNode Title="SendMessageAsync Method (RedisChannel, T)" Url="html/99282e6b-b159-5579-09e4-8a8e543a4208.htm" />
           <HelpTOCNode Title="SendMessageAsync Method (Guid, T)" Url="html/1ad9e086-3850-c2b3-f7d1-1fb00c60ac7c.htm" />
         </HelpTOCNode>
@@ -295,7 +295,7 @@
         <HelpTOCNode Title="TryResolve Method " Url="html/cfc6f4c5-94f1-26a7-b22b-ca92650bb801.htm" />
         <HelpTOCNode Title="TryResolveVirtualHost Method " Url="html/8d208e34-98e3-386d-31a0-54e873c40f54.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="7001da46-c538-4aea-bb40-1a44eb8ebfa9" Title="RemoteHubOverRedis(T) Events" Url="html/35203d4b-2881-87df-fa9f-5d11b8b23905.htm">
+      <HelpTOCNode Id="79923af6-403c-4507-b09c-8a199e574061" Title="RemoteHubOverRedis(T) Events" Url="html/35203d4b-2881-87df-fa9f-5d11b8b23905.htm">
         <HelpTOCNode Title="ConnectionErrorOccurred Event" Url="html/ebfc531a-056e-f59b-be1c-cd10e8747f0d.htm" />
         <HelpTOCNode Title="RemoteClientRemoved Event" Url="html/37fb544d-2807-0f53-dfd9-ac00423d25db.htm" />
         <HelpTOCNode Title="RemoteClientUpdated Event" Url="html/d85c3a88-a248-0cfc-07ac-33a05a76fe65.htm" />
@@ -303,16 +303,16 @@
         <HelpTOCNode Title="Stopped Event" Url="html/71b531a8-73d4-5b35-d592-9ea2d8ccc7e3.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="8bb09897-cfda-4347-b697-0955c02bc6a9" Title="RemoteHubOverStream(T) Class" Url="html/8eda50a9-5a22-8361-b3c8-345dda484b1b.htm">
+    <HelpTOCNode Id="5823c36b-d73c-442b-a386-403cc0deb9f1" Title="RemoteHubOverStream(T) Class" Url="html/8eda50a9-5a22-8361-b3c8-345dda484b1b.htm">
       <HelpTOCNode Title="RemoteHubOverStream(T) Constructor " Url="html/6c782008-fc15-3849-e2c5-a95ce1756df4.htm" />
-      <HelpTOCNode Id="f1e5fdd3-0f07-4ceb-9a44-19d856cd8ce0" Title="RemoteHubOverStream(T) Properties" Url="html/da81ded6-89aa-43da-d761-5f9a78b38e22.htm">
+      <HelpTOCNode Id="5b44ba9f-116f-4ae1-9aff-c7caaebda148" Title="RemoteHubOverStream(T) Properties" Url="html/da81ded6-89aa-43da-d761-5f9a78b38e22.htm">
         <HelpTOCNode Title="ClientId Property " Url="html/94b28d0b-c445-dcb8-b674-fc39b02d303c.htm" />
         <HelpTOCNode Title="IsStarted Property " Url="html/31839585-f5b2-4dda-dee0-125f2a634de0.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="a7dab7ad-1883-42ea-a058-cdfd72b7a572" Title="RemoteHubOverStream(T) Methods" Url="html/2294a57d-a46a-4efc-88e5-bd07ad9db624.htm">
+      <HelpTOCNode Id="0228bd0f-21fc-4de7-847f-7db218c4d56e" Title="RemoteHubOverStream(T) Methods" Url="html/2294a57d-a46a-4efc-88e5-bd07ad9db624.htm">
         <HelpTOCNode Title="ApplyVirtualHosts Method " Url="html/93db9ef4-7480-e518-5473-7604c7cab75a.htm" />
         <HelpTOCNode Title="ChangeStream Method " Url="html/1496914c-8e96-d863-bc5a-3a9126ed9ade.htm" />
-        <HelpTOCNode Id="94a6f9b0-459b-46aa-964f-143653a35715" Title="Dispose Method " Url="html/42e682ca-97ba-d642-40c8-1162b6bb7aa4.htm">
+        <HelpTOCNode Id="9d59f908-301c-463a-ac9b-0bc8562bd512" Title="Dispose Method " Url="html/42e682ca-97ba-d642-40c8-1162b6bb7aa4.htm">
           <HelpTOCNode Title="Dispose Method " Url="html/57fc0d2f-5016-16e8-565b-c25ed1d71d33.htm" />
           <HelpTOCNode Title="Dispose Method (Boolean)" Url="html/35f7420b-f751-c804-7a9b-f564199713d5.htm" />
         </HelpTOCNode>
@@ -323,7 +323,7 @@
         <HelpTOCNode Title="TryGetVirtualHosts Method " Url="html/3e19d8d8-1c22-2b03-06a0-8bce82512e3a.htm" />
         <HelpTOCNode Title="TryResolveVirtualHost Method " Url="html/eba501a3-fadc-08eb-1dac-7093b0bcc10f.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="04297f28-3087-4c1d-a5c6-e339516b4969" Title="RemoteHubOverStream(T) Events" Url="html/9e9138f6-ddab-9e75-b501-ccad31a007cd.htm">
+      <HelpTOCNode Id="d39c599e-ec2e-4dbf-840a-98cb54c4d497" Title="RemoteHubOverStream(T) Events" Url="html/9e9138f6-ddab-9e75-b501-ccad31a007cd.htm">
         <HelpTOCNode Title="ConnectionErrorOccurred Event" Url="html/0dbdb31e-aba4-eb8b-14ca-dfffbbf02731.htm" />
         <HelpTOCNode Title="RemoteClientRemoved Event" Url="html/203d6996-7a7e-eefc-29dd-78fdc539f308.htm" />
         <HelpTOCNode Title="RemoteClientUpdated Event" Url="html/5a8a0369-3baf-3cd4-1a01-0fa7fddc802c.htm" />
@@ -331,22 +331,22 @@
         <HelpTOCNode Title="Stopped Event" Url="html/66ae7f0d-d358-843c-6afa-99fef9d23a4e.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="8c8f5065-1a20-4aae-99f1-2c28188de914" Title="RemoteHubSwitch Class" Url="html/b74a906d-0711-a77c-9828-7f1af129aa03.htm">
+    <HelpTOCNode Id="d1d407c2-bd42-4f53-9a2b-7129ed9bf5d6" Title="RemoteHubSwitch Class" Url="html/b74a906d-0711-a77c-9828-7f1af129aa03.htm">
       <HelpTOCNode Title="RemoteHubSwitch Constructor " Url="html/2af4c7fd-799e-1947-d331-5984a31396fe.htm" />
-      <HelpTOCNode Id="4720bc2b-aa1c-4d60-b7f3-ba20d35bf6d1" Title="RemoteHubSwitch Methods" Url="html/3243af37-ed46-9eab-d1f8-947ce1b09c08.htm">
+      <HelpTOCNode Id="862c0830-cc50-484b-bb7c-ea596f53197b" Title="RemoteHubSwitch Methods" Url="html/3243af37-ed46-9eab-d1f8-947ce1b09c08.htm">
         <HelpTOCNode Title="AddAdapter Method " Url="html/2db5105c-7137-5fbe-d151-e5b2103cde08.htm" />
         <HelpTOCNode Title="AddAdapters Method " Url="html/e01eb0e6-d7f0-1079-916f-8d0d61e4cee1.htm" />
         <HelpTOCNode Title="GetActiveRemoteClientsOfAdapter Method " Url="html/c3ed9e09-778e-38da-94ea-b0c62a7b39b7.htm" />
         <HelpTOCNode Title="GetAllAdapters Method " Url="html/e9bec0e9-ba25-360a-09f8-f6a565b13f1e.htm" />
         <HelpTOCNode Title="GetAllRemoteClients Method " Url="html/927cdcd9-632a-685d-8e59-3e6bb2767310.htm" />
-        <HelpTOCNode Id="dcf54658-cb33-47be-b73e-912855064889" Title="RemoveAdapter Method " Url="html/4cca833c-bb2a-9291-ab1f-a6a9b67d5317.htm">
+        <HelpTOCNode Id="3eb777b4-2bb3-4d77-afb2-6c1f1e8f960d" Title="RemoveAdapter Method " Url="html/4cca833c-bb2a-9291-ab1f-a6a9b67d5317.htm">
           <HelpTOCNode Title="RemoveAdapter Method (IRemoteHubAdapter(Byte[]), Boolean)" Url="html/3577110e-e5c7-ee74-ff00-689ed6a8bfcb.htm" />
           <HelpTOCNode Title="RemoveAdapter Method (IEnumerable(IRemoteHubAdapter(Byte[])), Boolean)" Url="html/ee5f0e04-e5c8-9174-8e8b-55f853ad21f4.htm" />
         </HelpTOCNode>
         <HelpTOCNode Title="RemoveAdapters Method " Url="html/b4eab79c-57b5-08f4-ac01-e2692e93f012.htm" />
         <HelpTOCNode Title="RemoveAllAdapters Method " Url="html/74a15b40-0e1c-0127-571b-c8892ff86c62.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="080dfc17-104a-4b99-b8a8-b2de0888055f" Title="RemoteHubSwitch Events" Url="html/66ede0bd-4522-95e6-8512-375c19eea52e.htm">
+      <HelpTOCNode Id="0f19f9e1-1da1-4c2a-89f7-b7b06b49c419" Title="RemoteHubSwitch Events" Url="html/66ede0bd-4522-95e6-8512-375c19eea52e.htm">
         <HelpTOCNode Title="AdapterAdded Event" Url="html/5576b2ad-8137-f8db-366c-7c70d4de709f.htm" />
         <HelpTOCNode Title="AdapterRemoved Event" Url="html/41bbbc66-aa00-6ffe-cee5-b5d9db9992b8.htm" />
         <HelpTOCNode Title="AdapterStarted Event" Url="html/09e7f2e6-acce-9b4c-c751-dd710650eae1.htm" />
@@ -359,15 +359,15 @@
         <HelpTOCNode Title="RemoteClientRemoved Event" Url="html/4e616167-2b49-386b-12d1-3279ac5aa396.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="86130afd-18cb-45e9-a659-5875db517913" Title="RemoteHubSwitchDirect(T) Class" Url="html/12cfdf5d-a870-508a-8b2f-8347d90d6378.htm">
+    <HelpTOCNode Id="b1b5b393-43cf-49ae-b624-f6d1f3cdab62" Title="RemoteHubSwitchDirect(T) Class" Url="html/12cfdf5d-a870-508a-8b2f-8347d90d6378.htm">
       <HelpTOCNode Title="RemoteHubSwitchDirect(T) Constructor " Url="html/aaa5c9ea-0973-7be6-6ce2-f7cb70d7231f.htm" />
-      <HelpTOCNode Id="1d244963-d032-4753-8578-005c9c7c5879" Title="RemoteHubSwitchDirect(T) Properties" Url="html/5d0fdab5-f3b8-15c7-dbd1-d83477f701e3.htm">
+      <HelpTOCNode Id="9a034624-1f1b-4630-8776-353a47a1ded7" Title="RemoteHubSwitchDirect(T) Properties" Url="html/5d0fdab5-f3b8-15c7-dbd1-d83477f701e3.htm">
         <HelpTOCNode Title="ClientId Property " Url="html/8b1a8030-090f-bbae-b185-e4c6fdd8570e.htm" />
         <HelpTOCNode Title="IsStarted Property " Url="html/e3a71c9a-49d1-9b67-280e-c6f2cb99bc3e.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="5debda67-a4f8-4de4-9497-d0c3e57c1bf4" Title="RemoteHubSwitchDirect(T) Methods" Url="html/0316ae89-27de-980b-b7b2-e1175a337357.htm">
+      <HelpTOCNode Id="c023934b-0f9b-4fda-bb70-5cea0f5a9a4d" Title="RemoteHubSwitchDirect(T) Methods" Url="html/0316ae89-27de-980b-b7b2-e1175a337357.htm">
         <HelpTOCNode Title="ApplyVirtualHosts Method " Url="html/496fe4a2-5ccf-b2bd-3cef-ce6eec6a467f.htm" />
-        <HelpTOCNode Id="6f94a5a3-837a-4352-aec6-f45b528fec89" Title="Dispose Method " Url="html/983a08c2-3a49-c7a9-8012-9f6f6a35078b.htm">
+        <HelpTOCNode Id="03f33600-9a64-4be0-8605-fce7587c5934" Title="Dispose Method " Url="html/983a08c2-3a49-c7a9-8012-9f6f6a35078b.htm">
           <HelpTOCNode Title="Dispose Method " Url="html/4d29a168-0248-b3e0-4992-0f4df31e99fe.htm" />
           <HelpTOCNode Title="Dispose Method (Boolean)" Url="html/4e222e89-01c8-1929-aea2-b3db1eb275ab.htm" />
         </HelpTOCNode>
@@ -378,7 +378,7 @@
         <HelpTOCNode Title="TryGetVirtualHosts Method " Url="html/f1cf6006-55a9-8669-98b0-3d76b9aac80f.htm" />
         <HelpTOCNode Title="TryResolveVirtualHost Method " Url="html/a2c2082e-2a3b-41a2-b859-c3d24c79f13a.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="2d59bcd4-110e-4ed7-9355-88149967657b" Title="RemoteHubSwitchDirect(T) Events" Url="html/24c62acf-cec9-b4bb-d439-a8f854f82d89.htm">
+      <HelpTOCNode Id="7a478787-9d74-43ae-9e6e-19d245af3ff8" Title="RemoteHubSwitchDirect(T) Events" Url="html/24c62acf-cec9-b4bb-d439-a8f854f82d89.htm">
         <HelpTOCNode Title="ConnectionErrorOccurred Event" Url="html/95c02659-6d63-b8ce-b1eb-2d3728b7fbb4.htm" />
         <HelpTOCNode Title="RemoteClientRemoved Event" Url="html/2f8d91c7-2ad4-d365-41d7-fb3fb1d7bf9c.htm" />
         <HelpTOCNode Title="RemoteClientUpdated Event" Url="html/4990ccfc-1afe-570a-c9fa-16e14c5250d6.htm" />
@@ -386,17 +386,17 @@
         <HelpTOCNode Title="Stopped Event" Url="html/d1287e26-bc46-0d04-beec-aeecbcab3cec.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="0f08b408-8790-4f72-8b44-77c7cc1eab19" Title="StreamAdapter Class" Url="html/32377ac3-9d92-e8e9-a675-0c9271d43856.htm">
+    <HelpTOCNode Id="cf5e7d9a-328a-48eb-97a1-6fb875c52434" Title="StreamAdapter Class" Url="html/32377ac3-9d92-e8e9-a675-0c9271d43856.htm">
       <HelpTOCNode Title="StreamAdapter Constructor " Url="html/532ae563-2836-aa78-e817-9af5d2d1a067.htm" />
-      <HelpTOCNode Id="93559180-c54b-422c-98ff-57f01e1d8722" Title="StreamAdapter Properties" Url="html/56da9492-d15a-7d4a-6f94-356b3b893473.htm">
+      <HelpTOCNode Id="3c7ea6ef-af12-4490-814f-0ccba42d5151" Title="StreamAdapter Properties" Url="html/56da9492-d15a-7d4a-6f94-356b3b893473.htm">
         <HelpTOCNode Title="IsStarted Property " Url="html/ef91cb39-a98f-940c-4faf-ab2b63983e7c.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="ccb70f63-f25b-4d58-8768-230cc7a23038" Title="StreamAdapter Methods" Url="html/83de470c-94c0-8b9d-3ac8-3ac5f8f82f31.htm">
+      <HelpTOCNode Id="6f4be31f-6bd9-4a4a-8e37-3f8c9b41d4a9" Title="StreamAdapter Methods" Url="html/83de470c-94c0-8b9d-3ac8-3ac5f8f82f31.htm">
         <HelpTOCNode Title="AddClient Method " Url="html/0107a85d-7344-b49d-ff45-c86c386c66db.htm" />
         <HelpTOCNode Title="AddClientAsync Method " Url="html/c058b908-55ae-c53f-3cfe-e26c4948f8ef.htm" />
         <HelpTOCNode Title="ApplyVirtualHosts Method " Url="html/185a7ef1-4841-1102-4c8c-3a20a6e86b50.htm" />
         <HelpTOCNode Title="ChangeStream Method " Url="html/3cd412fe-068f-c4ca-e71b-4f063638331c.htm" />
-        <HelpTOCNode Id="8d2f2525-150f-4d33-9b5f-210455a9b6aa" Title="Dispose Method " Url="html/9aae239f-f6b9-6e4d-7146-992a133608a6.htm">
+        <HelpTOCNode Id="e4e63d52-3c3a-4365-a309-f4a744bad75e" Title="Dispose Method " Url="html/9aae239f-f6b9-6e4d-7146-992a133608a6.htm">
           <HelpTOCNode Title="Dispose Method " Url="html/e8c69db5-aa58-a607-8232-73ce10273763.htm" />
           <HelpTOCNode Title="Dispose Method (Boolean)" Url="html/75ed5c1f-6230-5522-626b-6c59b2294d16.htm" />
         </HelpTOCNode>
@@ -414,7 +414,7 @@
         <HelpTOCNode Title="TryGetVirtualHosts Method " Url="html/ab9766fa-eeb3-add3-76fe-a2911b649fce.htm" />
         <HelpTOCNode Title="TryResolveVirtualHost Method " Url="html/0e03ccd5-bf9d-3a77-c4c9-1b9c5dde0a66.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="c0a15c97-0150-41e4-8a28-fed3c2becc97" Title="StreamAdapter Events" Url="html/54ce1d13-134a-0822-fc12-691d45882ab7.htm">
+      <HelpTOCNode Id="d3d9c03b-388b-4000-b045-5f0aa8e25d86" Title="StreamAdapter Events" Url="html/54ce1d13-134a-0822-fc12-691d45882ab7.htm">
         <HelpTOCNode Title="AdapterStarted Event" Url="html/09c7e883-de57-2969-2b76-bc6a8b429fe7.htm" />
         <HelpTOCNode Title="AdapterStopped Event" Url="html/18c42716-da64-c025-640e-09f4b2a7dcde.htm" />
         <HelpTOCNode Title="ConnectionErrorOccurred Event" Url="html/aedc4b18-cc32-2a34-46d6-5091f96cc577.htm" />
@@ -422,10 +422,10 @@
         <HelpTOCNode Title="RemoteClientUpdated Event" Url="html/c2bc4fd6-e702-61d2-588e-8151feacb50a.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Id="b0d2090c-15a3-4113-95ec-82892eaabc25" Title="StreamAdapter(T) Class" Url="html/8b88bacc-723f-055a-4b53-173bdb35bafd.htm">
+    <HelpTOCNode Id="eaad3943-0a0a-4b49-9c10-8b2f3f67cd87" Title="StreamAdapter(T) Class" Url="html/8b88bacc-723f-055a-4b53-173bdb35bafd.htm">
       <HelpTOCNode Title="StreamAdapter(T) Constructor " Url="html/ff2ec233-18a1-8eb3-611c-d7dc2376c39e.htm" />
       <HelpTOCNode Title="StreamAdapter(T) Properties" Url="html/513fe60a-9170-b7ee-c017-7185b2c8e68b.htm" />
-      <HelpTOCNode Id="fafc150a-e6a7-4e12-82ce-3b48b9a7a8fe" Title="StreamAdapter(T) Methods" Url="html/163714cd-6f1c-3bda-5e9d-045af7749c91.htm">
+      <HelpTOCNode Id="19164571-63e6-4ab8-8bf7-7e30a22542ce" Title="StreamAdapter(T) Methods" Url="html/163714cd-6f1c-3bda-5e9d-045af7749c91.htm">
         <HelpTOCNode Title="AddOnMessageReceivedCallback Method " Url="html/9249d614-bca4-eb36-aff2-5f93e9216d36.htm" />
         <HelpTOCNode Title="OnPrivateMessageReceived Method " Url="html/c23684d3-ce8a-b588-3d25-138ef549e3cf.htm" />
         <HelpTOCNode Title="RemoveAllOnMessageReceivedCallbacks Method " Url="html/99b1f132-efee-04ab-41e3-73606a75e506.htm" />
@@ -435,13 +435,13 @@
       </HelpTOCNode>
       <HelpTOCNode Title="StreamAdapter(T) Events" Url="html/ff7602d6-0663-0b3d-f5e6-e3278ddbe560.htm" />
     </HelpTOCNode>
-    <HelpTOCNode Id="c308fabb-c27a-4031-bb88-d7d733464f52" Title="VirtualHostSetting Class" Url="html/ad97e3dc-cd64-cc00-3e40-b4007fdd222d.htm">
+    <HelpTOCNode Id="818cd62d-c5e3-4d7a-a5ba-d5fe6c8962f1" Title="VirtualHostSetting Class" Url="html/ad97e3dc-cd64-cc00-3e40-b4007fdd222d.htm">
       <HelpTOCNode Title="VirtualHostSetting Constructor " Url="html/2d14610c-e63b-3352-7f44-6dc25b6d20b4.htm" />
-      <HelpTOCNode Id="3070d75d-4d43-46e3-bb1e-fa0b4218af57" Title="VirtualHostSetting Properties" Url="html/a8ad468d-ca96-ff50-c568-2cccdffdf220.htm">
+      <HelpTOCNode Id="bcfad08b-3ae7-4c99-b842-c20d7faae29f" Title="VirtualHostSetting Properties" Url="html/a8ad468d-ca96-ff50-c568-2cccdffdf220.htm">
         <HelpTOCNode Title="Priority Property " Url="html/da2b5553-b3a5-3aef-70e5-ff8a03ed3290.htm" />
         <HelpTOCNode Title="Weight Property " Url="html/9ca130a8-a235-2bda-b646-5a97851479cd.htm" />
       </HelpTOCNode>
-      <HelpTOCNode Id="3399dbbb-21f2-4b86-ad9c-0a2568fe62df" Title="VirtualHostSetting Methods" Url="html/fffccffd-3c8a-7d7a-20b0-4998376094f4.htm">
+      <HelpTOCNode Id="69b4008a-36df-4f2a-905a-07f6d9bff194" Title="VirtualHostSetting Methods" Url="html/fffccffd-3c8a-7d7a-20b0-4998376094f4.htm">
         <HelpTOCNode Title="Equals Method " Url="html/5b327ba1-e727-c584-8086-b4c49fc66bfa.htm" />
         <HelpTOCNode Title="GetHashCode Method " Url="html/64a9f37c-eac3-ea6d-19cd-5359c0cb272a.htm" />
       </HelpTOCNode>

@@ -106,7 +106,7 @@
     <Folder Include="media" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\VSProjects\RemoteHub\Source\SHFB\Documentation\Content\Components\IRemoteHubRedis.aml" />
+    <None Include="Content\Components\IRemoteHubRedis.aml" />
     <None Include="Content\Components\IRemoteHub.aml" />
     <None Include="Content\Components\IRemoteHubStream.aml" />
     <None Include="Content\Components\RedisClient.aml" />
@@ -122,6 +122,7 @@
     <None Include="Content\Welcome.aml" />
     <None Include="Content\WorkWIthRA\Demo.aml" />
     <None Include="Content\WorkWIthRA\Event.aml" />
+    <None Include="Resources.pptx" />
   </ItemGroup>
   <ItemGroup>
     <ContentLayout Include="ContentLayout.content" />
@@ -132,6 +133,24 @@
       <AlternateText>Help</AlternateText>
       <CopyToMedia>True</CopyToMedia>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="media\Networking.jpg">
+      <ImageId>Networking</ImageId>
+      <AlternateText>Networking</AlternateText>
+    </Image>
+    <Image Include="media\Redis.jpg">
+      <ImageId>Redis</ImageId>
+      <AlternateText>Redis</AlternateText>
+    </Image>
+    <Image Include="media\Stream.jpg">
+      <ImageId>Stream</ImageId>
+      <AlternateText>Stream</AlternateText>
+    </Image>
+    <Image Include="media\Switch.jpg">
+      <ImageId>Switch</ImageId>
+      <AlternateText>Switch</AlternateText>
+    </Image>
   </ItemGroup>
   <!-- Import the SHFB build targets -->
   <Import Project="$(SHFBROOT)\SandcastleHelpFileBuilder.targets" />

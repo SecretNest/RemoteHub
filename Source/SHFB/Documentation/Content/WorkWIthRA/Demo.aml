@@ -4,103 +4,66 @@
     xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
-    <!--
-    <summary>
-      <para>Optional summary abstract</para>
-    </summary>
-    -->
-
     <introduction>
-      <!-- Uncomment this to generate an outline of the section and sub-section
-           titles.  Specify a numeric value as the inner text to limit it to
-           a specific number of sub-topics when creating the outline.  Specify
-           zero (0) to limit it to top-level sections only.  -->
-      <!-- <autoOutline /> -->
-
-      <para>Required introduction</para>
+      <para>Here is a demo of Remote Hub works with Remote Agency, provided a client server mode of chat room.</para>
     </introduction>
 
-    <!-- <prerequisites><content>Optional prerequisites info</content></prerequisites> -->
-
-    <!-- One or more procedure or section with procedure -->
-    <procedure>
-      <title>Procedure title</title>
-      <steps class="ordered">
-        <step>
-          <content>
-            <para>First step</para>
-          </content>
-        </step>
-        <step>
-          <content>
-            <para>Second step</para>
-          </content>
-        </step>
-      </steps>
-      <!-- <conclusion>Optional conclusion</conclusion> -->
-    </procedure>
-
-    <!-- Optional additional procedure or section with procedure -->
-    <section address="Section1">
-      <title>Optional section title</title>
+    <section>
+      <title>Code</title>
       <content>
-        <procedure>
-          <title>Procedure #2</title>
-          <steps class="ordered">
-            <step>
-              <content>
-                <para>First step</para>
-              </content>
-            </step>
-            <step>
-              <content>
-                <para>Second step</para>
-              </content>
-            </step>
-          </steps>
-          <!-- <conclusion>Optional conclusion</conclusion> -->
-        </procedure>
+        <para>Demo code is written in C#. Source code can be found in the folder <externalLink>
+              <linkText>DemoWithRemoteAgency</linkText>
+              <linkUri>https://github.com/scegg/RemoteHub/tree/master/DemoWithRemoteAgency</linkUri>
+            </externalLink>.</para>
       </content>
     </section>
 
-    <!-- Optional next steps info
-    <nextSteps>
-      <content><para>Next steps info goes here</para></content>
-    </nextSteps>
-    -->
+    <section>
+      <title>Projects</title>
+      <content>
+        <para>There are 5 projects in the same solution file.</para>
+        <list class="bullet">
+          <listItem>
+            <para>ChatClientOnRedis: The client side of the chat room based on Redis database. Use it with ChatServerOnRedis.</para>
+          </listItem>
+          <listItem>
+            <para>ChatServerOnRedis: The server side of the chat room based on Redis database. Use it with ChatClientOnRedis.</para>
+          </listItem>
+          <listItem>
+            <para>ChatClientOnSslStream: The client side of the chat room based on streams. Use it with ChatServerOnSslStream.</para>
+          </listItem>
+          <listItem>
+            <para>ChatServerOnSslStream: The server side of the chat room based on streams. Use it with ChatClientOnSslStream.</para>
+          </listItem>
+          <listItem>
+            <para>SharedInterface: The interface of the ChatServer, name IChatServer. This project is referenced by all other 4 projects listed above.</para>
+          </listItem>
+        </list>
+      </content>
+    </section>
+
+    <section>
+      <title>Demo</title>
+      <content>
+        <para>Server side includes an instance of ChatServer, which contains a method and an event. When the method received a message, the event will be raised to broadcast it to all handlers.</para>
+        <para>Due to the stateful management, all service object with event support need to be disposed required by Remote Agency. When a disconnecting is discovered on the server side, method OnProxiesOfSiteDisposed is called to removing the handler related.</para>
+        <para>Client side should be started after the server side application. A user name need to be entered, then the client side is prepared and connect to the server. Each text entered will be broadcast to all clients.</para>
+        <para>Running the demo based on Redis need a Redis instance running in localhost, or on another server with changing the connectingString on both server and client side code.</para>
+        <para>Stream demo is based on Stream Adapter with SslStream. All certificates used is creating on the fly.</para>
+      </content>
+    </section>
 
     <relatedTopics>
-      <!-- One or more of the following:
-           - A local link
-           - An external link
-           - A code entity reference
-
-      <link xlink:href="Other Topic's ID">Link text</link>
-      <externalLink>
-          <linkText>Link text</linkText>
-          <linkAlternateText>Optional alternate link text</linkAlternateText>
-          <linkUri>URI</linkUri>
-      </externalLink>
-      <codeEntityReference>API member ID</codeEntityReference>
-
-      Examples:
-
-      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
-
-      <externalLink>
-          <linkText>SHFB on GitHub</linkText>
-          <linkAlternateText>Go to GitHub</linkAlternateText>
-          <linkUri>https://GitHub.com/EWSoftware/SHFB</linkUri>
-      </externalLink>
-
-      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
-      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
-      -->
+      <link xlink:href="7b9f6faa-8de5-4097-bad0-76e9295ccce0" /> <!--IRemoteHubRedis-->
+      <link xlink:href="faeafdf3-1c3a-4aa6-a045-24e0df018aa6" /> <!--RedisAdapter-->
+      <link xlink:href="40f09325-9850-497d-afb6-0b8b90d8360a" /> <!--RedisClient-->
+      <link xlink:href="a635f111-aa6b-4609-bec8-d954ac988f47" /> <!--StreamAdapter-->
+      <link xlink:href="91b09d21-87ae-4bc8-9efe-4f446b05cd3e" /> <!--StreamClient-->
+      <link xlink:href="754f0327-c190-40b4-b091-93e104cc78be" /> <!--Switch-->
+      <link xlink:href="0241d550-bee5-4690-b22b-3399ba7a7bf1" /> <!--SwitchDirect-->
+      <link xlink:href="e84b359f-4609-429c-8b3f-d040a75ceae6" /> <!--HowToRedis-->
+      <link xlink:href="fb014e2d-05c2-4da2-9ed3-0032564a7ae0" /> <!--HowToSwitch-->
+      <link xlink:href="d8f5d54c-994c-4cdc-8de9-a270cc00cf48" /> <!--WorkWithRAEvent-->
     </relatedTopics>
   </developerWalkthroughDocument>
 </topic>

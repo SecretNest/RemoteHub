@@ -4,103 +4,46 @@
     xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5"
     xmlns:xlink="http://www.w3.org/1999/xlink">
 
-    <!--
-    <summary>
-      <para>Optional summary abstract</para>
-    </summary>
-    -->
-
     <introduction>
-      <!-- Uncomment this to generate an outline of the section and sub-section
-           titles.  Specify a numeric value as the inner text to limit it to
-           a specific number of sub-topics when creating the outline.  Specify
-           zero (0) to limit it to top-level sections only.  -->
-      <!-- <autoOutline /> -->
-
-      <para>Required introduction</para>
+      <para>Remote Hub supports virtual host mapping for load balancing.</para>
     </introduction>
 
-    <!-- <prerequisites><content>Optional prerequisites info</content></prerequisites> -->
-
-    <!-- One or more procedure or section with procedure -->
-    <procedure>
-      <title>Procedure title</title>
-      <steps class="ordered">
-        <step>
-          <content>
-            <para>First step</para>
-          </content>
-        </step>
-        <step>
-          <content>
-            <para>Second step</para>
-          </content>
-        </step>
-      </steps>
-      <!-- <conclusion>Optional conclusion</conclusion> -->
-    </procedure>
-
-    <!-- Optional additional procedure or section with procedure -->
-    <section address="Section1">
-      <title>Optional section title</title>
+    <section>
+      <title>Virtual host</title>
       <content>
-        <procedure>
-          <title>Procedure #2</title>
-          <steps class="ordered">
-            <step>
-              <content>
-                <para>First step</para>
-              </content>
-            </step>
-            <step>
-              <content>
-                <para>Second step</para>
-              </content>
-            </step>
-          </steps>
-          <!-- <conclusion>Optional conclusion</conclusion> -->
-        </procedure>
+        <para>Virtual host is a function based on host mapping table. Remote Hub clients can register virtual hosts mapping on itself, declaring it is a part of the service provider of the virtual host. By this, service customer can choose provider based on load balancing.</para>
+        <para>Each virtual host record contains id, priority and weight. When resolving by id of a virtual host, all records with the same id and the highest priority will be queried and one will be selected randomly. The probability of the chosen recored is considered by the weight of all queried records.</para>
       </content>
     </section>
 
-    <!-- Optional next steps info
-    <nextSteps>
-      <content><para>Next steps info goes here</para></content>
-    </nextSteps>
-    -->
+    <section>
+      <title>Set up virtual hosts</title>
+      <content>
+        <para>To set up virtual hosts, use the method <codeEntityReference qualifyHint="false" autoUpgrade="true">M:SecretNest.RemoteHub.IRemoteHub.ApplyVirtualHosts(System.Collections.Generic.KeyValuePair{System.Guid,SecretNest.RemoteHub.VirtualHostSetting}[])</codeEntityReference> provided by any Remote Hub client. Each calling will override the current setting on this client. All virtual host settings need to passed within one call. Calling with argument set to null will clean all exists virtual host settings on this client.</para>
+        <para>A client can have up to 65535 virtual hosts. Each host have an virtual host id (as the key of the KeyValuePair), priority and weight (as members in VirtualHostSetting).</para>
+        <para>After method called, virtual host settings will be synchronized to all clients in the same network in a short while.</para>
+      </content>
+    </section>
+
+    <section>
+      <title>Resolve a virtual host to an client</title>
+      <content>
+        <para>To resolve a virtual host, use the method <codeEntityReference qualifyHint="false" autoUpgrade="true">M:SecretNest.RemoteHub.IRemoteHub.TryResolveVirtualHost(System.Guid,System.Guid@)</codeEntityReference> provided by any Remote Hub client.</para>
+        <para>This method will try to resolve a virtual host to an client, which will be passed out as the 2nd argument. Result of this method is whether the virtual host can be found.</para>
+      </content>
+    </section>
+
+    <section>
+      <title>Stateful objects</title>
+      <content>
+        <para>When the service is handled with stateful object, like Event support in Remote Agency, user code needs to keep the real client id from the first resolving to make sure the same service object is chosen all the time for one client.</para>
+        <para>For example, when user code plans to remove a handler from an event in a remote site powered by Remote Agency and virtual host function, user code needs to use the recorded client id while adding the handler of this event as the target, instead of resolving it again.</para>
+      </content>
+    </section>
 
     <relatedTopics>
-      <!-- One or more of the following:
-           - A local link
-           - An external link
-           - A code entity reference
-
-      <link xlink:href="Other Topic's ID">Link text</link>
-      <externalLink>
-          <linkText>Link text</linkText>
-          <linkAlternateText>Optional alternate link text</linkAlternateText>
-          <linkUri>URI</linkUri>
-      </externalLink>
-      <codeEntityReference>API member ID</codeEntityReference>
-
-      Examples:
-
-      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
-
-      <externalLink>
-          <linkText>SHFB on GitHub</linkText>
-          <linkAlternateText>Go to GitHub</linkAlternateText>
-          <linkUri>https://GitHub.com/EWSoftware/SHFB</linkUri>
-      </externalLink>
-
-      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
-      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
-      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
-      -->
+      <link xlink:href="7b9f6faa-8de5-4097-bad0-76e9295ccce0" /> <!--IRemoteHubRedis-->
+      <link xlink:href="d8f5d54c-994c-4cdc-8de9-a270cc00cf48" /> <!--WorkWithRAEvent-->
     </relatedTopics>
   </developerWalkthroughDocument>
 </topic>

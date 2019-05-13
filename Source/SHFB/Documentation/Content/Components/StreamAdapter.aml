@@ -12,7 +12,7 @@
       <title>Use this library</title>
       <content>
         <para>This library defines the adapter works in pairs connected by streams, named as <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.StreamAdapter`1</codeEntityReference>, which implemented <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.IRemoteHubStreamAdapter</codeEntityReference> and <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.IRemoteHubAdapter`1</codeEntityReference>.</para>
-        <para>Creating an instance of this adapter and attaching it to one switch will link the other adapter which connected to the same streams to the switch. This will allow all clients from the other side and the switch to discover each others and transport message among them.</para>
+        <para>Creating an instance of this adapter and attaching it to one switch will link the other adapter which connected to the same streams to the switch. This will allow all clients from the other side and the switch to discover each other and transport message among them.</para>
         <para>Stream Client, SecretNest.RemoteHub.Stream, will contains an instance of this adapter. But the adapter is constructed and controlled by client. It's not necessary for user to create the instance of adapter for the client.</para>
       </content>
     </section>

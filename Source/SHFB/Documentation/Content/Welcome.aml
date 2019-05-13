@@ -13,288 +13,288 @@
 		<section>
 			<title>Getting Started</title>
 			<content>
-        <para>Welcome to Remote Hub.</para>
-        <para>Remote Hub is a solution for Remote Agency, connecting sites by using Redis database and / or network streams.</para>
-        <para>Remote Hub can also be used dedicatedly, transporting messages among clients. One thing need to be mentioned is, the source (sender) of the message will not be transport to the target. The receiver can only get the message body and the receiver id specified by the sender, but the sender id is not included unless it is a field included in your message body.</para>
-        <para>The things user should handle:</para>
-        <list class="bullet">
-          <listItem>
-            <para>Redis server instance, if you want to transfer messages using Redis publish-subscribe service;</para>
-          </listItem>
-          <listItem>
-            <para>Streams for transporting messages, if you want to transfer message using streams;</para>
-          </listItem>
-          <listItem>
-            <para>Component for generating message to sent and processing message received, e.g. <externalLink>
-              <linkText>Remote Agency</linkText>
-              <linkUri>https://secretnest.info/RemoteAgency</linkUri>
-            </externalLink> instance;</para>
-          </listItem>
-          <listItem>
-            <para>Reference to Remote Hub.</para>
-          </listItem>
-        </list>
-        <para>The things Remote Hub cares:</para>
-        <list class="bullet">
-          <listItem>
-            <para>Maintaining state of each client by monitoring clients adding, changing and removing operations;</para>
-          </listItem>
-          <listItem>
-            <para>Connecting clients to the same logical network and routing messages among them;</para>
-          </listItem>
-          <listItem>
-            <para>Supporting virtual host with load balancing.</para>
-          </listItem>
-        </list>
-      </content>
+				<para>Welcome to Remote Hub.</para>
+				<para>Remote Hub is a solution for Remote Agency, connecting sites by using Redis database and / or network streams.</para>
+				<para>Remote Hub can also be used dedicatedly, transporting messages among clients. One thing need to be mentioned is, the source (sender) of the message will not be transport to the target. The receiver can only get the message body and the receiver id specified by the sender, but the sender id is not included unless it is a field included in your message body.</para>
+				<para>The things user should handle:</para>
+				<list class="bullet">
+					<listItem>
+						<para>Redis server instance, if you want to transfer messages using Redis publish-subscribe service;</para>
+					</listItem>
+					<listItem>
+						<para>Streams for transporting messages, if you want to transfer message using streams;</para>
+					</listItem>
+					<listItem>
+						<para>Component for generating message to sent and processing message received, e.g. <externalLink>
+							<linkText>Remote Agency</linkText>
+							<linkUri>https://secretnest.info/RemoteAgency</linkUri>
+						</externalLink> instance;</para>
+					</listItem>
+					<listItem>
+						<para>Reference to Remote Hub.</para>
+					</listItem>
+				</list>
+				<para>The things Remote Hub cares:</para>
+				<list class="bullet">
+					<listItem>
+						<para>Maintaining state of each client by monitoring clients adding, changing and removing operations;</para>
+					</listItem>
+					<listItem>
+						<para>Connecting clients to the same logical network and routing messages among them;</para>
+					</listItem>
+					<listItem>
+						<para>Supporting virtual host with load balancing.</para>
+					</listItem>
+				</list>
+			</content>
 		</section>
 
-    <section>
-      <title>Released packages</title>
-      <content>
-        <para>Currently, 9 packages are officially released on NuGet:</para>
-        <table>
-          <tableHeader>
-            <row>
-              <entry>
-                <para>Name</para>
-              </entry>
-              <entry>
-                <para>Description</para>
-              </entry>
-              <entry>
-                <para>Package</para>
-              </entry>
-              <entry>
-                <para>Documentation</para>
-              </entry>
-            </row>
-          </tableHeader>
-          <row>
-            <entry>
-              <para>SecretNest.IRemoteHub</para>
-            </entry>
-            <entry>
-              <para>Interfaces, delegates and shared classes of Remote Hub.</para>
-            </entry>
-            <entry>
-              <para>
-                <externalLink>
-                  <linkText>NuGet</linkText>
-                  <linkUri>https://www.nuget.org/packages/SecretNest.IRemoteHub</linkUri>
-                </externalLink>
-              </para>
-            </entry>
-            <entry>
-              <para>
-                <link xlink:href="3d44d1cd-5d0c-4c89-bedd-49830a60baec" />
-              </para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>SecretNest.IRemoteHub.Redis</para>
-            </entry>
-            <entry>
-              <para>Interfaces of Remote Hub based on Redis database.</para>
-            </entry>
-            <entry>
-              <para>
-                <externalLink>
-                  <linkText>NuGet</linkText>
-                  <linkUri>https://www.nuget.org/packages/SecretNest.IRemoteHub.Redis</linkUri>
-                </externalLink>
-              </para>
-            </entry>
-            <entry>
-              <para>
-                <link xlink:href="7b9f6faa-8de5-4097-bad0-76e9295ccce0" />
-              </para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>SecretNest.IRemoteHub.Stream</para>
-            </entry>
-            <entry>
-              <para>Interfaces of Remote Hub based on streams.</para>
-            </entry>
-            <entry>
-              <para>
-                <externalLink>
-                  <linkText>NuGet</linkText>
-                  <linkUri>https://www.nuget.org/packages/SecretNest.IRemoteHub.Stream</linkUri>
-                </externalLink>
-              </para>
-            </entry>
-            <entry>
-              <para>
-                <link xlink:href="ed44485b-adff-46f1-9be9-d5731e1d4ff4" />
-              </para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>SecretNest.RemoteHub.RedisAdapter</para>
-            </entry>
-            <entry>
-              <para>Adapter of Remote Hub based on Redis database.</para>
-            </entry>
-            <entry>
-              <para>
-                <externalLink>
-                  <linkText>NuGet</linkText>
-                  <linkUri>https://www.nuget.org/packages/SecretNest.RemoteHub.RedisAdapter</linkUri>
-                </externalLink>
-              </para>
-            </entry>
-            <entry>
-              <para>
-                <link xlink:href="faeafdf3-1c3a-4aa6-a045-24e0df018aa6" />
-              </para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>SecretNest.RemoteHub.Redis</para>
-            </entry>
-            <entry>
-              <para>Remote Hub based on Redis database.</para>
-            </entry>
-            <entry>
-              <para>
-                <externalLink>
-                  <linkText>NuGet</linkText>
-                  <linkUri>https://www.nuget.org/packages/SecretNest.RemoteHub.Redis</linkUri>
-                </externalLink>
-              </para>
-            </entry>
-            <entry>
-              <para>
-                <link xlink:href="40f09325-9850-497d-afb6-0b8b90d8360a" />
-              </para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>SecretNest.RemoteHub.StreamAdapter</para>
-            </entry>
-            <entry>
-              <para>Adapter of Remote Hub based on streams.</para>
-            </entry>
-            <entry>
-              <para>
-                <externalLink>
-                  <linkText>NuGet</linkText>
-                  <linkUri>https://www.nuget.org/packages/SecretNest.RemoteHub.StreamAdapter</linkUri>
-                </externalLink>
-              </para>
-            </entry>
-            <entry>
-              <para>
-                <link xlink:href="a635f111-aa6b-4609-bec8-d954ac988f47" />
-              </para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>SecretNest.RemoteHub.Stream</para>
-            </entry>
-            <entry>
-              <para>Remote Hub based on streams.</para>
-            </entry>
-            <entry>
-              <para>
-                <externalLink>
-                  <linkText>NuGet</linkText>
-                  <linkUri>https://www.nuget.org/packages/SecretNest.RemoteHub.Stream</linkUri>
-                </externalLink>
-              </para>
-            </entry>
-            <entry>
-              <para>
-                <link xlink:href="91b09d21-87ae-4bc8-9efe-4f446b05cd3e" />
-              </para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>SecretNest.RemoteHub.SwitchDirect</para>
-            </entry>
-            <entry>
-              <para>Remote Hub for attaching to local switch instance directly.</para>
-            </entry>
-            <entry>
-              <para>
-                <externalLink>
-                  <linkText>NuGet</linkText>
-                  <linkUri>https://www.nuget.org/packages/SecretNest.RemoteHub.SwitchDirect</linkUri>
-                </externalLink>
-              </para>
-            </entry>
-            <entry>
-              <para>
-                <link xlink:href="0241d550-bee5-4690-b22b-3399ba7a7bf1" />
-              </para>
-            </entry>
-          </row>
-          <row>
-            <entry>
-              <para>SecretNest.RemoteHub.Switch</para>
-            </entry>
-            <entry>
-              <para>A switch for connecting adapters and routing messages.</para>
-            </entry>
-            <entry>
-              <para>
-                <externalLink>
-                  <linkText>NuGet</linkText>
-                  <linkUri>https://www.nuget.org/packages/SecretNest.RemoteHub.Switch</linkUri>
-                </externalLink>
-              </para>
-            </entry>
-            <entry>
-              <para>
-                <link xlink:href="754f0327-c190-40b4-b091-93e104cc78be" />
-              </para>
-            </entry>
-          </row>
-        </table>
-      </content>
-    </section>
+		<section>
+			<title>Released packages</title>
+			<content>
+				<para>Currently, 9 packages are officially released on NuGet:</para>
+				<table>
+					<tableHeader>
+						<row>
+							<entry>
+								<para>Name</para>
+							</entry>
+							<entry>
+								<para>Description</para>
+							</entry>
+							<entry>
+								<para>Package</para>
+							</entry>
+							<entry>
+								<para>Documentation</para>
+							</entry>
+						</row>
+					</tableHeader>
+					<row>
+						<entry>
+							<para>SecretNest.IRemoteHub</para>
+						</entry>
+						<entry>
+							<para>Interfaces, delegates and shared classes of Remote Hub.</para>
+						</entry>
+						<entry>
+							<para>
+								<externalLink>
+									<linkText>NuGet</linkText>
+									<linkUri>https://www.nuget.org/packages/SecretNest.IRemoteHub</linkUri>
+								</externalLink>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<link xlink:href="3d44d1cd-5d0c-4c89-bedd-49830a60baec" />
+							</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>SecretNest.IRemoteHub.Redis</para>
+						</entry>
+						<entry>
+							<para>Interfaces of Remote Hub based on Redis database.</para>
+						</entry>
+						<entry>
+							<para>
+								<externalLink>
+									<linkText>NuGet</linkText>
+									<linkUri>https://www.nuget.org/packages/SecretNest.IRemoteHub.Redis</linkUri>
+								</externalLink>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<link xlink:href="7b9f6faa-8de5-4097-bad0-76e9295ccce0" />
+							</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>SecretNest.IRemoteHub.Stream</para>
+						</entry>
+						<entry>
+							<para>Interfaces of Remote Hub based on streams.</para>
+						</entry>
+						<entry>
+							<para>
+								<externalLink>
+									<linkText>NuGet</linkText>
+									<linkUri>https://www.nuget.org/packages/SecretNest.IRemoteHub.Stream</linkUri>
+								</externalLink>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<link xlink:href="ed44485b-adff-46f1-9be9-d5731e1d4ff4" />
+							</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>SecretNest.RemoteHub.RedisAdapter</para>
+						</entry>
+						<entry>
+							<para>Adapter of Remote Hub based on Redis database.</para>
+						</entry>
+						<entry>
+							<para>
+								<externalLink>
+									<linkText>NuGet</linkText>
+									<linkUri>https://www.nuget.org/packages/SecretNest.RemoteHub.RedisAdapter</linkUri>
+								</externalLink>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<link xlink:href="faeafdf3-1c3a-4aa6-a045-24e0df018aa6" />
+							</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>SecretNest.RemoteHub.Redis</para>
+						</entry>
+						<entry>
+							<para>Remote Hub based on Redis database.</para>
+						</entry>
+						<entry>
+							<para>
+								<externalLink>
+									<linkText>NuGet</linkText>
+									<linkUri>https://www.nuget.org/packages/SecretNest.RemoteHub.Redis</linkUri>
+								</externalLink>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<link xlink:href="40f09325-9850-497d-afb6-0b8b90d8360a" />
+							</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>SecretNest.RemoteHub.StreamAdapter</para>
+						</entry>
+						<entry>
+							<para>Adapter of Remote Hub based on streams.</para>
+						</entry>
+						<entry>
+							<para>
+								<externalLink>
+									<linkText>NuGet</linkText>
+									<linkUri>https://www.nuget.org/packages/SecretNest.RemoteHub.StreamAdapter</linkUri>
+								</externalLink>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<link xlink:href="a635f111-aa6b-4609-bec8-d954ac988f47" />
+							</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>SecretNest.RemoteHub.Stream</para>
+						</entry>
+						<entry>
+							<para>Remote Hub based on streams.</para>
+						</entry>
+						<entry>
+							<para>
+								<externalLink>
+									<linkText>NuGet</linkText>
+									<linkUri>https://www.nuget.org/packages/SecretNest.RemoteHub.Stream</linkUri>
+								</externalLink>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<link xlink:href="91b09d21-87ae-4bc8-9efe-4f446b05cd3e" />
+							</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>SecretNest.RemoteHub.SwitchDirect</para>
+						</entry>
+						<entry>
+							<para>Remote Hub for attaching to local switch instance directly.</para>
+						</entry>
+						<entry>
+							<para>
+								<externalLink>
+									<linkText>NuGet</linkText>
+									<linkUri>https://www.nuget.org/packages/SecretNest.RemoteHub.SwitchDirect</linkUri>
+								</externalLink>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<link xlink:href="0241d550-bee5-4690-b22b-3399ba7a7bf1" />
+							</para>
+						</entry>
+					</row>
+					<row>
+						<entry>
+							<para>SecretNest.RemoteHub.Switch</para>
+						</entry>
+						<entry>
+							<para>A switch for connecting adapters and routing messages.</para>
+						</entry>
+						<entry>
+							<para>
+								<externalLink>
+									<linkText>NuGet</linkText>
+									<linkUri>https://www.nuget.org/packages/SecretNest.RemoteHub.Switch</linkUri>
+								</externalLink>
+							</para>
+						</entry>
+						<entry>
+							<para>
+								<link xlink:href="754f0327-c190-40b4-b091-93e104cc78be" />
+							</para>
+						</entry>
+					</row>
+				</table>
+			</content>
+		</section>
 
-    <section>
-      <title>Supported frameworks</title>
-      <content>
-        <para>Remote Hub is built in dotnet standard 2, dotnet framework 4.6.1 and 4.7.2.</para>
-      </content>
-    </section>
-    <section>
-      <title>Licenses</title>
-      <content>
-        <para>
-          SecretNest.RemoteHub packages are licensed under <externalLink>
-            <linkText>MIT</linkText>
-            <linkUri>https://github.com/scegg/RemoteHub/blob/master/LICENSE</linkUri>
-          </externalLink>. You can copy and redistribute the material in any medium or format
-          for any purpose, even commercially. Source code is available at <externalLink>
-            <linkText>Github</linkText>
-            <linkUri>https://github.com/scegg/RemoteHub</linkUri>
-          </externalLink>.
-        </para>
-      </content>
-    </section>
-    <section>
-      <title>Links</title>
-      <content>
-        <para>
-          Issues, requests and source code: <externalLink>
-            <linkText>Github</linkText>
-            <linkUri>https://github.com/scegg/RemoteHub</linkUri>
-          </externalLink>
-        </para>
-      </content>
-    </section>
+		<section>
+			<title>Supported frameworks</title>
+			<content>
+				<para>Remote Hub is built in dotnet standard 2, dotnet framework 4.6.1 and 4.7.2.</para>
+			</content>
+		</section>
+		<section>
+			<title>Licenses</title>
+			<content>
+				<para>
+					SecretNest.RemoteHub packages are licensed under <externalLink>
+						<linkText>MIT</linkText>
+						<linkUri>https://github.com/scegg/RemoteHub/blob/master/LICENSE</linkUri>
+					</externalLink>. You can copy and redistribute the material in any medium or format
+					for any purpose, even commercially. Source code is available at <externalLink>
+						<linkText>Github</linkText>
+						<linkUri>https://github.com/scegg/RemoteHub</linkUri>
+					</externalLink>.
+				</para>
+			</content>
+		</section>
+		<section>
+			<title>Links</title>
+			<content>
+				<para>
+					Issues, requests and source code: <externalLink>
+						<linkText>Github</linkText>
+						<linkUri>https://github.com/scegg/RemoteHub</linkUri>
+					</externalLink>
+				</para>
+			</content>
+		</section>
 
 		<relatedTopics>
 			<link xlink:href="2792f28b-4304-4e0e-b46e-85fb4fcf44d3" />

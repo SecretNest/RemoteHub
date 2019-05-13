@@ -13,7 +13,7 @@
       <content>
         <para>This library defines the adapter for connecting to Redis database, named as <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.RedisAdapter`1</codeEntityReference>, which implemented <codeEntityReference qualifyHint="false">T:SecretNest.RemoteHub.IRemoteHubRedisAdapter`1</codeEntityReference>.</para>
         <para>Publish-subscribe service is used on the Redis database specified while constructing an instance of this adapter. No data in this database will be queried or changed.</para>
-        <para>Creating an instance of this adapter and attaching it to one switch will link the target Redis database to the switch. This will allow all clients from the Redis database and the switch to discover each others and transport message among them.</para>
+        <para>Creating an instance of this adapter and attaching it to one switch will link the target Redis database to the switch. This will allow all clients from the Redis database and the switch to discover each other and transport message among them.</para>
         <para>Redis Client, SecretNest.RemoteHub.Redis, will contains an instance of this adapter. But the adapter is constructed and controlled by client. It's not necessary for user to create the instance of adapter for the client.</para>
       </content>
     </section>
