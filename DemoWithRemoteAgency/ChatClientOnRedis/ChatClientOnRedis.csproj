@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SecretNest.RemoteAgency.DataContractSerializer.EasyEncapsulation" Version="1.6.2" />
+    <PackageReference Include="SecretNest.RemoteAgency.DataContractSerializer.EasyEncapsulation" Version="1.7.0" />
     <PackageReference Include="SecretNest.RemoteHub.Redis" Version="1.1.4" />
   </ItemGroup>
 
