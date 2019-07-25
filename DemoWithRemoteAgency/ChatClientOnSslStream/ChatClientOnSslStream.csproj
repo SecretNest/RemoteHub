@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SecretNest.RemoteAgency.DataContractSerializer.EasyEncapsulation" Version="1.6.1" />
+    <PackageReference Include="SecretNest.RemoteAgency.DataContractSerializer.EasyEncapsulation" Version="1.6.2" />
     <PackageReference Include="SecretNest.RemoteHub.Stream" Version="1.1.3" />
   </ItemGroup>
 
