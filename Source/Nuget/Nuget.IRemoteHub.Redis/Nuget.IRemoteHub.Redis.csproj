@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461;net472;netstandard2.1</TargetFrameworks>
     <RootNamespace>SecretNest.RemoteHub</RootNamespace>
     <AssemblyName>SecretNest.IRemoteHub.Redis</AssemblyName>
     <Configurations>Release</Configurations>
@@ -13,20 +13,24 @@
     <Description>Interfaces of Remote Hub based on Redis database.</Description>
     <Copyright>Allen Cui</Copyright>
     <PackageProjectUrl>https://scegg.github.io/RemoteHub</PackageProjectUrl>
-    <PackageIconUrl>https://scegg.github.io/RemoteHub/icons/Help.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/scegg/RemoteHub</RepositoryUrl>
-    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
-    <Version>1.1.1</Version>
-    <AssemblyVersion>1.1.1.0</AssemblyVersion>
-    <FileVersion>1.1.1.0</FileVersion>
+    <PackageReleaseNotes>Update to support netcore 3 and netstandard 2.1.</PackageReleaseNotes>
+    <Version>1.2.1</Version>
+    <AssemblyVersion>1.2.1.0</AssemblyVersion>
+    <FileVersion>1.2.1.0</FileVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup>
     <DocumentationFile>SecretNest.IRemoteHub.Redis.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SecretNest.IRemoteHub" Version="1.1.0" />
+    <None Include="icon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SecretNest.IRemoteHub" Version="1.2.1" />
     <PackageReference Include="StackExchange.Redis" Version="2.0.601" />
   </ItemGroup>
 

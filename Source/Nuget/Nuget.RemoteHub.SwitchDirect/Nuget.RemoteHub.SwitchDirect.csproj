@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461;net472;netstandard2.1</TargetFrameworks>
     <RootNamespace>SecretNest.RemoteHub</RootNamespace>
     <AssemblyName>SecretNest.RemoteHub.SwitchDirect</AssemblyName>
     <Configurations>Release</Configurations>
@@ -13,22 +13,26 @@
     <Description>Remote Hub for attaching to local switch instance directly.</Description>
     <Copyright>Allen Cui</Copyright>
     <PackageProjectUrl>https://scegg.github.io/RemoteHub</PackageProjectUrl>
-    <PackageIconUrl>https://scegg.github.io/RemoteHub/icons/Help.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <RepositoryUrl>https://github.com/scegg/RemoteHub</RepositoryUrl>
-    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
-    <Version>1.1.2</Version>
-    <AssemblyVersion>1.1.2.0</AssemblyVersion>
-    <FileVersion>1.1.2.0</FileVersion>
+    <PackageReleaseNotes>Update to support netcore 3 and netstandard 2.1.</PackageReleaseNotes>
+    <Version>1.2.1</Version>
+    <AssemblyVersion>1.2.1.0</AssemblyVersion>
+    <FileVersion>1.2.1.0</FileVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+  <PropertyGroup>
     <DocumentationFile>SecretNest.RemoteHub.SwitchDirect.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="icon.png" Pack="true" PackagePath="" />
+  </ItemGroup>
 
   <Import Project="..\..\Code\Code.RemoteHub.SwitchDirect\Code.RemoteHub.SwitchDirect.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="SecretNest.IRemoteHub" Version="1.1.0" />
+    <PackageReference Include="SecretNest.IRemoteHub" Version="1.2.1" />
   </ItemGroup>
 
   <Import Project="..\..\Code\Code.RemoteHub.AdapterShared\Code.RemoteHub.AdapterShared.projitems" Label="Shared" />

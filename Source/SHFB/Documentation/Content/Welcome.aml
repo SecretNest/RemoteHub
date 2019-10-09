@@ -266,7 +266,7 @@
 		<section>
 			<title>Supported frameworks</title>
 			<content>
-				<para>Remote Hub is built in dotnet standard 2, dotnet framework 4.6.1 and 4.7.2.</para>
+				<para>Remote Hub is built in dotnet standard 2 and 2.1, dotnet framework 4.6.1 and 4.7.2.</para>
 			</content>
 		</section>
 		<section>

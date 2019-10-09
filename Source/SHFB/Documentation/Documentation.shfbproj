@@ -28,14 +28,32 @@
     </TransformComponentArguments>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub\Release.IRemoteHub.csproj" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Redis\Release.IRemoteHub.Redis.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Stream\Release.IRemoteHub.Stream.csproj" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Redis\Release.RemoteHub.Redis.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.RedisAdapter\Release.RemoteHub.RedisAdapter.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Stream\Release.RemoteHub.Stream.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.StreamAdapter\Release.RemoteHub.StreamAdapter.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Switch\Release.RemoteHub.Switch.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.SwitchDirect\Release.RemoteHub.SwitchDirect.csproj" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Redis\Release.RemoteHub.Redis.csproj" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Redis\Release.IRemoteHub.Redis.csproj" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub\bin\Release\netstandard2.0\SecretNest.IRemoteHub.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub\bin\Release\netstandard2.0\SecretNest.IRemoteHub.dll" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Redis\bin\Release\netstandard2.0\SecretNest.IRemoteHub.Redis.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Redis\bin\Release\netstandard2.0\SecretNest.IRemoteHub.Redis.dll" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Stream\bin\Release\netstandard2.0\SecretNest.IRemoteHub.Stream.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Stream\bin\Release\netstandard2.0\SecretNest.IRemoteHub.Stream.dll" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Redis\bin\Release\netstandard2.0\SecretNest.RemoteHub.Redis.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Redis\bin\Release\netstandard2.0\SecretNest.RemoteHub.Redis.dll" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.RedisAdapter\bin\Release\netstandard2.0\SecretNest.RemoteHub.RedisAdapter.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.RedisAdapter\bin\Release\netstandard2.0\SecretNest.RemoteHub.RedisAdapter.dll" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Stream\bin\Release\netstandard2.0\SecretNest.RemoteHub.Stream.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Stream\bin\Release\netstandard2.0\SecretNest.RemoteHub.Stream.dll" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.StreamAdapter\bin\Release\netstandard2.0\SecretNest.RemoteHub.StreamAdapter.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.StreamAdapter\bin\Release\netstandard2.0\SecretNest.RemoteHub.StreamAdapter.dll" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Switch\bin\Release\netstandard2.0\SecretNest.RemoteHub.Switch.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Switch\bin\Release\netstandard2.0\SecretNest.RemoteHub.Switch.dll" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.SwitchDirect\bin\Release\netstandard2.0\SecretNest.RemoteHub.SwitchDirect.xml" />
+      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.SwitchDirect\bin\Release\netstandard2.0\SecretNest.RemoteHub.SwitchDirect.dll" />
     </DocumentationSources>
     <HelpFileFormat>Website</HelpFileFormat>
     <SyntaxFilters>Standard</SyntaxFilters>
@@ -61,21 +79,27 @@
     </NamespaceSummaries>
     <WarnOnMissingSourceContext>False</WarnOnMissingSourceContext>
     <ComponentConfigurations>
-      <ComponentConfig id="Resolve Reference Links (ESENT Cache)" enabled="True">
-        <component id="Resolve Reference Links (ESENT Cache)">{@HRefFormat}
-<locale value="{@Locale}" /><linkTarget value="{@SdkLinkTarget}" /><helpOutput format="HtmlHelp1"><msdnContentIdCache path="{@LocalDataFolder}Cache\MsdnContentId.cache" cachePath="{@LocalDataFolder}Cache\ESentMsdnContentIdCache" localCacheSize="2500" /><targets base="{@FrameworkReflectionDataFolder}" recurse="true" files="*.xml" type="{@HtmlSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
-		{@ReferenceLinkNamespaceFiles}
-	</targets><targets files="reflection.xml" type="Local" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput><helpOutput format="MSHelpViewer"><msdnContentIdCache path="{@LocalDataFolder}Cache\MsdnContentId.cache" cachePath="{@LocalDataFolder}Cache\ESentMsdnContentIdCache" localCacheSize="2500" /><targets base="{@FrameworkReflectionDataFolder}" recurse="true" files="*.xml" type="{@MSHelpViewerSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
-		{@ReferenceLinkNamespaceFiles}
-	</targets><targets files="reflection.xml" type="Id" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput><helpOutput format="Website"><msdnContentIdCache path="{@LocalDataFolder}Cache\MsdnContentId.cache" cachePath="{@LocalDataFolder}Cache\ESentMsdnContentIdCache" localCacheSize="2500" /><targets base="{@FrameworkReflectionDataFolder}" recurse="true" files="*.xml" type="{@WebsiteSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
-		{@ReferenceLinkNamespaceFiles}
-	</targets><targets files="reflection.xml" type="Local" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput><helpOutput format="OpenXml"><msdnContentIdCache path="{@LocalDataFolder}Cache\MsdnContentId.cache" cachePath="{@LocalDataFolder}Cache\ESentMsdnContentIdCache" localCacheSize="2500" /><targets base="{@FrameworkReflectionDataFolder}" recurse="true" files="*.xml" type="{@WebsiteSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
-		{@ReferenceLinkNamespaceFiles}
-	</targets><targets files="reflection.xml" type="Local" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput><helpOutput format="Markdown"><msdnContentIdCache path="{@LocalDataFolder}Cache\MsdnContentId.cache" cachePath="{@LocalDataFolder}Cache\ESentMsdnContentIdCache" localCacheSize="2500" /><targets base="{@FrameworkReflectionDataFolder}" recurse="true" files="*.xml" type="{@WebsiteSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
-		{@ReferenceLinkNamespaceFiles}
-	</targets><targets files="reflection.xml" type="Local" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput></component>
+      <ComponentConfig id="Code Block Component" enabled="True">
+        <component id="Code Block Component">
+          <basePath value="{@HtmlEncProjectFolder}" />
+          <outputPaths>{@HelpFormatOutputPaths}</outputPaths>
+          <allowMissingSource value="false" />
+          <removeRegionMarkers value="false" />
+          <colorizer syntaxFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xml" styleFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.xsl" stylesheet="{@SHFBFolder}PresentationStyles\Colorizer\highlight.css" scriptFile="{@SHFBFolder}PresentationStyles\Colorizer\highlight.js" disabled="{@DisableCodeBlockComponent}" language="cs" tabSize="0" numberLines="false" outlining="false" keepSeeTags="false" defaultTitle="true" />
+        </component>
       </ComponentConfig>
-    </ComponentConfigurations>
+<ComponentConfig id="Resolve Reference Links (ESENT Cache)" enabled="True"><component id="Resolve Reference Links (ESENT Cache)">{@HRefFormat}
+<locale value="{@Locale}" /><linkTarget value="{@SdkLinkTarget}" /><helpOutput format="HtmlHelp1"><memberIdUrlCache path="{@LocalDataFolder}Cache\MemberIdUrl.cache" cachePath="{@LocalDataFolder}Cache\ESentMemberIdUrlCache" localCacheSize="2500" /><targets base="{@FrameworkReflectionDataFolder}" recurse="true" files="*.xml" type="{@HtmlSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
+		{@ReferenceLinkNamespaceFiles}
+	</targets><targets files="reflection.xml" type="Local" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput><helpOutput format="MSHelpViewer"><memberIdUrlCache path="{@LocalDataFolder}Cache\MemberIdUrl.cache" cachePath="{@LocalDataFolder}Cache\ESentMemberIdUrlCache" localCacheSize="2500" /><targets base="{@FrameworkReflectionDataFolder}" recurse="true" files="*.xml" type="{@MSHelpViewerSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
+		{@ReferenceLinkNamespaceFiles}
+	</targets><targets files="reflection.xml" type="Id" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput><helpOutput format="Website"><memberIdUrlCache path="{@LocalDataFolder}Cache\MemberIdUrl.cache" cachePath="{@LocalDataFolder}Cache\ESentMemberIdUrlCache" localCacheSize="2500" /><targets base="{@FrameworkReflectionDataFolder}" recurse="true" files="*.xml" type="{@WebsiteSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
+		{@ReferenceLinkNamespaceFiles}
+	</targets><targets files="reflection.xml" type="Local" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput><helpOutput format="OpenXml"><memberIdUrlCache path="{@LocalDataFolder}Cache\MemberIdUrl.cache" cachePath="{@LocalDataFolder}Cache\ESentMemberIdUrlCache" localCacheSize="2500" /><targets base="{@FrameworkReflectionDataFolder}" recurse="true" files="*.xml" type="{@WebsiteSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
+		{@ReferenceLinkNamespaceFiles}
+	</targets><targets files="reflection.xml" type="Local" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput><helpOutput format="Markdown"><memberIdUrlCache path="{@LocalDataFolder}Cache\MemberIdUrl.cache" cachePath="{@LocalDataFolder}Cache\ESentMemberIdUrlCache" localCacheSize="2500" /><targets base="{@FrameworkReflectionDataFolder}" recurse="true" files="*.xml" type="{@WebsiteSdkLinkType}" id="FrameworkTargets" cachePath="{@LocalDataFolder}Cache\ESentFrameworkTargetCache" localCacheSize="2500">
+		{@ReferenceLinkNamespaceFiles}
+	</targets><targets files="reflection.xml" type="Local" id="ProjectTargets" cachePath="" localCacheSize="2500" noReload="true" /></helpOutput></component></ComponentConfig></ComponentConfigurations>
     <PlugInConfigurations>
     </PlugInConfigurations>
   </PropertyGroup>

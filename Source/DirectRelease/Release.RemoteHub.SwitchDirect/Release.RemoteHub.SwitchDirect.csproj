@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461;net472</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net461;net472</TargetFrameworks>
     <RootNamespace>SecretNest.RemoteHub</RootNamespace>
     <AssemblyName>SecretNest.RemoteHub.SwitchDirect</AssemblyName>
     <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
-  
+
   <PropertyGroup Condition="'$(TargetFramework)|$(Platform)'=='netstandard2.0|AnyCPU'">
     <DocumentationFile>SecretNest.RemoteHub.SwitchDirect.xml</DocumentationFile>
   </PropertyGroup>
