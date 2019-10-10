@@ -36,24 +36,6 @@
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.SwitchDirect\Release.RemoteHub.SwitchDirect.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Redis\Release.RemoteHub.Redis.csproj" />
       <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Redis\Release.IRemoteHub.Redis.csproj" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub\bin\Release\netstandard2.0\SecretNest.IRemoteHub.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub\bin\Release\netstandard2.0\SecretNest.IRemoteHub.dll" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Redis\bin\Release\netstandard2.0\SecretNest.IRemoteHub.Redis.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Redis\bin\Release\netstandard2.0\SecretNest.IRemoteHub.Redis.dll" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Stream\bin\Release\netstandard2.0\SecretNest.IRemoteHub.Stream.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.IRemoteHub.Stream\bin\Release\netstandard2.0\SecretNest.IRemoteHub.Stream.dll" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Redis\bin\Release\netstandard2.0\SecretNest.RemoteHub.Redis.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Redis\bin\Release\netstandard2.0\SecretNest.RemoteHub.Redis.dll" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.RedisAdapter\bin\Release\netstandard2.0\SecretNest.RemoteHub.RedisAdapter.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.RedisAdapter\bin\Release\netstandard2.0\SecretNest.RemoteHub.RedisAdapter.dll" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Stream\bin\Release\netstandard2.0\SecretNest.RemoteHub.Stream.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Stream\bin\Release\netstandard2.0\SecretNest.RemoteHub.Stream.dll" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.StreamAdapter\bin\Release\netstandard2.0\SecretNest.RemoteHub.StreamAdapter.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.StreamAdapter\bin\Release\netstandard2.0\SecretNest.RemoteHub.StreamAdapter.dll" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Switch\bin\Release\netstandard2.0\SecretNest.RemoteHub.Switch.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.Switch\bin\Release\netstandard2.0\SecretNest.RemoteHub.Switch.dll" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.SwitchDirect\bin\Release\netstandard2.0\SecretNest.RemoteHub.SwitchDirect.xml" />
-      <DocumentationSource sourceFile="..\..\DirectRelease\Release.RemoteHub.SwitchDirect\bin\Release\netstandard2.0\SecretNest.RemoteHub.SwitchDirect.dll" />
     </DocumentationSources>
     <HelpFileFormat>Website</HelpFileFormat>
     <SyntaxFilters>Standard</SyntaxFilters>
