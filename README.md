@@ -4,7 +4,7 @@ Network communicating solution for [Remote Agency](https://secretnest.info/Remot
 
 Home page: https://secretnest.info/RemoteHub
 
-Documentation: https://scegg.github.io/RemoteHub/
+Documentation: https://RemoteHub.docs.secretnest.info
 
 # Nuget Packages
 |Package|Description|
