@@ -2,7 +2,11 @@
 <topic id="bd0fe8b6-fbbe-46a6-a55a-9de5c0d0cff9" revisionNumber="1">
 	<developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
 		<introduction>
-			<para>Remote Hub is a network communicating solution for <externalLink>
+			<para>
+        <externalLink>
+          <linkText>Remote Hub</linkText>
+          <linkUri>https://secretnest.info/RemoteHub</linkUri>
+        </externalLink> is a network communicating solution for <externalLink>
 				<linkText>Remote Agency</linkText>
 				<linkUri>https://secretnest.info/RemoteAgency</linkUri>
 			</externalLink>.
@@ -275,11 +279,11 @@
 				<para>
 					SecretNest.RemoteHub packages are licensed under <externalLink>
 						<linkText>MIT</linkText>
-						<linkUri>https://github.com/scegg/RemoteHub/blob/master/LICENSE</linkUri>
+						<linkUri>https://github.com/SecretNest/RemoteHub/blob/master/LICENSE</linkUri>
 					</externalLink>. You can copy and redistribute the material in any medium or format
 					for any purpose, even commercially. Source code is available at <externalLink>
 						<linkText>Github</linkText>
-						<linkUri>https://github.com/scegg/RemoteHub</linkUri>
+						<linkUri>https://github.com/SecretNest/RemoteHub</linkUri>
 					</externalLink>.
 				</para>
 			</content>
@@ -290,7 +294,7 @@
 				<para>
 					Issues, requests and source code: <externalLink>
 						<linkText>Github</linkText>
-						<linkUri>https://github.com/scegg/RemoteHub</linkUri>
+						<linkUri>https://github.com/SecretNest/RemoteHub</linkUri>
 					</externalLink>
 				</para>
 			</content>

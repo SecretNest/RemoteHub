@@ -12,13 +12,13 @@
     <Product>Remote Hub</Product>
     <Description>Remote Hub based on Redis database.</Description>
     <Copyright>Allen Cui</Copyright>
-    <PackageProjectUrl>https://scegg.github.io/RemoteHub</PackageProjectUrl>
+    <PackageProjectUrl>https://secretnest.info/RemoteHub</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
-    <RepositoryUrl>https://github.com/scegg/RemoteHub</RepositoryUrl>
-    <PackageReleaseNotes>Update to support netcore 3 and netstandard 2.1.</PackageReleaseNotes>
-    <Version>1.2.1</Version>
-    <AssemblyVersion>1.2.1.0</AssemblyVersion>
-    <FileVersion>1.2.1.0</FileVersion>
+    <RepositoryUrl>https://github.com/SecretNest/RemoteHub</RepositoryUrl>
+    <PackageReleaseNotes>Rebuild with netstandard 2.0 / 2.1 and dotnet framework 4.6.1 / 4.7.2.</PackageReleaseNotes>
+    <Version>1.2.2</Version>
+    <AssemblyVersion>1.2.2.0</AssemblyVersion>
+    <FileVersion>1.2.2.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -32,7 +32,7 @@
   <Import Project="..\..\Code\Code.RemoteHub.Redis\Code.RemoteHub.Redis.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="SecretNest.RemoteHub.RedisAdapter" Version="1.2.1" />
+    <PackageReference Include="SecretNest.RemoteHub.RedisAdapter" Version="1.2.2" />
   </ItemGroup>
 
 </Project>

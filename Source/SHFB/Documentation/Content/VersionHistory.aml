@@ -12,6 +12,20 @@ life of the project.</para>
 				<list class="bullet">
           <listItem>
             <para>No code changed in this update.</para>
+            <para>Rebuild with netstandard 2.0 / 2.1 and dotnet framework 4.6.1 / 4.7.2.</para>
+            <para>Update Redis support package from Nuget.</para>
+            <para>IRemoteHub: 1.2.2</para>
+            <para>IRemoteHub.Redis: 1.2.2</para>
+            <para>IRemoteHub.Stream: 1.2.2</para>
+            <para>RemoteHub.RedisAdapter: 1.2.2</para>
+            <para>RemoteHub.Redis: 1.2.2</para>
+            <para>RemoteHub.StreamAdapter: 1.2.2</para>
+            <para>RemoteHub.Stream: 1.2.2</para>
+            <para>RemoteHub.Switch: 1.2.2</para>
+            <para>RemoteHub.SwitchDirect: 1.2.2</para>
+          </listItem>
+          <listItem>
+            <para>No code changed in this update.</para>
             <para>Update to support netcore 3 and netstandard 2.1.</para>
             <para>IRemoteHub: 1.2.1</para>
             <para>IRemoteHub.Redis: 1.2.1</para>

@@ -13,7 +13,7 @@
       <content>
         <para>Demo code is written in C#. Source code can be found in the folder <externalLink>
               <linkText>DemoWithRemoteAgency</linkText>
-              <linkUri>https://github.com/scegg/RemoteHub/tree/master/DemoWithRemoteAgency</linkUri>
+              <linkUri>https://github.com/SecretNest/RemoteHub/tree/master/DemoWithRemoteAgency</linkUri>
             </externalLink>.</para>
       </content>
     </section>
